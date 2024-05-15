@@ -32,7 +32,7 @@ public class User {
     @Column(name = "user_username", unique = true)
     private String user_username;
 
-    @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un utente può giocare a più giochi
     private List <Game> user_games = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY) // un utente può sbloccare più achievement
