@@ -46,9 +46,9 @@ public class Game {
     @Column(name = "game_release_date")
     private String game_releaseDate;
 
-    @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un gioco può essere giocato da più utenti
-    private List<User> user_games = new ArrayList<>();
+    // @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un gioco può essere giocato da più utenti
+    // private List<User> user_games = new ArrayList<>();
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY) // un gioco può avere più achievement
-    private Set<Achievement> achievements = new HashSet<>();
+    // @OneToMany(mappedBy = "game", fetch = FetchType.LAZY) // un gioco può avere più achievement
+    // private Set<Achievement> achievements = new HashSet<>();
 }

@@ -32,12 +32,12 @@ public class User {
     @Column(name = "user_username", unique = true)
     private String user_username;
 
-    @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un utente può giocare a più giochi
-    private List <Game> user_games = new ArrayList<>();
+    // @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un utente può giocare a più giochi
+    // private List <Game> user_games = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY) // un utente può sbloccare più achievement
-    @JoinTable(name = "user_achievements",
-               joinColumns = @JoinColumn(name = "user_id"),
-               inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    private Set<Achievement> achievements = new HashSet<>();
+    // @ManyToMany(fetch = FetchType.LAZY) // un utente può sbloccare più achievement
+    // @JoinTable(name = "user_achievements",
+    //            joinColumns = @JoinColumn(name = "user_id"),
+    //            inverseJoinColumns = @JoinColumn(name = "achievement_id"))
+    // private Set<Achievement> achievements = new HashSet<>();
 }

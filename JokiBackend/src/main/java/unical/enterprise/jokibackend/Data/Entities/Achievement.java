@@ -34,11 +34,11 @@ public class Achievement {
     @Column(name = "achievement_date")
     private Date achievement_date;
 
-    @ManyToOne(fetch = FetchType.LAZY) // un achievement appartiene ad un solo gioco
-    @JoinColumn(name = "game_id")
-    private Game game;
+    // @ManyToOne(fetch = FetchType.LAZY) // un achievement appartiene ad un solo gioco
+    // @JoinColumn(name = "game_id")
+    // private Game game;
 
-    @ManyToMany(mappedBy = "achievements", fetch = FetchType.LAZY) // un achievement può essere sbloccato da più utenti
-    private Set<User> users = new HashSet<>();
+    // @ManyToMany(mappedBy = "achievements", fetch = FetchType.LAZY) // un achievement può essere sbloccato da più utenti
+    // private Set<User> users = new HashSet<>();
 
 }
