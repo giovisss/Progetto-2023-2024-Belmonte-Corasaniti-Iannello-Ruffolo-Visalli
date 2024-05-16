@@ -1,5 +1,7 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,9 +12,9 @@ import lombok.Data;
 @Entity(name = "games") // jakarta, fa riferimento alla tabella games
 public class Game {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
     @Column(name = "game_id")
-    private Long game_id;
+    private UUID game_id;
 
     @Column(name = "game_name")
     private String game_name;
