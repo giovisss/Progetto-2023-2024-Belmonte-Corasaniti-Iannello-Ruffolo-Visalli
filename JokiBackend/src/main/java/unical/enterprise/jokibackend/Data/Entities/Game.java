@@ -1,15 +1,18 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data // lombok, genera getter e setter
 @Entity(name = "games") // jakarta, fa riferimento alla tabella games
+@AllArgsConstructor
 public class Game {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
@@ -38,5 +41,11 @@ public class Game {
     private String game_publisher;
 
     @Column(name = "game_release_date")
-    private String game_releaseDate;
+    private Date game_releaseDate;
+
+    @Column(name = "game_stock")
+    private int game_stock;
+
+    @Column(name = "admin_id")
+    private UUID admin_id;
 }
