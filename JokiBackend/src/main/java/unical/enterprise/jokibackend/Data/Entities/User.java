@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Data // lombok, genera getter e setter
-@Entity(name="users") // jakarta, fa riferimento alla tabella users
+@Entity(name = "users") // jakarta, fa riferimento alla tabella users
 public class User {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
@@ -32,12 +32,9 @@ public class User {
     @Column(name = "user_username", unique = true)
     private String user_username;
 
-    // @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un utente può giocare a più giochi
-    // private List <Game> user_games = new ArrayList<>();
-
-    // @ManyToMany(fetch = FetchType.LAZY) // un utente può sbloccare più achievement
-    // @JoinTable(name = "user_achievements",
-    //            joinColumns = @JoinColumn(name = "user_id"),
-    //            inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    // private Set<Achievement> achievements = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY) // un utente può giocare a più giochi
+    @JoinTable(name = "user_games",
+               joinColumns = @JoinColumn(name = "user_id"),
+               inverseJoinColumns = @JoinColumn(name = "game_id"))
+    private List <Game> user_games = new ArrayList<>();
 }

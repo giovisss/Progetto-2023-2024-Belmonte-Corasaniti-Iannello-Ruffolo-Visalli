@@ -10,12 +10,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data // lombok, genera getter e setter
-@Entity(name="games") // jakarta, fa riferimento alla tabella games
+@Entity(name = "games") // jakarta, fa riferimento alla tabella games
 public class Game {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.AUTO)
@@ -45,10 +47,4 @@ public class Game {
 
     @Column(name = "game_release_date")
     private String game_releaseDate;
-
-    // @ManyToMany(mappedBy = "user_games", fetch = FetchType.LAZY) // un gioco può essere giocato da più utenti
-    // private List<User> user_games = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "game", fetch = FetchType.LAZY) // un gioco può avere più achievement
-    // private Set<Achievement> achievements = new HashSet<>();
 }
