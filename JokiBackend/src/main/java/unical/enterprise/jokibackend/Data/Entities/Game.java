@@ -1,12 +1,14 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -48,4 +50,7 @@ public class Game {
 
     @Column(name = "admin_id")
     private UUID admin_id;
+
+    @ManyToMany(mappedBy = "games")
+    private Set<Wishlist> wishlists;
 }

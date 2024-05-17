@@ -1,11 +1,16 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -18,9 +23,15 @@ public class Wishlist {
     @Column(name = "wishlist_id")
     private UUID wishlist_id;
 
-    @Column(name = "wishlist_user_id")
-    private UUID wishlist_user_id;
+    @OneToOne
+    @JoinColumn(name = "wishlist_user_id", referencedColumnName = "user_id")
+    private User user;
 
-    @Column(name = "wishlist_game_id")
-    private UUID wishlist_game_id;
+    @ManyToMany
+    @JoinTable(
+        name = "wishlist_games",
+        joinColumns = @JoinColumn(name = "wishlist_id"),
+        inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private Set<Game> games;
 }
