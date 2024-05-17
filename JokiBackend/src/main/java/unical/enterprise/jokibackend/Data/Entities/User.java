@@ -22,9 +22,6 @@ public class User {
     @Column(name = "user_password")
     private String user_password;
 
-    @Column(name = "user_role")
-    private String user_role;
-
     @Column(name = "user_username", unique = true)
     private String user_username;
     

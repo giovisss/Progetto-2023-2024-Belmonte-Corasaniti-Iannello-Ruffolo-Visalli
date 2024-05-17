@@ -27,11 +27,11 @@ public class Wishlist {
     @JoinColumn(name = "wishlist_user_id", referencedColumnName = "user_id")
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-        name = "wishlist_games",
-        joinColumns = @JoinColumn(name = "wishlist_id"),
-        inverseJoinColumns = @JoinColumn(name = "game_id")
-    )
-    private Set<Game> games;
+    // @ManyToMany
+    // @JoinTable(
+    //     name = "wishlist_games",
+    //     joinColumns = @JoinColumn(name = "wishlist_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "game_id")
+    // )
+    // private Set<Game> games;
 }
