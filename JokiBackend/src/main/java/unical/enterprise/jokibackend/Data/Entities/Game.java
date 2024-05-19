@@ -53,6 +53,6 @@ public class Game {
     @Column(name = "admin_id")
     private UUID admin_id;
 
-    @ManyToMany(mappedBy = "games")
-    private Set<Wishlist> wishlists;
+    // @ManyToMany(mappedBy = "games")
+    // private Set<Wishlist> wishlists;
 }

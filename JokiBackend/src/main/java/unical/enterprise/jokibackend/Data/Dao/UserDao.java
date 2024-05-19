@@ -12,13 +12,13 @@ import unical.enterprise.jokibackend.Data.Entities.User;
 @Repository
 public interface UserDao extends JpaRepository<User, UUID>{
 
-    // non so se serve la query, i nomi di tabelle e dei campi non sono precisamente quelli delle convenzioni hibernate
-    // magari facciamo qualche prova prima di andare avanti
-    @Query("SELECT u FROM users u WHERE u.users_id = :id") 
+    // servono le query oppure cambiamo i campi in modo che siano quelli della convenzione hibernate
+    @Query("SELECT u FROM users u WHERE u.user_id = :id") 
     Optional<User> findUserById(UUID id);
 
-    @Query("SELECT u FROM users u WHERE u.email = :email")
+    @Query("SELECT u FROM users u WHERE u.user_email = :email")
     Optional<User> findUserByEmail(String email);
 
+    @Query("SELECT u FROM users u WHERE u.user_username = :username")
     Optional<User> findUserByUsername(String username);
 }
