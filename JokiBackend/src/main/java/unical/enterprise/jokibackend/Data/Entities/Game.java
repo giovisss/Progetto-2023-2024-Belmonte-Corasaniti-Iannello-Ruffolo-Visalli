@@ -10,11 +10,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Data;
 
 @Data // lombok, genera getter e setter
 @Entity(name = "games") // jakarta, fa riferimento alla tabella games
 @AllArgsConstructor
+@NoArgsConstructor
 public class Game {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)

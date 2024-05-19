@@ -12,11 +12,13 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Data;
 
 @Data
 @Entity(name = "wishlists")
 @AllArgsConstructor
+@NoArgsConstructor
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
