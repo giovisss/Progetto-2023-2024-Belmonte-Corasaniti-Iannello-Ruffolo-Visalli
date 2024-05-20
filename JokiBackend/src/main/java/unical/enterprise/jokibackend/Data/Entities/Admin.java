@@ -15,18 +15,17 @@ import lombok.Data;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Admin {
-
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    @Column(name = "admin_id")
-    private UUID admin_id;
+    @Column
+    private UUID id;
 
-    @Column(name = "admin_password")
-    private String admin_password;
+    @Column
+    private String password;
 
-    @Column(name = "admin_username", unique = true)
-    private String admin_username;
+    @Column(unique = true)
+    private String username;
 
-    @Column(name = "admin_email", unique = true)
-    private String admin_email;
+    @Column(unique = true)
+    private String email;
 }

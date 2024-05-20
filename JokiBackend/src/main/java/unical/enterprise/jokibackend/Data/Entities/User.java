@@ -18,27 +18,27 @@ import lombok.Data;
 public class User {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    @Column(name = "user_id")
-    private UUID user_id;
+    @Column
+    private UUID id;
 
-    @Column(name = "user_password")
-    private String user_password;
+    @Column
+    private String password;
 
-    @Column(name = "user_username", unique = true)
-    private String user_username;
+    @Column(unique = true)
+    private String username;
     
-    @Column(name = "user_email", unique = true)
-    private String user_email;
+    @Column(unique = true)
+    private String email;
 
-    @Column(name = "user_name")
-    private String user_name;
+    @Column
+    private String name;
 
-    @Column(name = "user_surname")
-    private String user_surname;
+    @Column
+    private String surname;
 
-    @Column(name = "user_birthdate")
-    private Date user_birthdate;
+    @Column(columnDefinition = "DATE")
+    private Date birthdate;
 
-    @Column(name = "user_address")
-    private String user_address;
+    @Column
+    private String address;
 }

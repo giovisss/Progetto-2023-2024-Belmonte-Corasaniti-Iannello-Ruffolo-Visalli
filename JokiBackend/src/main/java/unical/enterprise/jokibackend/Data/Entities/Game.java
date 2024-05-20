@@ -1,14 +1,14 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -20,39 +20,37 @@ import lombok.Data;
 public class Game {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    @Column(name = "game_id")
-    private UUID game_id;
+    @Column
+    private UUID id;
 
-    @Column(name = "game_name")
-    private String game_name;
+    @Column
+    private String name;
 
-    @Column(name = "game_description")
-    private String game_description;
+    @Column
+    private String description;
 
-    @Column(name = "game_price")
-    private double game_price;
+    @Column
+    private double price;
 
-    @Column(name = "game_image")
-    private String game_image; // se vogliamo salvare l'immagine in base64
+    @Column
+    private String image; // se vogliamo salvare l'immagine in base64
 
-    @Column(name = "game_category")
-    private String game_category;
+    @Column
+    private String category;
 
-    @Column(name = "game_developer")
-    private String game_developer;
+    @Column
+    private String developer;
 
-    @Column(name = "game_publisher")
-    private String game_publisher;
+    @Column
+    private String publisher;
 
-    @Column(name = "game_release_date")
-    private Date game_releaseDate;
+    @Column(columnDefinition = "DATE")
+    private Date releaseDate;
 
-    @Column(name = "game_stock")
-    private int game_stock;
+    @Column
+    private int stock;
 
-    @Column(name = "admin_id")
-    private UUID admin_id;
-
-    // @ManyToMany(mappedBy = "games")
-    // private Set<Wishlist> wishlists;
+    @ManyToOne
+    @JoinColumn
+    private Admin admin;
 }

@@ -18,21 +18,15 @@ import lombok.Data;
 public class Order {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    @Column(name = "order_id")
-    private UUID order_id;
+    @Column
+    private UUID id;
 
-    @Column(name = "order_user_id")
-    private UUID order_user_id;
+    @Column
+    private Date date;
 
-    @Column(name = "order_game_id")
-    private UUID order_game_id;
+    @Column
+    private double price;
 
-    @Column(name = "order_date")
-    private Date order_date;
-
-    @Column(name = "order_price")
-    private double order_price;
-
-    @Column(name = "order_status")
-    private Boolean order_status;
+    @Column
+    private Boolean status;
 }
