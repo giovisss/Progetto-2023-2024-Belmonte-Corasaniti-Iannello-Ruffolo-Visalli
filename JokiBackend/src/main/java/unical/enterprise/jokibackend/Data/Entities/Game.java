@@ -30,7 +30,7 @@ public class Game {
     private String description;
 
     @Column
-    private double price;
+    private Double price;
 
     @Column
     private String image; // se vogliamo salvare l'immagine in base64
@@ -48,7 +48,7 @@ public class Game {
     private Date releaseDate;
 
     @Column
-    private int stock;
+    private Integer stock;
 
     @ManyToOne
     @JoinColumn

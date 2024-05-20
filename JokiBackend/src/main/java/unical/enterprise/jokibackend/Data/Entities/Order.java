@@ -25,7 +25,7 @@ public class Order {
     private Date date;
 
     @Column
-    private double price;
+    private Double price;
 
     @Column
     private Boolean status;
