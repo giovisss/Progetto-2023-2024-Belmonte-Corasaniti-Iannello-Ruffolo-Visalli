@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Services;
+package unical.enterprise.jokibackend.Data.Services;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import unical.enterprise.jokibackend.Data.DTO.UserDTO;
+import unical.enterprise.jokibackend.DTO.UserDTO;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
 

@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Data.DTO;
+package unical.enterprise.jokibackend.DTO;
 
 import java.util.Date;
 import java.util.UUID;
