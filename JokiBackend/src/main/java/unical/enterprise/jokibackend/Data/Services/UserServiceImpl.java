@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Collection<UserDto> getAllUsers(Specification<User> spec) {
-        return userDao.findAll().stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+        return userDao.findAll(spec).stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
     }
 
     public UserDto save(UserDto userDto) {
