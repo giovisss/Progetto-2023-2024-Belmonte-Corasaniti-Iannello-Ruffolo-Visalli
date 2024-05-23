@@ -4,12 +4,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import unical.enterprise.jokibackend.Data.Entities.User;
 
 @Repository
-public interface UserDao extends JpaRepository<User, UUID>{
+public interface UserDao extends JpaRepository<User, UUID>, JpaSpecificationExecutor<User>{
 
     Optional<User> findUserById(UUID id);
 
