@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.DTO;
+package unical.enterprise.jokibackend.Dto;
 
 import java.util.Date;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserDto {
     private UUID id;
     private String password;
     private String username;
