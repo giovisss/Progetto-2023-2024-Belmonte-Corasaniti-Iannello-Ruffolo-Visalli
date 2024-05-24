@@ -7,6 +7,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -21,7 +24,7 @@ public class Order {
     @Column
     private UUID id;
 
-    @Column
+    @Column(columnDefinition = "DATE")
     private Date date;
 
     @Column
@@ -29,4 +32,12 @@ public class Order {
 
     @Column
     private Boolean status;
+
+    @OneToMany
+    @JoinColumn
+    private Game game;
+
+    @OneToOne
+    @JoinColumn
+    private User user;
 }

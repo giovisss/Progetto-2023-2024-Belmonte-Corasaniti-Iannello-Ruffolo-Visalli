@@ -33,7 +33,7 @@ public class Game {
     private Double price;
 
     @Column
-    private String image; // se vogliamo salvare l'immagine in base64
+    private String imagePath;
 
     @Column
     private String category;
