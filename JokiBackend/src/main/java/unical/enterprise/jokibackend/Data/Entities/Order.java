@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class Order {
 
     @OneToMany
     @JoinColumn
-    private Game game;
+    private Collection<Game> game;
 
     @OneToOne
     @JoinColumn

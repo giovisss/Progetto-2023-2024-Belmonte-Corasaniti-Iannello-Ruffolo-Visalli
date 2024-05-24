@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -46,14 +47,14 @@ public class User {
     private String address;
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(referencedColumnName = "user_id")
     private Wishlist wishlist;
 
     @OneToMany
     @JoinColumn
-    private Order order;
+    private Collection<Order> order;
 
     @OneToMany
     @JoinColumn
-    private Game game;
+    private Collection<Game> game;
 }
