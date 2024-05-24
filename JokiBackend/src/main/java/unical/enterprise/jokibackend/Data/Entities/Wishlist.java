@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity(name = "wishlists")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Wishlist {;
+public class Wishlist {
     @Id
     @ManyToOne
     @JoinColumn
