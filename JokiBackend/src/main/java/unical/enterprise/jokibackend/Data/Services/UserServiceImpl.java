@@ -28,6 +28,16 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserDto.class);
     }
 
+    public UserDto getUserByUsername(String username) {
+        User user = userDao.findUserByUsername(username).orElse(null);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    public UserDto getUserByEmail(String email) {
+        User user = userDao.findUserByEmail(email).orElse(null);
+        return modelMapper.map(user, UserDto.class);
+    }
+
     public Collection<UserDto> getAllUsers(Specification<User> spec) {
         return userDao.findAll(spec).stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
     }
