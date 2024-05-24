@@ -47,4 +47,8 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
         return modelMapper.map(user, UserDto.class);
     }
+
+    public void delete(UUID id) {
+        userDao.deleteById(id);
+    }
 }
