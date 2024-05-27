@@ -24,7 +24,7 @@ public class Game {
     private UUID id;
 
     @Column
-    private String name;
+    private String title;
 
     @Column
     private String description;

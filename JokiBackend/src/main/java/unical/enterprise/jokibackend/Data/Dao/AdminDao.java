@@ -3,6 +3,7 @@ package unical.enterprise.jokibackend.Data.Dao;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface AdminDao extends JpaRepository<Admin, UUID>{
+public interface AdminDao extends JpaRepository<Admin, UUID>, JpaSpecificationExecutor<Admin> {
 
     Optional<Admin> findAdminByEmail(String email);
 
