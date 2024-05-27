@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class GamesDto {
+public class GameDto {
     private UUID id;
     private String title;
     private Double price;
