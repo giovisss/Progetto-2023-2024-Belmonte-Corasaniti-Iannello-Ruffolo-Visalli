@@ -10,15 +10,17 @@ import unical.enterprise.jokibackend.Dto.UserDto;
 
 public interface UserService {
 
-    public UserDto getUserById(UUID id);
+    void save(User user);
 
-    public UserDto getUserByUsername(String username);
+    UserDto getUserById(UUID id);
 
-    public UserDto getUserByEmail(String email);
+    UserDto getUserByUsername(String username);
 
-    public Collection<UserDto> getAllUsers(Specification<User> spec);
+    UserDto getUserByEmail(String email);
 
-    public UserDto save(UserDto userDto);
+    Collection<UserDto> getAllUsers(Specification<User> spec);
 
-    public void delete(UUID id);
+    UserDto updateUser(UUID id, UserDto userDto);
+
+    void delete(UUID id);
 }

@@ -17,7 +17,12 @@ public class GameServiceImpl implements GameService{
     private final GameDao gameDao;
 
     private final ModelMapper modelMapper;
-    
+
+    public GameServiceImpl(GameDao gameDao, ModelMapper modelMapper) {
+        this.gameDao = gameDao;
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     public GameDto getGameById(UUID id) {
         Game game = gameDao.findById(id).orElse(null);

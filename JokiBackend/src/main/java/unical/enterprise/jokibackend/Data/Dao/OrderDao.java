@@ -5,14 +5,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import unical.enterprise.jokibackend.Data.Entities.Order;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface OrderDao extends JpaRepository<Order, UUID>, JpaSpecificationExecutor<Order>{
-    Optional<Order> findOrderByUserId(UUID id);
-    Optional<Order> findOrderByUserUsername(String username);
-    Optional<Order> findOrderByStatus(Boolean status);
-    Optional<Order> findOrderByGameId(UUID id);
-    Optional<Order> findOrderByGameName(String name);
+    Optional<Order> findOrdersByUserId(UUID id);
+    Optional<Order> findOrdersByStatus(Boolean status);
+    Optional<Order> findOrdersByGameId(UUID id);
+    Optional<Order> findOrdersByGameName(String name);
+
 }

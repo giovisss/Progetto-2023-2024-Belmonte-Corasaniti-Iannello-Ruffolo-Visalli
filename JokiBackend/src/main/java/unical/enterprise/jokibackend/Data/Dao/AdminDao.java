@@ -22,5 +22,5 @@ public interface AdminDao extends JpaRepository<Admin, UUID>, JpaSpecificationEx
     Optional<Admin> findAdminByUsername(String username);
 
     @Query("SELECT g FROM games g WHERE g.admin = :id")
-    ArrayList<Game> findGamesByThisAdminId(UUID id);
+    ArrayList<Game> findGamesInsertByAdminId(UUID id);
 }
