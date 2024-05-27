@@ -16,9 +16,9 @@ import unical.enterprise.jokibackend.Dto.GamesDto;
 public class GameServiceImpl implements GameService{
 
     @Autowired
-    private GameDao gameDao;
+    private final GameDao gameDao;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     
     @Override
     public GamesDto getGameById(UUID id) {

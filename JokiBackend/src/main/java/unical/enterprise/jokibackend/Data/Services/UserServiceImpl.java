@@ -19,9 +19,9 @@ import unical.enterprise.jokibackend.Dto.UserDto;
 public class UserServiceImpl implements UserService {
     
     @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public UserDto getUserById(UUID id) {
