@@ -23,31 +23,40 @@ public class UserServiceImpl implements UserService {
 
     private ModelMapper modelMapper;
 
+    @Override
     public UserDto getUserById(UUID id) {
         User user = userDao.findById(id).orElse(null);
         return modelMapper.map(user, UserDto.class);
     }
-
+    
+    @Override
     public UserDto getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username).orElse(null);
         return modelMapper.map(user, UserDto.class);
     }
-
+    
+    @Override
     public UserDto getUserByEmail(String email) {
         User user = userDao.findUserByEmail(email).orElse(null);
         return modelMapper.map(user, UserDto.class);
     }
-
+    
+    @Override
     public Collection<UserDto> getAllUsers(Specification<User> spec) {
-        return userDao.findAll(spec).stream().map(user -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
+        return userDao.findAll(spec)
+        .stream().map(user -> modelMapper
+        .map(user, UserDto.class))
+        .collect(Collectors.toList());
     }
-
+    
+    @Override
     public UserDto save(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
         userDao.save(user);
         return modelMapper.map(user, UserDto.class);
     }
-
+    
+    @Override
     public void delete(UUID id) {
         userDao.deleteById(id);
     }
