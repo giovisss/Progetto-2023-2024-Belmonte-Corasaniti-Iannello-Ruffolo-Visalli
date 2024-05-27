@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface GameDao extends JpaRepository<Game, UUID>, JpaSpecificationExecutor<Game>{
-    Optional<Game> findGameByName(String name);
+    Optional<Game> findGameByTitle(String title);
     Optional<Game> findGameByAuthor(String author);
     Optional<Game> findGameByGenre(String genre);
 }
