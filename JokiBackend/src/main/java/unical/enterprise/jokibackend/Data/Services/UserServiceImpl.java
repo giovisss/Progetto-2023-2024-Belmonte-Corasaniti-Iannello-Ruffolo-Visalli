@@ -21,6 +21,16 @@ public class UserServiceImpl implements UserService {
 
     private final ModelMapper modelMapper;
 
+    public UserServiceImpl(UserDao userDao, ModelMapper modelMapper) {
+        this.userDao = userDao;
+        this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public void save(User user) {
+        userDao.save(user);
+    }
+
     @Override
     public UserDto getUserById(UUID id) {
         User user = userDao.findById(id).orElse(null);
@@ -46,10 +56,14 @@ public class UserServiceImpl implements UserService {
         .map(user, UserDto.class))
         .collect(Collectors.toList());
     }
-    
+
     @Override
-    public UserDto save(UserDto userDto) {
-        User user = modelMapper.map(userDto, User.class);
+    public UserDto updateUser(UUID id, UserDto userDto) {
+        User user = userDao.findById(id).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        user = modelMapper.map(userDto, User.class);
         userDao.save(user);
         return modelMapper.map(user, UserDto.class);
     }
