@@ -5,7 +5,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,7 @@ import unical.enterprise.jokibackend.Dto.UserDto;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    
-    @Autowired
+
     private final UserDao userDao;
 
     private final ModelMapper modelMapper;

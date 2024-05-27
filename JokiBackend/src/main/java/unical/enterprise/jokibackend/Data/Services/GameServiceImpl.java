@@ -3,7 +3,6 @@ package unical.enterprise.jokibackend.Data.Services;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import unical.enterprise.jokibackend.Dto.GamesDto;
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService{
 
-    @Autowired
     private final GameDao gameDao;
 
     private final ModelMapper modelMapper;
