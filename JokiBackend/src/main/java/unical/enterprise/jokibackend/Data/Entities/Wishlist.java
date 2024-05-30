@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -23,11 +22,9 @@ public class Wishlist {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn
     private User user;
     
     @ManyToOne
-    @JoinColumn
     private Game game;
 
     @Column(columnDefinition = "int default 0")

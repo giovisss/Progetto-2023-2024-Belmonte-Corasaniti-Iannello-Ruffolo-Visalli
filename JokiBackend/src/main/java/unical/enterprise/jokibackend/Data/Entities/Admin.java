@@ -1,11 +1,13 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -28,4 +30,7 @@ public class Admin {
 
     @Column
     private String password;
+
+    @OneToMany
+    private Collection<Game> game;
 }

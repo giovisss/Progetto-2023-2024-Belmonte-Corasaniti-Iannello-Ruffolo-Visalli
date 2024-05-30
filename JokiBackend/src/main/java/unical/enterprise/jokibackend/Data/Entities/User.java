@@ -8,7 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -47,14 +46,11 @@ public class User {
     private String address;
 
     @OneToOne
-    @JoinColumn(referencedColumnName = "user_id")
     private Wishlist wishlist;
 
     @OneToMany
-    @JoinColumn
     private Collection<Order> order;
 
     @OneToMany
-    @JoinColumn
     private Collection<Game> game;
 }
