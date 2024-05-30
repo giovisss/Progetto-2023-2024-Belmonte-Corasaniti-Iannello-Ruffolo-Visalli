@@ -13,6 +13,6 @@ public interface OrderDao extends JpaRepository<Order, UUID>, JpaSpecificationEx
     Optional<Order> findOrdersByUserId(UUID id);
     Optional<Order> findOrdersByStatus(Boolean status);
     Optional<Order> findOrdersByGameId(UUID id);
-    // Optional<Order> findOrdersByGameName(String name);
+    Optional<Order> findOrdersByGameTitle(String title);
 
 }

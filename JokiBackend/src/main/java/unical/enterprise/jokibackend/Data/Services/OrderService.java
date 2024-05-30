@@ -20,5 +20,5 @@ public interface OrderService {
     Collection<OrderDto> getByUserId(UUID id);
     Collection<OrderDto> getByGameId(UUID id);
     Collection<OrderDto> getOrderByStatus(Boolean status);
-    // Collection<OrderDto> getOrdersByGameName(String name);
+    Collection<OrderDto> getOrdersByGameTitle(String title);
 }

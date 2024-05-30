@@ -76,11 +76,11 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
-    // @Override
-    // public Collection<OrderDto> getOrdersByGameName(String name) {
-    //     return orderDao.findOrdersByGameName(name)
-    //             .stream().map(order -> modelMapper
-    //             .map(order, OrderDto.class))
-    //             .toList();
-    // }
+    @Override
+    public Collection<OrderDto> getOrdersByGameTitle(String title) {
+        return orderDao.findOrdersByGameTitle(title)
+                .stream().map(order -> modelMapper
+                .map(order, OrderDto.class))
+                .toList();
+    }
 }
