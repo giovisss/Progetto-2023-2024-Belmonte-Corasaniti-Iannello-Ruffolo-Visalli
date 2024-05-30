@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import unical.enterprise.jokibackend.Data.Entities.Game;
-import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 
 import java.util.Optional;
