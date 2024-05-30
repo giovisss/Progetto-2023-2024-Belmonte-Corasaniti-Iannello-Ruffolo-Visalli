@@ -5,7 +5,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -45,11 +44,11 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public Collection<UserDto> getAllUsers(Specification<User> spec) {
-        return userDao.findAll(spec)
-        .stream().map(user -> modelMapper
-        .map(user, UserDto.class))
-        .collect(Collectors.toList());
+    public Collection<UserDto> getAllUsers() {
+        return userDao.findAll()
+            .stream().map(user -> modelMapper
+            .map(user, UserDto.class))
+            .collect(Collectors.toList());
     }
 
     @Override

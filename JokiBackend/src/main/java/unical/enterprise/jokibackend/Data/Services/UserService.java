@@ -3,8 +3,6 @@ package unical.enterprise.jokibackend.Data.Services;
 import java.util.Collection;
 import java.util.UUID;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Dto.UserDto;
 
@@ -18,7 +16,7 @@ public interface UserService {
 
     UserDto getUserByEmail(String email);
 
-    Collection<UserDto> getAllUsers(Specification<User> spec);
+    Collection<UserDto> getAllUsers();
 
     UserDto updateUser(UUID id, UserDto userDto);
 
