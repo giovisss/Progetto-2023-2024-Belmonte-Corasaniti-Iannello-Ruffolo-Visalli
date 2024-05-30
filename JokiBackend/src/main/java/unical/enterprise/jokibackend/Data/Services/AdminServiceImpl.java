@@ -20,11 +20,6 @@ public class AdminServiceImpl implements AdminService{
     private final AdminDao adminDao;
     private final ModelMapper modelMapper;
 
-    public AdminServiceImpl(AdminDao adminDao, ModelMapper modelMapper) {
-        this.adminDao = adminDao;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public void save(Admin admin) {
         adminDao.save(admin);

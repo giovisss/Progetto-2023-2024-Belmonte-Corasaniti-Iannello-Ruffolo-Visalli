@@ -16,7 +16,7 @@ public class GameDto {
     private Double price;
     private String imagePath;
     private String category;
-    private String developer;
+    private String author;
     private String publisher;
     private Date releaseDate;
     private Integer stock;

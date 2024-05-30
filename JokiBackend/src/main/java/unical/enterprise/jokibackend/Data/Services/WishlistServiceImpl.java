@@ -18,11 +18,6 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistDao wishlistDao;
     private final ModelMapper modelMapper;
 
-    public WishlistServiceImpl(WishlistDao wishlistDao, ModelMapper modelMapper) {
-        this.wishlistDao = wishlistDao;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public void save(Wishlist wishlist) {
         wishlistDao.save(wishlist);
@@ -48,25 +43,25 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public WishlistDto getByUserId(UUID id) {
-        Wishlist wishlist = wishlistDao.findWishlistByUser(id).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByUserId(id).orElse(null);
         return modelMapper.map(wishlist, WishlistDto.class);
     }
 
     @Override
     public Collection<WishlistDto> getByGameId(UUID id) {
-        Wishlist wishlist = wishlistDao.findWishlistByGame(id).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByGameId(id).orElse(null);
         return List.of(modelMapper.map(wishlist, WishlistDto.class));
     }
 
     @Override
     public WishlistDto getByUserUsername(String username) {
-        Wishlist wishlist = wishlistDao.findWishlistByUser(UUID.fromString(username)).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByUserId(UUID.fromString(username)).orElse(null);
         return modelMapper.map(wishlist, WishlistDto.class);
     }
 
     @Override
     public Collection<WishlistDto> getByGameName(String name) {
-        Wishlist wishlist = wishlistDao.findWishlistByGame(UUID.fromString(name)).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByGameId(UUID.fromString(name)).orElse(null);
         return List.of(modelMapper.map(wishlist, WishlistDto.class));
     }
 }

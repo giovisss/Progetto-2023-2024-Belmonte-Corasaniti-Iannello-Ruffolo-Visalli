@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -17,11 +18,6 @@ public class GameServiceImpl implements GameService{
     private final GameDao gameDao;
 
     private final ModelMapper modelMapper;
-
-    public GameServiceImpl(GameDao gameDao, ModelMapper modelMapper) {
-        this.gameDao = gameDao;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public GameDto getGameById(UUID id) {
@@ -45,6 +41,14 @@ public class GameServiceImpl implements GameService{
     public GameDto getGameByGenre(String genre) {
         Game game = gameDao.findGameByGenre(genre).orElse(null);
         return modelMapper.map(game, GameDto.class);
+    }
+
+    @Override
+    public Collection<GameDto> findAll() {
+        return gameDao.findAll()
+                .stream().map(game -> modelMapper
+                .map(game, GameDto.class))
+                .toList();
     }
     
     @Override

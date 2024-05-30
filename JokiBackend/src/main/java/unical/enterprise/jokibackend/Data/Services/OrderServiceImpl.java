@@ -17,11 +17,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
 
-    public OrderServiceImpl(OrderDao orderDao, ModelMapper modelMapper) {
-        this.orderDao = orderDao;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public void save(Order order) {
         orderDao.save(order);
@@ -81,11 +76,11 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
-    @Override
-    public Collection<OrderDto> getOrdersByGameName(String name) {
-        return orderDao.findOrdersByGameName(name)
-                .stream().map(order -> modelMapper
-                .map(order, OrderDto.class))
-                .toList();
-    }
+    // @Override
+    // public Collection<OrderDto> getOrdersByGameName(String name) {
+    //     return orderDao.findOrdersByGameName(name)
+    //             .stream().map(order -> modelMapper
+    //             .map(order, OrderDto.class))
+    //             .toList();
+    // }
 }

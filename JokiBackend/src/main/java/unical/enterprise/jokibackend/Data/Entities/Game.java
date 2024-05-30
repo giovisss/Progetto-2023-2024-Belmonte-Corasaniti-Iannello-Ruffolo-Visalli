@@ -36,10 +36,10 @@ public class Game {
     private String imagePath;
 
     @Column
-    private String category;
+    private String genre;
 
     @Column
-    private String developer;
+    private String author;
 
     @Column
     private String publisher;

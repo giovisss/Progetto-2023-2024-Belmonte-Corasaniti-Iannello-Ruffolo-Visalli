@@ -21,11 +21,6 @@ public class UserServiceImpl implements UserService {
 
     private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserDao userDao, ModelMapper modelMapper) {
-        this.userDao = userDao;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
     public void save(User user) {
         userDao.save(user);
