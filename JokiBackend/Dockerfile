@@ -1,13 +1,11 @@
-FROM adoptopenjdk/openjdk22:alpine
+FROM alpine
 
-RUN apk --no-cache add postgresql-client
+RUN apk update && apk --no-cache add openjdk17-jre
 
-COPY target/JokiBackend-0.0.1-SNAPSHOT.jar /app/app.jar
+WORKDIR /app
 
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/jokidb
-ENV SPRING_DATASOURCE_USERNAME=jokiuser
-ENV SPRING_DATASOURCE_PASSWORD=jokiuser
+COPY target/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
