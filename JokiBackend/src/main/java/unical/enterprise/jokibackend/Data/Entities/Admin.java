@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ import lombok.Data;
 @NoArgsConstructor
 public class Admin {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
     @Column
     private UUID id;
 
