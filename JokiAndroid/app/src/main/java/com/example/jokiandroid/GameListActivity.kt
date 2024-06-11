@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,8 +27,9 @@ import com.example.jokiandroid.model.getFakeGames
 import com.example.jokiandroid.viewmodel.CartViewModel
 
 @Composable
-fun GameListPage(cartViewModel: CartViewModel = viewModel()) {
+fun GameListPage(cartViewModel: CartViewModel) {
     val gameList = getFakeGames()
+    val cartItems = cartViewModel.cartItems.observeAsState(emptyList())
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -35,9 +37,9 @@ fun GameListPage(cartViewModel: CartViewModel = viewModel()) {
     ){
         LazyColumn(
             content = {
-                itemsIndexed(gameList){index: Int, item: Game ->
-                    GameItem(item = item, onAddToCart = {
-                        cartViewModel.addToCart(item)
+                itemsIndexed(gameList){index: Int, game: Game ->
+                    GameItem(item = game, onAddToCart = {
+                        cartViewModel.addGame(it)
                     })
                 }
             }
