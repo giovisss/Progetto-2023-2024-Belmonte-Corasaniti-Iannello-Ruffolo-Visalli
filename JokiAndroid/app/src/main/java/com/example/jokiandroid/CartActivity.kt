@@ -2,8 +2,12 @@ import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -24,29 +28,39 @@ fun CartActivity(navController: NavController, cartViewModel: CartViewModel) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Carrello",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(
+                text = "Carrello",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "cartBack",
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+        }
 
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
             Log.d("CartActivity", "cartItems size: ${cartItems.size}")
-                items(cartItems.size) { game ->
-                    CartItem(
-                        cartItem = cartItems[game],
-                        onRemove = {
-                            cartViewModel.removeGame(cartItems[game])
-                        }
-                    )
-                    Divider()
-                }
+            items(cartItems.size) { game ->
+                CartItem(
+                    cartItem = cartItems[game],
+                    onRemove = {
+                        cartViewModel.removeGame(cartItems[game])
+                    }
+                )
+                Divider()
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
@@ -64,7 +78,9 @@ fun CartActivity(navController: NavController, cartViewModel: CartViewModel) {
                 Text(text = "Paga")
             }
         }
+    }
 }
+
 
 
 @Composable
