@@ -1,22 +1,22 @@
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.jokiandroid.model.CartItem
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.viewmodel.CartViewModel
 
 @Composable
-fun CartActivity(navController: NavController, cartViewModel: CartViewModel = viewModel()) {
-    val cart by cartViewModel.cart.collectAsState()
+fun CartActivity(navController: NavController, cartViewModel: CartViewModel) {
+    val cartItems by cartViewModel.cartItems.observeAsState(emptyList())
 
     Column(
         modifier = Modifier
@@ -33,14 +33,15 @@ fun CartActivity(navController: NavController, cartViewModel: CartViewModel = vi
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
-            items(cart.games) { game ->
-                CartItem(
-                    game = game,
-                    onRemove = {
-                        cartViewModel.removeFromCart(game)
-                    }
-                )
-                Divider()
+                items(cartItems.size) { cartItems ->
+                    CartItem(
+                        cartItem = cartItems[cartItem],
+                        onRemove = {
+                            cartViewModel.removeFromCart(game)
+                        }
+                    )
+                    Divider()
+                }
             }
         }
 
@@ -65,7 +66,7 @@ fun CartActivity(navController: NavController, cartViewModel: CartViewModel = vi
 }
 
 @Composable
-fun CartItem(game: Game, onRemove: () -> Unit) {
+fun CartItem(cartItem: CartItem, onRemove: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
