@@ -1,3 +1,0 @@
-CREATE DATABASE jokidb;
-CREATE USER jokiuser WITH PASSWORD 'jokiuser';
-GRANT ALL PRIVILEGES ON DATABASE jokidb TO jokiuser;
