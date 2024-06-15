@@ -12,6 +12,7 @@ import { ListProductsComponent } from './component/list-products/list-products.c
 import { LoginComponent } from './component/login/login.component';
 import { ProductComponent } from './component/product/product.component';
 import { CartComponent } from './component/cart/cart.component';
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { CartComponent } from './component/cart/cart.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    HttpClientModule
   ],
   providers: [
     {
