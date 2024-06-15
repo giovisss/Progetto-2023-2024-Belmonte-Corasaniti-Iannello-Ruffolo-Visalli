@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+//AL MOMENTO COMMENTATO IN USER CONTROLLER
+//NON HA ALTRI USI PER ORA
+
 @Service
 public class KeycloakAdminService {
 
@@ -33,6 +37,9 @@ public class KeycloakAdminService {
     private String adminPassword;
 
     private Keycloak getInstance() {
+        System.out.println("Auth server URL: " + authServerUrl);
+        System.out.println("Realm: " + realm);
+
         return KeycloakBuilder.builder()
                 .serverUrl(authServerUrl)
                 .realm(realm)
@@ -46,7 +53,10 @@ public class KeycloakAdminService {
 
     public List<String> getUserRoles(String userId) {
         Keycloak keycloak = getInstance();
+        System.out.println("Keycloak: " + keycloak.toString());
         RealmResource realmResource = keycloak.realm(realm);
+        System.out.println(realmResource.toString());
+        System.out.println(realmResource.roles().list().toString());
 
         List<RoleRepresentation> roles = realmResource.users().get(userId).roles().getAll().getRealmMappings();
         return roles.stream().map(RoleRepresentation::getName).collect(Collectors.toList());
