@@ -43,9 +43,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     private String getPricipleClaimName(Jwt jwt) {
         String claimName = JwtClaimNames.SUB;
 
+//        commentare se si vuole usare l'id invece del nome
         if(principleAttribute != null) {
             claimName = principleAttribute;
         }
+
         return jwt.getClaim(claimName);
     }
 

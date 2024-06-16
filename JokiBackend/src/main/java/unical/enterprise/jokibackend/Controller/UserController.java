@@ -1,13 +1,8 @@
 package unical.enterprise.jokibackend.Controller;
 
-
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import unical.enterprise.jokibackend.Service.KeycloakAdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,5 +29,10 @@ public class UserController {
     @PreAuthorize("hasRole('client_admin')")
     public String diocane2() {
         return "diocane 2";
+    }
+
+    @PostMapping("/user-data")
+    public String userData() {
+        return "username/id: " + SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
