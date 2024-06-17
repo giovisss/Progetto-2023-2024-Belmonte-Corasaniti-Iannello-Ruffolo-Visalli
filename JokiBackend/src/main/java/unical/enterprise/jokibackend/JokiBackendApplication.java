@@ -7,13 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class JokiBackendApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(JokiBackendApplication.class, args);
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 }
