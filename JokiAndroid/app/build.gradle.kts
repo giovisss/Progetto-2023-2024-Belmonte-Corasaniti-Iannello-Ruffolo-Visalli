@@ -8,6 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        manifestPlaceholders["appAuthRedirectScheme"] = "joki"
         applicationId = "com.example.jokiandroid"
         minSdk = 30
         targetSdk = 34
@@ -68,5 +69,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
+    implementation (libs.appauth)// boh
+    // Retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
 
+    // Coroutine Call Adapter (per usare le coroutine con Retrofit)
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
+
+    // Gson (per la serializzazione/deserializzazione JSON)
+    implementation (libs.gson)
 }

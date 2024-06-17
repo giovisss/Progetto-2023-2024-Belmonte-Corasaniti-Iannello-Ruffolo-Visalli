@@ -1,7 +1,10 @@
-package com.example.jokiandroid
+package com.example.jokiandroid.activity
 
 import CartActivity
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,53 +31,75 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.viewmodel.CartViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var authManager: AuthManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        authManager = AuthManager(this)
         setContent {
             JokiAndroidTheme {
                 Surface {
-                        MainScreen()
-                    }
+                    MainScreen(authManager)
                 }
             }
         }
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        authManager.handleAuthorizationResponse(
+            requestCode,
+            resultCode,
+            data
+        ) { accessToken, idToken ->
+            if (accessToken != null && idToken != null) {
+                // Usa i token come necessario
+                Log.d("Auth", "Access Token: $accessToken")
+                Log.d("Auth", "ID Token: $idToken")
+            } else {
+                // Gestisci l'errore di autenticazione
+                Log.e("Auth", "Authentication failed")
+            }
+        }
+    }
+}
+
 @Composable
-fun MainScreen() { //navController per gestire la navigazione tra le varie pagine
+fun MainScreen(authManager: AuthManager) { //navController per gestire la navigazione tra le varie pagine
     val navController = rememberNavController()
     val cartViewModel = remember { CartViewModel() }
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") { JokiHome(navController, cartViewModel) }
+        composable("home") { JokiHome(navController, cartViewModel, authManager) }
         composable("cart") { CartActivity(navController, cartViewModel) }
+        composable("login") { LoginActivity(navController) }
     }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JokiHome(navController: NavController, cartViewModel: CartViewModel) {
+fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authManager: AuthManager) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(DrawerValue.Closed) //crea e ricorda lo stato del drawer
     val coroutineScope = rememberCoroutineScope() //coroutine ( eseguire operazioni asincrone), questo crea un coroutineScope che è un contesto di esecuzione delle coroutine
+    val localContext = LocalContext.current
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -87,7 +112,14 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     label = { Text(text = "Login") },
                     selected = false,
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        coroutineScope.launch {
+                        drawerState.close()
+                        }
+                        // Avvia il flusso di autorizzazione
+                        authManager.startAuthorization(localContext as Activity)
+                        navController.navigate("login")
+                    }
                 )
                 NavigationDrawerItem(
                     label = { Text(text = "Home") },
