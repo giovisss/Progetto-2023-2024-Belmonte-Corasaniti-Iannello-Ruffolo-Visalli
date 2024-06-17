@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Config;
+package unical.enterprise.jokibackend.Component;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;

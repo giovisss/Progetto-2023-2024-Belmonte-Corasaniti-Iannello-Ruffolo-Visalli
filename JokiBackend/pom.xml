@@ -82,50 +82,50 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-boot-starter</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-admin-client</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-core</artifactId>
-            <version>25.0.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-adapter-core -->
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-adapter-core</artifactId>
-            <version>24.0.5</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-security-adapter -->
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-security-adapter</artifactId>
-            <version>24.0.5</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-adapter -->
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-adapter</artifactId>
-            <version>18.0.2</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
-            <version>25.0.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-starter -->
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-starter</artifactId>
-            <version>24.0.5</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-core</artifactId>-->
+<!--            <version>25.0.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.keycloak/keycloak-adapter-core &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-adapter-core</artifactId>-->
+<!--            <version>24.0.5</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-security-adapter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-security-adapter</artifactId>-->
+<!--            <version>24.0.5</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-adapter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-boot-adapter</artifactId>-->
+<!--            <version>18.0.2</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-admin-client</artifactId>-->
+<!--            <version>25.0.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.keycloak/keycloak-spring-boot-starter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-boot-starter</artifactId>-->
+<!--            <version>24.0.5</version>-->
+<!--        </dependency>-->
 
 
 

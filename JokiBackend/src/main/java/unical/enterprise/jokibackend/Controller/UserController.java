@@ -9,16 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-//    @Autowired
-//    private KeycloakAdminService keycloakAdminService;
-//
-//    @GetMapping("/{userId}/roles")
-//    public List<String> getUserRoles(@PathVariable String userId) {
-//        System.out.println("userId: " + userId);
-//        keycloakAdminService.getUserRoles(userId).forEach(System.out::println);
-//        return keycloakAdminService.getUserRoles(userId);
-//    }
-
     @GetMapping("/diocane")
     @PreAuthorize("hasRole('client_user')")
     public String diocane() {
@@ -29,6 +19,18 @@ public class UserController {
     @PreAuthorize("hasRole('client_admin')")
     public String diocane2() {
         return "diocane 2";
+    }
+
+    @GetMapping("/privato/{username}")
+    @PreAuthorize("#username == authentication.name")
+    public String privato(@PathVariable String username) {
+        return "HA ACCESSO";
+    }
+
+    @GetMapping("/amici/{username}")
+    @PreAuthorize("@userPermissionEvaluator.isFriend(authentication, #username)")
+    public String amici(@PathVariable String username) {
+        return "Sono amici";
     }
 
     @PostMapping("/user-data")
