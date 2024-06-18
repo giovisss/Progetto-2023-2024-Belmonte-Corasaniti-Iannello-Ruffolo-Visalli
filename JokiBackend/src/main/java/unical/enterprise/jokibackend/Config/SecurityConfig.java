@@ -28,7 +28,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
 
         http
                 .oauth2ResourceServer(oauth2 ->
