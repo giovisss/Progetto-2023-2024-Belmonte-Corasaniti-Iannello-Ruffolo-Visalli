@@ -1,6 +1,7 @@
-package unical.enterprise.jokibackend;
+package unical.enterprise.jokibackend.Service;
 
 import unical.enterprise.jokibackend.Config.KeycloakConfig;
+import unical.enterprise.jokibackend.Data.Credentials;
 import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
 import lombok.AllArgsConstructor;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -27,6 +28,8 @@ public class KeycloakService {
         user.setEmail(userDTO.getEmailId());
         user.setCredentials(Collections.singletonList(credential));
         user.setEnabled(true);
+
+        user.setEmailVerified(true);
 
         UsersResource instance = getInstance();
         instance.create(user);

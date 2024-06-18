@@ -24,9 +24,9 @@ public class KeycloakConfig {
             keycloak = KeycloakBuilder.builder()
                     .serverUrl(serverUrl)
                     .realm(realm)
-                    .grantType(OAuth2Constants.PASSWORD)
-                    .username(userName)
-                    .password(password)
+                    .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+//                    .username(userName)
+//                    .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
                     .resteasyClient(

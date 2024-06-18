@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend;
+package unical.enterprise.jokibackend.Data;
 
 import org.keycloak.representations.idm.CredentialRepresentation;
 

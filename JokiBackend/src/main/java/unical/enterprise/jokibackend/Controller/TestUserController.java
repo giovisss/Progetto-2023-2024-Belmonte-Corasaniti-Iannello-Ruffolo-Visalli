@@ -1,11 +1,12 @@
 package unical.enterprise.jokibackend.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
-import unical.enterprise.jokibackend.KeycloakService;
+import unical.enterprise.jokibackend.Service.KeycloakService;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,14 +45,32 @@ public class TestUserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody KeycloakUserDTO userDTO){
-        System.out.println(userDTO.getUserName());
-        System.out.println(userDTO.getPassword());
-        System.out.println(userDTO.getEmailId());
-        System.out.println(userDTO.getLastName());
-        System.out.println(userDTO.getFirstname());
+    public ResponseEntity<String> register(@RequestBody KeycloakUserDTO userDTO){
+        try {
+            service.addUser(userDTO);
+            return ResponseEntity.ok("User added successfully");
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error adding user");
+        }
+    }
 
-        service.addUser(userDTO);
-        return "User Added Successfully.";
+    @GetMapping("/user/{username}")
+    public ResponseEntity<KeycloakUserDTO> getUser(@PathVariable String username){
+        try {
+            var tmp = service.getUser(username).get(0);
+
+            KeycloakUserDTO userDTO = new KeycloakUserDTO();
+            userDTO.setUserName(tmp.getUsername());
+            userDTO.setEmailId(tmp.getEmail());
+            userDTO.setFirstname(tmp.getFirstName());
+            userDTO.setLastName(tmp.getLastName());
+
+            return ResponseEntity.ok(userDTO);
+        }
+        catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }
