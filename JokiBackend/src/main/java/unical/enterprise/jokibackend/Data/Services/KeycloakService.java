@@ -23,9 +23,6 @@ import unical.enterprise.jokibackend.Dto.UserDto;
 @Service
 public class KeycloakService {
     @Autowired
-    UserServiceImpl userService;
-
-    @Autowired
     UserDao userDao;
 
     @Autowired
