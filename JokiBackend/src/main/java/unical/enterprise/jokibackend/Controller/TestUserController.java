@@ -1,19 +1,33 @@
 package unical.enterprise.jokibackend.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+import unical.enterprise.jokibackend.Data.Dao.UserDao;
+import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Services.KeycloakService;
 import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
-import unical.enterprise.jokibackend.Service.KeycloakService;
+import unical.enterprise.jokibackend.Dto.UserDto;
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class TestUserController {
-    @Autowired
-    KeycloakService service;
+
+    private final KeycloakService service;
+    private final UserDao userDao;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/diocane")
     @PreAuthorize("hasRole('client_user')")
@@ -48,11 +62,25 @@ public class TestUserController {
     public ResponseEntity<String> register(@RequestBody KeycloakUserDTO userDTO){
         try {
             service.addUser(userDTO);
+            createLocalUser(userDTO);
             return ResponseEntity.ok("User added successfully");
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body("Error adding user");
         }
+    }
+
+    private User createLocalUser(KeycloakUserDTO userDTO) {
+        // per mappare direttamente dovremmo avere lo stesso nome degli attributi
+        // return userDao.save(modelMapper.map(userDTO, User.class));
+        UserDto user = new UserDto();
+        user.setUsername(userDTO.getUserName());
+        user.setEmail(userDTO.getEmailId());
+        user.setName(userDTO.getFirstname());
+        user.setSurname(userDTO.getLastName());
+        user.setPassword(userDTO.getPassword());
+        User userEntity = modelMapper.map(user, User.class);
+        return userDao.save(userEntity);
     }
 
     @GetMapping("/user/{username}")

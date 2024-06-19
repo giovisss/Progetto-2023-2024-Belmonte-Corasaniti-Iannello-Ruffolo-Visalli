@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Service;
+package unical.enterprise.jokibackend.Data.Services;
 
 import unical.enterprise.jokibackend.Config.KeycloakConfig;
 import unical.enterprise.jokibackend.Data.Credentials;
