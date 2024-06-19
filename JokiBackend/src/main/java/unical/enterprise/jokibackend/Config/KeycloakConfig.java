@@ -13,8 +13,8 @@ public class KeycloakConfig {
     public final static String realm = "JokiRealm";
     final static String clientId = "JokiBackend";
     final static String clientSecret = "BAAHnEU37J7LX0Do6sRcsDN9IZNVs20g";
-    final static String userName = "admin";
-    final static String password = "admin";
+//    final static String userName = "admin";
+//    final static String password = "admin";
 
     public KeycloakConfig() {
     }
@@ -34,5 +34,24 @@ public class KeycloakConfig {
                         ).build();
         }
         return keycloak;
+    }
+
+    public static String getUserToken(String username, String password){
+        var tmp = KeycloakBuilder.builder()
+                .serverUrl(serverUrl)
+                .realm(realm)
+                .grantType(OAuth2Constants.PASSWORD)
+                .username(username)
+                .password(password)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .resteasyClient(
+                        new ResteasyClientBuilder().connectionPoolSize(10).build()
+                ).build();
+
+        String token = tmp.tokenManager().getAccessTokenString();
+        tmp.close();
+
+        return token;
     }
 }
