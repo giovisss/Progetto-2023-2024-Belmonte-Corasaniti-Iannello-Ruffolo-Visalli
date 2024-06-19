@@ -1,6 +1,5 @@
 package unical.enterprise.jokibackend.Controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,11 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import unical.enterprise.jokibackend.Data.Dao.UserDao;
-import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.KeycloakService;
 import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
-import unical.enterprise.jokibackend.Dto.UserDto;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,8 +22,6 @@ import unical.enterprise.jokibackend.Dto.UserDto;
 public class TestUserController {
 
     private final KeycloakService service;
-    private final UserDao userDao;
-    private final ModelMapper modelMapper;
 
     @GetMapping("/diocane")
     @PreAuthorize("hasRole('client_user')")
