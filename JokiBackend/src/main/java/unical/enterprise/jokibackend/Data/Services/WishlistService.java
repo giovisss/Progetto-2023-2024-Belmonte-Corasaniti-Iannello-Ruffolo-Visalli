@@ -1,7 +1,7 @@
 package unical.enterprise.jokibackend.Data.Services;
 
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
-import unical.enterprise.jokibackend.Dto.WishlistDto;
+import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import java.util.UUID;
 import java.util.Collection;
 

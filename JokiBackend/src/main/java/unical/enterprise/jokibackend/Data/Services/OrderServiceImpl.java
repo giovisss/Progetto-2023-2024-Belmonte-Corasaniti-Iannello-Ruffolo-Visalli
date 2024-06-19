@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.OrderDao;
 import unical.enterprise.jokibackend.Data.Entities.Order;
-import unical.enterprise.jokibackend.Dto.OrderDto;
+import unical.enterprise.jokibackend.Data.Dto.OrderDto;
 
 import java.util.Collection;
 import java.util.UUID;

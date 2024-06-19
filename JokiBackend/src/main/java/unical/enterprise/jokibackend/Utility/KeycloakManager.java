@@ -1,11 +1,11 @@
-package unical.enterprise.jokibackend.Config;
+package unical.enterprise.jokibackend.Utility;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 
-public class KeycloakConfig {
+public class KeycloakManager {
 
     static Keycloak keycloak = null;
 
@@ -16,7 +16,7 @@ public class KeycloakConfig {
 //    final static String userName = "admin";
 //    final static String password = "admin";
 
-    public KeycloakConfig() {
+    public KeycloakManager() {
     }
 
     public static Keycloak getInstance(){

@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import unical.enterprise.jokibackend.Config.KeycloakConfig;
+import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
-import unical.enterprise.jokibackend.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 @AllArgsConstructor
 @Service
@@ -109,7 +109,7 @@ public class KeycloakService {
 
 
     public UsersResource getInstance(){
-        return KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
+        return KeycloakManager.getInstance().realm(KeycloakManager.realm).users();
     }
 
 

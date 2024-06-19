@@ -1,7 +1,7 @@
 package unical.enterprise.jokibackend.Data.Services;
 
 import unical.enterprise.jokibackend.Data.Entities.Order;
-import unical.enterprise.jokibackend.Dto.OrderDto;
+import unical.enterprise.jokibackend.Data.Dto.OrderDto;
 
 import java.util.Collection;
 import java.util.UUID;

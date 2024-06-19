@@ -3,9 +3,9 @@ package unical.enterprise.jokibackend.Controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unical.enterprise.jokibackend.Config.KeycloakConfig;
+import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Services.KeycloakService;
-import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -16,7 +16,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody KeycloakUserDTO userDTO) {
-        return ResponseEntity.ok(KeycloakConfig.getUserToken(userDTO.getUsername(), userDTO.getPassword()));
+        return ResponseEntity.ok(KeycloakManager.getUserToken(userDTO.getUsername(), userDTO.getPassword()));
     }
 
     @PostMapping("/register")

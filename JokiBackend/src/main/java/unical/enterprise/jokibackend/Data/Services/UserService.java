@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 public interface UserService {
 

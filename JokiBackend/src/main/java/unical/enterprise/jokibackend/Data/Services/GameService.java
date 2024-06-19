@@ -3,7 +3,7 @@ package unical.enterprise.jokibackend.Data.Services;
 import java.util.Collection;
 import java.util.UUID;
 
-import unical.enterprise.jokibackend.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
 public interface GameService {
 

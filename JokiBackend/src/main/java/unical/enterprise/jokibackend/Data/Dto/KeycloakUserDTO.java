@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Dto;
+package unical.enterprise.jokibackend.Data.Dto;
 
 import lombok.*;
 

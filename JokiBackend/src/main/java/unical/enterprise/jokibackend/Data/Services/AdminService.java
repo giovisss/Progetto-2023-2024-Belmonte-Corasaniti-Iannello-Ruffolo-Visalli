@@ -1,8 +1,8 @@
 package unical.enterprise.jokibackend.Data.Services;
 
 import unical.enterprise.jokibackend.Data.Entities.Admin;
-import unical.enterprise.jokibackend.Dto.AdminDto;
-import unical.enterprise.jokibackend.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.AdminDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
 import java.util.Collection;
 import java.util.UUID;

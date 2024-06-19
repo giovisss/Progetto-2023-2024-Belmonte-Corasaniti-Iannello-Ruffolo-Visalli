@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 @Service
 @RequiredArgsConstructor

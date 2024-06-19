@@ -5,8 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.AdminDao;
 import unical.enterprise.jokibackend.Data.Entities.Admin;
-import unical.enterprise.jokibackend.Dto.AdminDto;
-import unical.enterprise.jokibackend.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.AdminDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
 import java.util.Collection;
 import java.util.List;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Services.KeycloakService;
-import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 
 @RestController
 @RequestMapping("/api/users")
