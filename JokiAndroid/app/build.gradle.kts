@@ -79,4 +79,7 @@ dependencies {
 
     // Gson (per la serializzazione/deserializzazione JSON)
     implementation (libs.gson)
+
+    implementation (libs.androidx.navigation.compose.v253)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
 }

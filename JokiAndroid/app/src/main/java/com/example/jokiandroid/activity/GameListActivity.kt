@@ -1,6 +1,7 @@
 package com.example.jokiandroid.activity
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,19 +14,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jokiandroid.model.Game
-import com.example.jokiandroid.model.getFakeGames
 import com.example.jokiandroid.viewmodel.CartViewModel
+import com.example.jokiandroid.viewmodel.GameViewModel
 
 @Composable
-fun GameListPage(cartViewModel: CartViewModel) {
-    val gameList = getFakeGames()
+fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
+    val gameList by gameViewModel.games.observeAsState(emptyList())
     val cartItems = cartViewModel.cartItems.observeAsState(emptyList())
     Column(
         modifier = Modifier
@@ -35,9 +38,11 @@ fun GameListPage(cartViewModel: CartViewModel) {
         LazyColumn(
             content = {
                 itemsIndexed(gameList){index: Int, game: Game ->
-                    GameItem(item = game, onAddToCart = {
-                        cartViewModel.addGame(it)
-                    })
+                    GameItem(
+                        item = game,
+                        onAddToCart = { cartViewModel.addGame(it) },
+                        onGameClick = { navController.navigate("game_detail/${game.id}") }
+                    )
                 }
             }
         )
@@ -45,7 +50,7 @@ fun GameListPage(cartViewModel: CartViewModel) {
 }
 
 @Composable
-fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}){
+fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, onGameClick: (Game) -> Unit = {}){
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -53,6 +58,7 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}){
             .clip(RoundedCornerShape(15.dp))
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
+            .clickable { onGameClick(item) }
     ){
         Column(
             modifier = Modifier.weight(1f)

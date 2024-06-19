@@ -7,13 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    private const val BASE_URL = "http://localhost:8081/" // Sostituisci con l'URL del tuo server per ora non ho messo l'indirizzo ip spero funzioni localhost
+    private const val BASE_URL = "http://<your-server-ip>:8081/" // Sostituisci con l'indirizzo IP del tuo server
 
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(ApiService::class.java)
     }

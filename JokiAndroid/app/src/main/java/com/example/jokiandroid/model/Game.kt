@@ -1,26 +1,9 @@
 package com.example.jokiandroid.model
 
 data class Game(
-    var id: Int = 0,
+    var id: Int,
     var title: String,
     var price: Double,
     var description: String,
+    var image: String = ""
 )
-
-fun getFakeGames(): List<Game>{
-    return listOf<Game>(
-        Game(1,"Valorant", 35.0, "Gioco bellissimo"),
-        Game(2,"Rainbow six", 35.0, "Best gioco ever"),
-        Game(3,"XDefiant", 35.0, "Gioco"),
-        Game(4,"XDefiant", 35.0, "Gioco"),
-        Game(5,"XDefiant", 35.0, "Gioco"),
-        Game(6,"XDefiant", 35.0, "Gioco"),
-        Game(7,"XDefiant", 35.0, "Gioco"),
-        Game(8,"XDefiant", 35.0,"Gioco"),
-        Game(9,"XDefiant", 35.0,"Gioco"),
-        Game(10,"XDefiant", 35.0,"Gioco"),
-        Game(11,"XDefiant", 35.0,"Gioco"),
-        Game(12,"XDefiant", 35.0,"Gioco"),
-        Game(13,"XDefiant", 35.0,"Gioco")
-    )
-}

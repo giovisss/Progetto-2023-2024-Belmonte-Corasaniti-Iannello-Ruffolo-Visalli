@@ -19,11 +19,8 @@ class CartViewModel : ViewModel() {
     fun addGame(game: Game) {
         val currentList = _cartItems.value ?: emptyList()
         val item = currentList.find { it.id == game.id }
-        if (item != null) {
-            val updatedItem = item.copy(quantity = item.quantity + 1)
-            _cartItems.value = currentList.map { if (it.id == game.id) updatedItem else it }
-        } else {
-            _cartItems.value = currentList + CartItem(game.id, game.title, 1, game.price)
+        if (item == null) {
+            _cartItems.value = currentList + CartItem(game.id, game.title, game.price)
         }
         Log.d("CartViewModel", "Added game: ${game.title}")
         Log.d("CartViewModel", "number of games: ${currentList.size}")
@@ -43,6 +40,6 @@ class CartViewModel : ViewModel() {
 
     fun getTotalPrice(): Double {
         val currentList = _cartItems.value ?: emptyList()
-        return currentList.sumOf { it.price * it.quantity }
+        return currentList.sumOf { it.price }
     }
 }

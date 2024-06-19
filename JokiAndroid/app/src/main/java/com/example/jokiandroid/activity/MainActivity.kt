@@ -1,21 +1,22 @@
 package com.example.jokiandroid.activity
 
 import CartActivity
-import android.app.Activity
+import GameDetailScreen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.viewmodel.CartViewModel
+import com.example.jokiandroid.viewmodel.GameViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -85,21 +87,27 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(authManager: AuthManager) { //navController per gestire la navigazione tra le varie pagine
     val navController = rememberNavController()
     val cartViewModel = remember { CartViewModel() }
+    val viewModel = remember { GameViewModel() }
+
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") { JokiHome(navController, cartViewModel, authManager) }
+        composable("home") { JokiHome(navController, cartViewModel, authManager, viewModel ) }
         composable("cart") { CartActivity(navController, cartViewModel) }
         composable("login") { LoginActivity(navController) }
+        composable("game_detail/{gameId}") { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId")?.toIntOrNull()
+            gameId?.let { GameDetailScreen(gameId = it, viewModel = viewModel) }
+        }
     }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authManager: AuthManager) {
+fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authManager: AuthManager, gameViewModel: GameViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(DrawerValue.Closed) //crea e ricorda lo stato del drawer
     val coroutineScope = rememberCoroutineScope() //coroutine ( eseguire operazioni asincrone), questo crea un coroutineScope che è un contesto di esecuzione delle coroutine
-    val localContext = LocalContext.current
+    //val localContext = LocalContext.current
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -107,7 +115,7 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authMan
             ModalDrawerSheet {
                 Text("MENU'", modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.primary,)
-                Divider()
+                HorizontalDivider()
                 NavigationDrawerItem(
                     modifier = Modifier.padding(bottom = 16.dp),
                     label = { Text(text = "Login") },
@@ -116,8 +124,8 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authMan
                         coroutineScope.launch {
                         drawerState.close()
                         }
-                        // Avvia il flusso di autorizzazione
-                        authManager.startAuthorization(localContext as Activity)
+                        // Avvia il flusso di autorizzazione (crasha per network error)
+                        //authManager.startAuthorization(localContext as Activity)
                         navController.navigate("login")
                     }
                 )
@@ -181,9 +189,9 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authMan
                     scrollBehavior = scrollBehavior,
                 )
             },
-        ) { innerPadding -> innerPadding
-            Surface(modifier = Modifier.padding(innerPadding)) {
-                GameListPage(cartViewModel)
+        ) { innerPadding -> //innerPadding
+            Column(modifier = Modifier.padding(innerPadding)) {
+                GameListPage(gameViewModel,cartViewModel, navController)
             }
         }
     }

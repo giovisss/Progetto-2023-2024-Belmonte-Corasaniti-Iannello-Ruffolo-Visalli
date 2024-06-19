@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("endpoint/del/tuo/server")
-    suspend fun getGames(): Response<Game>
+    @GET("games")
+    suspend fun getGames(): Response<List<Game>>
 }
