@@ -62,7 +62,6 @@ public class TestUserController {
     public ResponseEntity<String> register(@RequestBody KeycloakUserDTO userDTO){
         try {
             service.addUser(userDTO);
-            createLocalUser(userDTO);
             return ResponseEntity.ok("User added successfully");
         }
         catch (Exception e) {
@@ -70,18 +69,6 @@ public class TestUserController {
         }
     }
 
-    private User createLocalUser(KeycloakUserDTO userDTO) {
-        // per mappare direttamente dovremmo avere lo stesso nome degli attributi
-        // return userDao.save(modelMapper.map(userDTO, User.class));
-        UserDto user = new UserDto();
-        user.setUsername(userDTO.getUserName());
-        user.setEmail(userDTO.getEmailId());
-        user.setName(userDTO.getFirstname());
-        user.setSurname(userDTO.getLastName());
-        user.setPassword(userDTO.getPassword());
-        User userEntity = modelMapper.map(user, User.class);
-        return userDao.save(userEntity);
-    }
 
     @GetMapping("/user/{username}")
     public ResponseEntity<KeycloakUserDTO> getUser(@PathVariable String username){

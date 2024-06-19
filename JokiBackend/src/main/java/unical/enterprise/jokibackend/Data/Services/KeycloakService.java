@@ -1,23 +1,35 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import unical.enterprise.jokibackend.Config.KeycloakConfig;
-import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
-import lombok.AllArgsConstructor;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import unical.enterprise.jokibackend.Config.KeycloakConfig;
+import unical.enterprise.jokibackend.Data.Dao.UserDao;
+import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Dto.UserDto;
 
 @AllArgsConstructor
 @Service
 public class KeycloakService {
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    UserDao userDao;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     public void addUser(KeycloakUserDTO userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
@@ -34,12 +46,26 @@ public class KeycloakService {
         UsersResource instance = getInstance();
 
         var response = instance.create(user);
-
+        
         //se andata a buon fine, aggiungi user al db locale
+        try {
         if(response.getStatus() == 201){
-            var tmp = getUser(userDTO.getUserName()).get(0);
-            //tmp contiene user di keycloak appena aggiunto
+            var tmp = getUser(user.getUsername()).get(0);
+            createLocalUser(tmp);
         }
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+    }
+
+    private User createLocalUser(UserRepresentation userRepresentation) {
+        UserDto userDto = new UserDto();
+        userDto.setId(UUID.fromString(userRepresentation.getId()));
+        userDto.setUsername(userRepresentation.getUsername());
+        userDto.setEmail(userRepresentation.getEmail());
+        userDto.setName(userRepresentation.getFirstName());
+        userDto.setSurname(userRepresentation.getLastName());
+        return userDao.save(modelMapper.map(userDto, User.class));
     }
 
 
