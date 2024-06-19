@@ -41,9 +41,8 @@ public class KeycloakService {
         user.setEmailVerified(true);
 
         UsersResource instance = getInstance();
-
         var response = instance.create(user);
-        
+
         //se andata a buon fine, aggiungi user al db locale
         if(response.getStatus() == 201){
             var tmp = getUser(user.getUsername()).get(0);
