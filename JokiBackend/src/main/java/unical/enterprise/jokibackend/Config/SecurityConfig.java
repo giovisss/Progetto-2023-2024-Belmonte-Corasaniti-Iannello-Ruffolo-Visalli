@@ -29,8 +29,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(
-                        "/api/users/register",
-                        "/api/users/user/{username}"
+                        "/api/auth/**"
                 ).permitAll())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 

@@ -1,7 +1,7 @@
 package unical.enterprise.jokibackend.Data.Services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import unical.enterprise.jokibackend.Config.KeycloakConfig;
-import unical.enterprise.jokibackend.Data.Credentials;
 import unical.enterprise.jokibackend.Dto.KeycloakUserDTO;
 import lombok.AllArgsConstructor;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -16,11 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class KeycloakService {
-
+    @Autowired
+    UserServiceImpl userService;
 
     public void addUser(KeycloakUserDTO userDTO){
-        CredentialRepresentation credential = Credentials
-                .createPasswordCredentials(userDTO.getPassword());
+        CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getUserName());
         user.setFirstName(userDTO.getFirstname());
@@ -32,19 +32,25 @@ public class KeycloakService {
         user.setEmailVerified(true);
 
         UsersResource instance = getInstance();
-        instance.create(user);
+
+        var response = instance.create(user);
+
+        //se andata a buon fine, aggiungi user al db locale
+        if(response.getStatus() == 201){
+            var tmp = getUser(userDTO.getUserName()).get(0);
+            //tmp contiene user di keycloak appena aggiunto
+        }
     }
+
 
     public List<UserRepresentation> getUser(String userName){
         UsersResource usersResource = getInstance();
-        List<UserRepresentation> user = usersResource.search(userName, true);
-        return user;
-
+        return usersResource.search(userName, true);
     }
 
+
     public void updateUser(String userId, KeycloakUserDTO userDTO){
-        CredentialRepresentation credential = Credentials
-                .createPasswordCredentials(userDTO.getPassword());
+        CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getUserName());
         user.setFirstName(userDTO.getFirstname());
@@ -55,6 +61,8 @@ public class KeycloakService {
         UsersResource usersResource = getInstance();
         usersResource.get(userId).update(user);
     }
+
+
     public void deleteUser(String userId){
         UsersResource usersResource = getInstance();
         usersResource.get(userId)
@@ -68,6 +76,7 @@ public class KeycloakService {
                 .sendVerifyEmail();
     }
 
+
     public void sendResetPassword(String userId){
         UsersResource usersResource = getInstance();
 
@@ -75,9 +84,17 @@ public class KeycloakService {
                 .executeActionsEmail(Arrays.asList("UPDATE_PASSWORD"));
     }
 
+
     public UsersResource getInstance(){
         return KeycloakConfig.getInstance().realm(KeycloakConfig.realm).users();
     }
 
 
+    private CredentialRepresentation createPasswordCredentials(String password) {
+        CredentialRepresentation passwordCredentials = new CredentialRepresentation();
+        passwordCredentials.setTemporary(false);
+        passwordCredentials.setType(CredentialRepresentation.PASSWORD);
+        passwordCredentials.setValue(password);
+        return passwordCredentials;
+    }
 }
