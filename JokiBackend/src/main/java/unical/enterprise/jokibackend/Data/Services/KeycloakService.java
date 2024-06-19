@@ -31,7 +31,7 @@ public class KeycloakService {
     public void addUser(KeycloakUserDTO userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(userDTO.getUserName());
+        user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstname());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmailId());
@@ -75,7 +75,7 @@ public class KeycloakService {
     public void updateUser(String userId, KeycloakUserDTO userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
-        user.setUsername(userDTO.getUserName());
+        user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstname());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmailId());

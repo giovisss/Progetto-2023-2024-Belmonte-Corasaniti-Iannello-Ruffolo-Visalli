@@ -11,7 +11,7 @@ import java.util.UUID;
 @ToString
 public class KeycloakUserDTO {
     private UUID userId;
-    private String userName;
+    private String username;
     private String emailId;
     private String password;
     private String firstname;

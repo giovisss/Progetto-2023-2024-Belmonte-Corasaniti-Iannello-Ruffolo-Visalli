@@ -16,7 +16,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody KeycloakUserDTO userDTO) {
-        return ResponseEntity.ok(KeycloakConfig.getUserToken(userDTO.getUserName(), userDTO.getPassword()));
+        return ResponseEntity.ok(KeycloakConfig.getUserToken(userDTO.getUsername(), userDTO.getPassword()));
     }
 
     @PostMapping("/register")

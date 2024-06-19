@@ -70,7 +70,7 @@ public class TestUserController {
             var tmp = service.getUser(username).get(0);
 
             KeycloakUserDTO userDTO = new KeycloakUserDTO();
-            userDTO.setUserName(tmp.getUsername());
+            userDTO.setUsername(tmp.getUsername());
             userDTO.setEmailId(tmp.getEmail());
             userDTO.setFirstname(tmp.getFirstName());
             userDTO.setLastName(tmp.getLastName());
