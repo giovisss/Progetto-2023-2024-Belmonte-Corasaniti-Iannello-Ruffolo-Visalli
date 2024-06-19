@@ -28,7 +28,7 @@ public class KeycloakService {
     @Autowired
     ModelMapper modelMapper;
 
-    public void addUser(KeycloakUserDTO userDTO){
+    public User addUser(KeycloakUserDTO userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getUsername());
@@ -45,14 +45,12 @@ public class KeycloakService {
         var response = instance.create(user);
         
         //se andata a buon fine, aggiungi user al db locale
-        try {
         if(response.getStatus() == 201){
             var tmp = getUser(user.getUsername()).get(0);
-            createLocalUser(tmp);
+            return createLocalUser(tmp);
         }
-        } catch (Exception e) {
-            System.out.println("Errore: " + e.getMessage());
-        }
+
+        return null;
     }
 
     private User createLocalUser(UserRepresentation userRepresentation) {

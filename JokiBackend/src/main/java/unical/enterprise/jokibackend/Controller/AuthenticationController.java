@@ -20,8 +20,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody KeycloakUserDTO userDTO) {
-        service.addUser(userDTO);
-        return "register";
+    public ResponseEntity<String> register(@RequestBody KeycloakUserDTO userDTO) {
+        if(service.addUser(userDTO) != null)
+            return ResponseEntity.ok(KeycloakManager.getUserToken(userDTO.getUsername(), userDTO.getPassword()));
+
+        return ResponseEntity.badRequest().body("Error while registering user");
     }
 }
