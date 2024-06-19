@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
@@ -28,6 +29,7 @@ public class KeycloakService {
     @Autowired
     ModelMapper modelMapper;
 
+    @Transactional
     public User addUser(KeycloakUserDTO userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
@@ -41,12 +43,17 @@ public class KeycloakService {
         user.setEmailVerified(true);
 
         UsersResource instance = getInstance();
-        var response = instance.create(user);
-
+        
         //se andata a buon fine, aggiungi user al db locale
-        if(response.getStatus() == 201){
-            var tmp = getUser(user.getUsername()).get(0);
-            return createLocalUser(tmp);
+        try {
+            var response = instance.create(user);
+            if(response.getStatus() == 201){
+                var tmp = getUser(user.getUsername()).get(0);
+                return createLocalUser(tmp);
+            }
+        } catch (Exception e){
+            deleteUser(getUser(user.getUsername()).get(0).getId());
+            userDao.deleteByUsername(user.getUsername());
         }
 
         return null;
