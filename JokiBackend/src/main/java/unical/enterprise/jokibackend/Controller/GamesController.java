@@ -38,26 +38,35 @@ public class GamesController {
 
     @GetMapping("")
     @Produces("application/json")
-    public ResponseEntity<String> getGamesList(@RequestParam String method, @RequestParam String value){
+    public ResponseEntity<String> getGamesList(@RequestParam(required = false) String method, @RequestParam(required = false) String value){
         try {
-            switch(method) {
-                case "title":
-                    GameDto gameByTitle = gameService.getGameByTitle(value);
-                    return ResponseEntity.ok(new Gson().toJson(gameByTitle));
-                case "author":
-                    GameDto gameByAuthor = gameService.getGameByAuthor(value);
-                    return ResponseEntity.ok(new Gson().toJson(gameByAuthor));
-                case "genre":
-                    GameDto gameByGenre = gameService.getGameByGenre(value);
-                    return ResponseEntity.ok(new Gson().toJson(gameByGenre));
-                default:
-                    Collection<GameDto> games = gameService.findAll();
-                    return ResponseEntity.ok(new Gson().toJson(games));
+            if(method == null) method = "";
+            else if(value == null || value.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("value cannot be empty");
             }
+
+            return switch (method) {
+                case "title" -> {
+                    GameDto gameByTitle = gameService.getGameByTitle(value);
+                    yield ResponseEntity.ok(new Gson().toJson(gameByTitle));
+                }
+                case "author" -> {
+                    GameDto gameByAuthor = gameService.getGameByAuthor(value);
+                    yield ResponseEntity.ok(new Gson().toJson(gameByAuthor));
+                }
+                case "genre" -> {
+                    GameDto gameByGenre = gameService.getGameByGenre(value);
+                    yield ResponseEntity.ok(new Gson().toJson(gameByGenre));
+                }
+                default -> {
+                    Collection<GameDto> games = gameService.findAll();
+                    yield ResponseEntity.ok(new Gson().toJson(games));
+                }
+            };
         }
         catch (Exception e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("An error occurred");
         }
     }
 

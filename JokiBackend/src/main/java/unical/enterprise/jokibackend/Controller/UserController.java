@@ -33,7 +33,7 @@ public class UserController {
         }
         catch (Exception e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("An error occurred");
         }
     }
 
@@ -50,7 +50,7 @@ public class UserController {
         }
         catch (Exception e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("An error occurred");
         }
     }
 
@@ -65,7 +65,7 @@ public class UserController {
         }
         catch (Exception e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("An error occurred");
         }
     }
 
@@ -79,9 +79,7 @@ public class UserController {
         }
         catch (Exception e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("An error occurred");
         }
     }
-
-
 }
