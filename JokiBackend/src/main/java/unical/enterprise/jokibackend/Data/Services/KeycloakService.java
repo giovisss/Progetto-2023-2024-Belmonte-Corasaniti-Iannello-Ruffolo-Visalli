@@ -92,10 +92,10 @@ public class KeycloakService {
     }
 
 
-    public void deleteUser(String userId){
+    public void deleteUser(String username){
         UsersResource usersResource = getInstance();
-        usersResource.get(userId)
-                .remove();
+        usersResource.get(username).remove();
+        userService.deleteByUsername(username);
     }
 
 

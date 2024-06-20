@@ -68,6 +68,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
+    public void deleteByUsername(String username) {
+        userDao.deleteByUsername(username);
+    }
+
     private UserDto checkBeforeReturn(User user) {
         if(user == null) return null;
 

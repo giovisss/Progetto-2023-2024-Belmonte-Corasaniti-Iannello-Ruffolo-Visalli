@@ -69,4 +69,20 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @DeleteMapping("/{username}")
+    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
+    @Produces("plain/text")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        try {
+            keycloakService.deleteUser(username);
+            return ResponseEntity.ok("User deleted");
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
 }
