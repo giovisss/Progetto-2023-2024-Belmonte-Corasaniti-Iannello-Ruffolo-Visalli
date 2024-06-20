@@ -15,7 +15,7 @@ public class GameDto {
     private String title;
     private Double price;
     private String imagePath;
-    private String category;
+    private String genre;
     private String author;
     private String publisher;
     private Date releaseDate;
