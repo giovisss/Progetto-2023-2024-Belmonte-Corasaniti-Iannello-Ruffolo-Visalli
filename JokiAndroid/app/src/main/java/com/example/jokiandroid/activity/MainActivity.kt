@@ -2,6 +2,7 @@ package com.example.jokiandroid.activity
 
 import CartActivity
 import GameDetailsActivity
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -65,19 +67,32 @@ class MainActivity : ComponentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        authManager.handleAuthorizationResponse(
-            requestCode,
-            resultCode,
-            data
-        ) { accessToken, idToken ->
-            if (accessToken != null && idToken != null) {
-                // Usa i token come necessario
-                Log.d("Auth", "Access Token: $accessToken")
-                Log.d("Auth", "ID Token: $idToken")
+        Log.d("Auth", "onActivityResult")
+        Log.d("Auth", "Request Code: $requestCode")
+        Log.d("Auth", "Result Code: $resultCode")
+        Log.d("Auth", "Data: $data")
+
+        if (requestCode == AuthManager.RC_AUTH) {
+            if (data != null) {
+                authManager.handleAuthorizationResponse(
+                    requestCode,
+                    resultCode,
+                    data
+                ) { accessToken, idToken ->
+                    if (accessToken != null && idToken != null) {
+                        // Usa i token come necessario
+                        Log.d("Auth", "Access Token: $accessToken")
+                        Log.d("Auth", "ID Token: $idToken")
+                    } else {
+                        // Gestisci l'errore di autenticazione
+                        Log.e("Auth", "Authentication failed")
+                    }
+                }
             } else {
-                // Gestisci l'errore di autenticazione
-                Log.e("Auth", "Authentication failed")
+                Log.e("Auth", "Intent data is null")
             }
+        } else {
+            Log.d("Auth", "Unknown request code: $requestCode")
         }
     }
 }
@@ -106,7 +121,7 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authMan
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(DrawerValue.Closed) //crea e ricorda lo stato del drawer
     val coroutineScope = rememberCoroutineScope() //coroutine ( eseguire operazioni asincrone), questo crea un coroutineScope che è un contesto di esecuzione delle coroutine
-    //val localContext = LocalContext.current
+    val localContext = LocalContext.current
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -124,7 +139,7 @@ fun JokiHome(navController: NavController, cartViewModel: CartViewModel, authMan
                         drawerState.close()
                         }
                         // Avvia il flusso di autorizzazione (crasha per network error)
-                        //authManager.startAuthorization(localContext as Activity)
+                        authManager.startAuthorization(localContext as Activity)
                         navController.navigate("login")
                     }
                 )

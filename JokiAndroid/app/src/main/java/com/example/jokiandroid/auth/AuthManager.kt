@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.example.jokiandroid.config.AuthConfig
+import net.openid.appauth.AppAuthConfiguration
+import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
@@ -15,29 +17,46 @@ import net.openid.appauth.ResponseTypeValues
 
 class AuthManager(private val context: Context) {
 
-    private val authService: AuthorizationService = AuthorizationService(context)
+    private val authService: AuthorizationService
+    private lateinit var authState: AuthState
+
+    init {
+        val appAuthConfiguration = AppAuthConfiguration.Builder()
+            .setConnectionBuilder(MyConnectionBuilder.INSTANCE)
+            .setSkipIssuerHttpsCheck(true)
+            .build()
+
+        Log.d("AuthManager", "AppAuthConfiguration created: $appAuthConfiguration")
+        authService = AuthorizationService(context, appAuthConfiguration)
+    }
 
     fun startAuthorization(activity: Activity) {
-        AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(AuthConfig.DISCOVERY_URI)
-        ) { serviceConfig, ex ->
-            if (serviceConfig != null) {
-                val authRequestBuilder = AuthorizationRequest.Builder(
-                    serviceConfig,
-                    AuthConfig.CLIENT_ID,
-                    ResponseTypeValues.CODE,
-                    Uri.parse(AuthConfig.REDIRECT_URI)
-                )
-                val authRequest = authRequestBuilder.build()
 
-                val customTabsIntent = authService.createCustomTabsIntentBuilder().build()
-                val authIntent = authService.getAuthorizationRequestIntent(authRequest, customTabsIntent)   //authIntent è un Intent esplicito creato utilizzando la libreria AppAuth. È utilizzato per avviare il flusso di autorizzazione dell'utente,
-                                                                                                            // aprendo un'interfaccia di autenticazione (come un browser o una WebView) che permette all'utente di inserire le proprie credenziali e autorizzare l'applicazione.
-                activity.startActivityForResult(authIntent, RC_AUTH)
-            } else {
-                Log.e("Auth", "Failed to fetch configuration", ex)
-            }
-        }
+        authState = AuthState()
+
+        AuthorizationServiceConfiguration.fetchFromUrl(
+            Uri.parse(AuthConfig.DISCOVERY_URI),
+            { serviceConfig, ex ->
+                if (serviceConfig != null) {
+                    val authRequestBuilder = AuthorizationRequest.Builder(
+                        serviceConfig,
+                        AuthConfig.CLIENT_ID,
+                        ResponseTypeValues.CODE,
+                        Uri.parse(AuthConfig.REDIRECT_URI)
+                    ).setScopes("openid")
+                    val authRequest = authRequestBuilder.build()
+
+                    Log.d("AuthManager", "AuthorizationRequest created: $authRequest")
+
+                    val customTabsIntent = authService.createCustomTabsIntentBuilder().build()
+                    val authIntent = authService.getAuthorizationRequestIntent(authRequest, customTabsIntent)
+                    activity.startActivityForResult(authIntent, RC_AUTH)
+                } else {
+                    Log.e("AuthManager", "Failed to fetch configuration", ex)
+                }
+            },
+            MyConnectionBuilder.INSTANCE
+        )
     }
 
     fun handleAuthorizationResponse(requestCode: Int, resultCode: Int, data: Intent?, onTokenReceived: (String?, String?) -> Unit) {
@@ -49,14 +68,16 @@ class AuthManager(private val context: Context) {
                 val tokenRequest = response.createTokenExchangeRequest()
                 authService.performTokenRequest(tokenRequest) { tokenResponse, exception ->
                     if (tokenResponse != null) {
+                        Log.d("Auth", "Access Token: ${tokenResponse.accessToken}")
+                        Log.d("Auth", "ID Token: ${tokenResponse.idToken}")
                         onTokenReceived(tokenResponse.accessToken, tokenResponse.idToken)
                     } else {
-                        Log.e("Auth", "Token Exchange failed", exception)
+                        Log.e("AuthManager", "Token Exchange failed", exception)
                         onTokenReceived(null, null)
                     }
                 }
             } else {
-                Log.e("Auth", "Authorization failed", ex)
+                Log.e("AuthManager", "Authorization failed", ex)
                 onTokenReceived(null, null)
             }
         }
