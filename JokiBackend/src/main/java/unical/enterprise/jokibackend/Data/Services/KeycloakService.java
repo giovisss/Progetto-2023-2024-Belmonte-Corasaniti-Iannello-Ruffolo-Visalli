@@ -23,11 +23,10 @@ import unical.enterprise.jokibackend.Data.Dto.UserDto;
 @AllArgsConstructor
 @Service
 public class KeycloakService {
-    @Autowired
-    UserDao userDao;
+    private final UserDao userDao;
+    private final ModelMapper modelMapper;
+    private final UserServiceImpl userService;
 
-    @Autowired
-    ModelMapper modelMapper;
 
     @Transactional
     public User addUser(KeycloakUserDTO userDTO){
@@ -75,18 +74,21 @@ public class KeycloakService {
         return usersResource.search(userName, true);
     }
 
-
-    public void updateUser(String userId, KeycloakUserDTO userDTO){
+    @Transactional
+    public UserDto updateUser(String userId, UserDto userDTO){
         CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
+
         user.setUsername(userDTO.getUsername());
-        user.setFirstName(userDTO.getFirstname());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmailId());
+        user.setFirstName(userDTO.getName());
+        user.setLastName(userDTO.getSurname());
+        user.setEmail(userDTO.getEmail());
         user.setCredentials(Collections.singletonList(credential));
 
         UsersResource usersResource = getInstance();
         usersResource.get(userId).update(user);
+
+        return userService.updateUser(userDTO.getUsername(), userDTO);
     }
 
 

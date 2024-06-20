@@ -18,7 +18,7 @@ public interface UserService {
 
     Collection<UserDto> getAllUsers();
 
-    UserDto updateUser(UUID id, UserDto userDto);
+    UserDto updateUser(String username, UserDto userDto);
 
     void delete(UUID id);
 }

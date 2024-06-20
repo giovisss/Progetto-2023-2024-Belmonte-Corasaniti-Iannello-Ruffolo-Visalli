@@ -28,19 +28,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(UUID id) {
         User user = userDao.findById(id).orElse(null);
-        return modelMapper.map(user, UserDto.class);
+        return checkBeforeReturn(user);
     }
     
     @Override
     public UserDto getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username).orElse(null);
-        return modelMapper.map(user, UserDto.class);
+        return checkBeforeReturn(user);
     }
     
     @Override
     public UserDto getUserByEmail(String email) {
         User user = userDao.findUserByEmail(email).orElse(null);
-        return modelMapper.map(user, UserDto.class);
+        return checkBeforeReturn(user);
     }
     
     @Override
@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UUID id, UserDto userDto) {
-        User user = userDao.findById(id).orElse(null);
+    public UserDto updateUser(String username, UserDto userDto) {
+        User user = userDao.findUserByUsername(username).orElse(null);
         if (user == null) {
             return null;
         }
@@ -65,5 +65,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID id) {
         userDao.deleteById(id);
+    }
+
+
+    private UserDto checkBeforeReturn(User user) {
+        if(user == null) return null;
+
+        return modelMapper.map(user, UserDto.class);
     }
 }

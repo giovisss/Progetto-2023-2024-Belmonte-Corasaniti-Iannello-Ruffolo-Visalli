@@ -1,18 +1,72 @@
-//package unical.enterprise.jokibackend.Controller;
-//
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.web.bind.annotation.*;
-//import unical.enterprise.jokibackend.Data.Services.KeycloakService;
-//
-//@RestController
-//@RequestMapping("/api/users")
-//@CrossOrigin(origins = "*")
-//@RequiredArgsConstructor
-//public class UserController {
-//
-//    private final KeycloakService service;
-//
-//
-//}
+package unical.enterprise.jokibackend.Controller;
+
+import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Services.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
+
+import javax.ws.rs.Produces;
+import java.util.logging.Logger;
+
+@RestController
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+public class UserController {
+    Logger logger = Logger.getLogger(UserController.class.getName());
+
+    private final KeycloakService keycloakService;
+    private final UserServiceImpl userService;
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('client_admin')")
+    @Produces("application/json")
+    public ResponseEntity<String> getUsersList(){
+        try {
+            Gson gson = new Gson();
+            var out = userService.getAllUsers();
+            return ResponseEntity.ok(gson.toJson(out));
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/{username}")
+    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
+    @Produces("application/json")
+    public ResponseEntity<String> getUser(@PathVariable String username) {
+        try {
+            Gson gson = new Gson();
+            var out = userService.getUserByUsername(username);
+
+            if (out == null) return ResponseEntity.notFound().build();
+            else return ResponseEntity.ok(gson.toJson(out));
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{username}")
+    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
+    @Produces("application/json")
+    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UserDto userDto) {
+        try {
+            Gson gson = new Gson();
+            var out = keycloakService.updateUser(username, userDto);
+            return ResponseEntity.ok(gson.toJson(out));
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+}
