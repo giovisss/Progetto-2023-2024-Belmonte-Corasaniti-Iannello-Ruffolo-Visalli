@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 @Service
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Override
     public void deleteByUsername(String username) {
         userDao.deleteByUsername(username);
     }

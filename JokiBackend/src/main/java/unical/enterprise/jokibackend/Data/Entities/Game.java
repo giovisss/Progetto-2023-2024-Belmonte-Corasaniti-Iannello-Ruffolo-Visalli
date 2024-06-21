@@ -56,5 +56,8 @@ public class Game {
     private Cart cart;
 
     @ManyToOne
-    private User user;
+    private Library library;
+
+    // @ManyToOne
+    // private User user;
 }

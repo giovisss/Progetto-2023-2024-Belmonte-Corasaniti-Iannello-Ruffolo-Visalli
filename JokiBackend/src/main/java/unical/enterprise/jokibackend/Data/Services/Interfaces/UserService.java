@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Data.Services;
+package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -21,4 +21,6 @@ public interface UserService {
     UserDto updateUser(String username, UserDto userDto);
 
     void delete(UUID id);
+
+    void deleteByUsername(String username);
 }

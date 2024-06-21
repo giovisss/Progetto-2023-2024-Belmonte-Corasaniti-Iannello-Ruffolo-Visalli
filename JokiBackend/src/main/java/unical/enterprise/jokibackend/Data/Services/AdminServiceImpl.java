@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.AdminDao;
 import unical.enterprise.jokibackend.Data.Entities.Admin;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Dto.AdminDto;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
@@ -20,7 +21,6 @@ public class AdminServiceImpl implements AdminService{
     private final AdminDao adminDao;
     private final ModelMapper modelMapper;
 
-    @Override
     public void save(Admin admin) {
         adminDao.save(admin);
     }
@@ -51,14 +51,14 @@ public class AdminServiceImpl implements AdminService{
                 .toList();
     }
 
-    @Override
-    public Collection<GameDto> getGamesInsertByAdminId(UUID id) {
-        List<GameDto> games = adminDao.findGamesInsertByAdminId(id)
-                .stream().map(game -> modelMapper
-                .map(game, GameDto.class))
-                .toList();
-        return games;
-    }
+    // @Override
+    // public Collection<GameDto> getGamesInsertByAdminId(UUID id) {
+    //     List<GameDto> games = adminDao.findGamesInsertByAdminId(id)
+    //             .stream().map(game -> modelMapper
+    //             .map(game, GameDto.class))
+    //             .toList();
+    //     return games;
+    // }
 
     @Override
     public AdminDto updateAdmin(UUID id, AdminDto adminDto) {
@@ -67,7 +67,12 @@ public class AdminServiceImpl implements AdminService{
         return modelMapper.map(admin, AdminDto.class);
     }
 
-    @Override
+    public AdminDto save(AdminDto adminDto) {
+        Admin admin = modelMapper.map(adminDto, Admin.class);
+        adminDao.save(admin);
+        return modelMapper.map(admin, AdminDto.class);
+    }
+
     public void delete(UUID id) {
         adminDao.deleteById(id);
     }

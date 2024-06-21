@@ -9,5 +9,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LibraryDao extends JpaRepository<Game, UUID> {
-    Optional<Collection<Game>> findGameByUser(User user);
+    // Optional<Collection<Game>> findGameByUser(User user);
 }

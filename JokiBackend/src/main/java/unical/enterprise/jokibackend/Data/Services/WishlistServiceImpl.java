@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import unical.enterprise.jokibackend.Data.Dao.WishlistDao;
 import java.util.Collection;

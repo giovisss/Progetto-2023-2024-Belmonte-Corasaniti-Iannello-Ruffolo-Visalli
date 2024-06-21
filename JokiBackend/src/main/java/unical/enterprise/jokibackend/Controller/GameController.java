@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Services.GameService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 @RestController
 @RequestMapping("/api/games")

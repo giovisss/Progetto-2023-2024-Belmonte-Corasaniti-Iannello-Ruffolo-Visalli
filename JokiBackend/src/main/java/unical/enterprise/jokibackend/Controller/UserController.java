@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
-import unical.enterprise.jokibackend.Data.Services.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
 
 import javax.ws.rs.Produces;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class UserController {
     Logger logger = Logger.getLogger(UserController.class.getName());
 
-    private final KeycloakService keycloakService;
+    private final KeycloakServiceImpl keycloakService;
     private final UserServiceImpl userService;
 
     @GetMapping("")

@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Dto;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto {
     private UUID id;
-    private String password;
     private String username;
     private String email;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private Date birthdate;
-    private String address;
+    private WishlistDto wishlist;
+    private Collection<CartDto> carts;
 }

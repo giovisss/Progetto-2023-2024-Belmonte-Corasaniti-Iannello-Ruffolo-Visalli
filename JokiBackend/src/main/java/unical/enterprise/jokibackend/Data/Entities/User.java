@@ -43,6 +43,9 @@ public class User {
     @OneToMany
     private Collection<Cart> cart;
 
-    @OneToMany
-    private Collection<Game> game;
+    @OneToOne
+    private Library library;
+
+    // @OneToMany
+    // private Collection<Game> game;
 }

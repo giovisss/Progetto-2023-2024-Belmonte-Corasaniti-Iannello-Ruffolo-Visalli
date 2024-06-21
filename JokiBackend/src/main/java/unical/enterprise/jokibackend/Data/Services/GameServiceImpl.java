@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 @Service
 @RequiredArgsConstructor

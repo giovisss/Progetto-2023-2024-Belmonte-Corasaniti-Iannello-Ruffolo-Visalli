@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import unical.enterprise.jokibackend.Data.Services.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 
 @RestController
@@ -21,7 +21,7 @@ import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 @RequiredArgsConstructor
 public class TestUserController {
 
-    private final KeycloakService service;
+    private final KeycloakServiceImpl service;
 
     @GetMapping("/diocane")
     @PreAuthorize("hasRole('client_user')")

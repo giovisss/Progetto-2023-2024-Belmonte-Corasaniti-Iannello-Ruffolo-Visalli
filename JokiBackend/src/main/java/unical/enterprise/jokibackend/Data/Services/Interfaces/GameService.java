@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Data.Services;
+package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
 import java.util.Collection;
 import java.util.UUID;

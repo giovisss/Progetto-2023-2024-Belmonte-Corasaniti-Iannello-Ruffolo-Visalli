@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Data.Services;
+package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;

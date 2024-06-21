@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services;
 
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,16 +17,17 @@ import lombok.AllArgsConstructor;
 import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeyCloakService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 @AllArgsConstructor
 @Service
-public class KeycloakService {
+public class KeycloakServiceImpl implements KeyCloakService{
     private final UserDao userDao;
     private final ModelMapper modelMapper;
-    private final UserServiceImpl userService;
-
+    private final UserService userService;
 
     @Transactional
     public User addUser(KeycloakUserDTO userDTO){
@@ -62,8 +64,8 @@ public class KeycloakService {
         userDto.setId(UUID.fromString(userRepresentation.getId()));
         userDto.setUsername(userRepresentation.getUsername());
         userDto.setEmail(userRepresentation.getEmail());
-        userDto.setName(userRepresentation.getFirstName());
-        userDto.setSurname(userRepresentation.getLastName());
+        userDto.setFirstName(userRepresentation.getFirstName());
+        userDto.setLastName(userRepresentation.getLastName());
         return userDao.save(modelMapper.map(userDto, User.class));
     }
 
@@ -75,14 +77,14 @@ public class KeycloakService {
 
     @Transactional
     public UserDto updateUser(String userId, UserDto userDTO){
-        CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
+        // CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
 
         user.setUsername(userDTO.getUsername());
-        user.setFirstName(userDTO.getName());
-        user.setLastName(userDTO.getSurname());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-        user.setCredentials(Collections.singletonList(credential));
+        // user.setCredentials(Collections.singletonList(credential));
 
         UsersResource usersResource = getInstance();
         usersResource.get(userId).update(user);

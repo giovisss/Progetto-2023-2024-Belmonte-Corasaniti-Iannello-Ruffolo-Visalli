@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Utility.KeycloakManager;
-import unical.enterprise.jokibackend.Data.Services.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 
 @RestController
@@ -12,7 +12,7 @@ import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final KeycloakService service;
+    private final KeycloakServiceImpl service;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody KeycloakUserDTO userDTO) {
