@@ -4,12 +4,16 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import javax.ws.rs.Produces;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -17,27 +21,18 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Services.GameService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
 
 @RestController
 @RequestMapping("/api/games")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-public class GamesController {
+public class GameController {
     
     private final GameService gameService;
     
     Logger logger = Logger.getLogger(UserController.class.getName());
 
-    @GetMapping("")
-    @Produces("application/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(@RequestParam(required = false) String method, @RequestParam(required = false) String value){
         try {
             if(method == null) method = "";
@@ -70,32 +65,65 @@ public class GamesController {
         }
     }
 
-    @GetMapping("/{id}")
-    @Produces("application/json")
-    public GameDto getGameById(@RequestParam UUID id) {
-        // sistemare json
-        return gameService.getGameById(id);
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<String> getGameById(@RequestParam UUID id) {
+        try {
+            GameDto game = gameService.getGameById(id);
+            if (game != null) {
+                return ResponseEntity.ok(new Gson().toJson(game));
+            } else {
+                throw new Exception("Game not found");
+            }
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
     }
 
     @PostMapping("")
     @PreAuthorize("hasRole('client_admin')")
-    public GameDto addGame(@RequestBody GameDto gameDto) {
-        // sistemare json
-        return gameService.save(gameDto);
+    public ResponseEntity<String> addGame(@RequestBody GameDto gameDto) {
+        try {
+            if(gameService.save(gameDto) != null) {
+                return ResponseEntity.ok("Successfully added game");
+            } else {
+                throw new Exception("Game save returned null");
+            }
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('client_admin')")
-    public GameDto updateGame(@RequestParam UUID id, @RequestBody GameDto gameDto) {
-        // TODO: Implement
-        return null;
+    public ResponseEntity<String> updateGame(@RequestParam UUID id, @RequestBody GameDto gameDto) {
+        try {
+            if(gameService.update(id, gameDto) != null) {
+                return ResponseEntity.ok("Successfully updated game");
+            } else {
+                throw new Exception("Game update returned null");
+            }
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
     }
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('client_admin')")
-    public void deleteGame(@RequestParam UUID id) {
-        // sistemare json
-        gameService.delete(id);
+    public ResponseEntity<String> deleteGame(@RequestParam UUID id) {
+        try {
+            gameService.delete(id);
+            return ResponseEntity.ok("Game deleted");
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
     }
 
     // @GetMapping("/by-title/{title}")

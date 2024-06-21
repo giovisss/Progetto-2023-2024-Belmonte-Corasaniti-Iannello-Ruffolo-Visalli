@@ -20,4 +20,6 @@ public interface GameService {
     public GameDto save(GameDto gameDto);
 
     public void delete(UUID id);
+
+    public GameDto update(UUID id, GameDto gameDto);
 }

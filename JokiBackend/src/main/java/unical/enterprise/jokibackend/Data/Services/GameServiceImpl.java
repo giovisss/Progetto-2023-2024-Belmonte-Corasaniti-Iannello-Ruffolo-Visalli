@@ -6,10 +6,13 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +55,7 @@ public class GameServiceImpl implements GameService{
     }
     
     @Override
+    @Transactional
     public GameDto save(GameDto gameDto) {
         Game game = modelMapper.map(gameDto, Game.class);
         gameDao.save(game);
@@ -59,6 +63,19 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
+    @Transactional
+    public GameDto update(UUID id, GameDto gameDto) {
+        Game game = gameDao.findById(id).orElse(null);
+        if (game == null) {
+            return null;
+        }
+        game = modelMapper.map(gameDto, Game.class);
+        gameDao.save(game);
+        return modelMapper.map(game, GameDto.class);
+    }
+
+    @Override
+    @Transactional
     public void delete(UUID id) {
         gameDao.deleteById(id);
     }
