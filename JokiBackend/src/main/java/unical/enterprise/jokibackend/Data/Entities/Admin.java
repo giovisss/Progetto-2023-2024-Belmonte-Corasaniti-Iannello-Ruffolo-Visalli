@@ -26,9 +26,6 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
-    @Column
-    private String password;
-
     @OneToMany
     private Collection<Game> game;
 }

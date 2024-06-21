@@ -6,13 +6,13 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import unical.enterprise.jokibackend.Data.Entities.Order;
+import unical.enterprise.jokibackend.Data.Entities.Cart;
 
 @Repository
-public interface OrderDao extends JpaRepository<Order, UUID> {
-    Optional<Order> findOrdersByUserId(UUID id);
-    Optional<Order> findOrdersByStatus(Boolean status);
-    Optional<Order> findOrdersByGameId(UUID id);
-    Optional<Order> findOrdersByGameTitle(String title);
+public interface OrderDao extends JpaRepository<Cart, UUID> {
+    Optional<Cart> findOrdersByUserId(UUID id);
+//    Optional<Order> findOrdersByStatus(Boolean status);
+    Optional<Cart> findOrdersByGameId(UUID id);
+    Optional<Cart> findOrdersByGameTitle(String title);
 
 }

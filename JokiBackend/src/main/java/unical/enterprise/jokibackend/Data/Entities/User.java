@@ -22,9 +22,6 @@ public class User {
     @Column
     private UUID id;
 
-    @Column
-    private String password;
-
     @Column(unique = true)
     private String username;
     
@@ -32,22 +29,19 @@ public class User {
     private String email;
 
     @Column
-    private String name;
+    private String firstName;
 
     @Column
-    private String surname;
+    private String lastName;
 
     @Column(columnDefinition = "DATE")
     private Date birthdate;
-
-    @Column
-    private String address;
 
     @OneToOne
     private Wishlist wishlist;
 
     @OneToMany
-    private Collection<Order> order;
+    private Collection<Cart> cart;
 
     @OneToMany
     private Collection<Game> game;

@@ -53,7 +53,7 @@ public class Game {
     private Admin admin;
 
     @ManyToOne
-    private Order order;
+    private Cart cart;
 
     @ManyToOne
     private User user;
