@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
-import unical.enterprise.jokibackend.Data.Entities.Game;
-import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 
 @Service
 @RequiredArgsConstructor
