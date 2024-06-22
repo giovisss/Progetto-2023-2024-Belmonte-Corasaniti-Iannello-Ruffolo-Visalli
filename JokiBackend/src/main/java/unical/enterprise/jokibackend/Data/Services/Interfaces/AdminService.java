@@ -11,6 +11,6 @@ public interface AdminService {
     AdminDto getByUsername(String username);
     AdminDto getByEmail(String email);
     Collection<AdminDto> findAll();
-    // Collection<GameDto> getGamesInsertByAdminId(UUID id);
     AdminDto updateAdmin(UUID id, AdminDto adminDto);
+    // Collection<GameDto> getGamesInsertByAdminId(UUID id);
 }
