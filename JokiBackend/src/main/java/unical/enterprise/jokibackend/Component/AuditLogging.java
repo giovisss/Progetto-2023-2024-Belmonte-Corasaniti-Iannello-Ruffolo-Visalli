@@ -16,9 +16,9 @@ import java.util.logging.Logger;
 
 @Aspect
 @Component
-public class AuditLoggingAspect {
+public class AuditLogging {
 
-    Logger logger = Logger.getLogger(AuditLoggingAspect.class.getName());
+    Logger logger = Logger.getLogger(AuditLogging.class.getName());
 
     @Pointcut("execution(* unical.enterprise.jokibackend.Controller.*.*(..))")
     public void allControllerMethods() {}
@@ -28,17 +28,23 @@ public class AuditLoggingAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         logger.info("--------------------------------------------------");
-        logger.info("User: " + request.getUserPrincipal().getName());
+
+        if(request.getUserPrincipal() == null) logger.info("User: Anonymous");
+        else logger.info("User: " + request.getUserPrincipal().getName());
+
         logger.info("Request Method: " + request.getMethod());
         logger.info("Endpoint: " + request.getRequestURI());
+
         logger.info("Arguments: " + Arrays.toString(joinPoint.getArgs()));
+        logger.info("Signature: " + joinPoint.getSignature());
     }
 
     @AfterReturning(pointcut = "allControllerMethods()", returning = "result")
-    public void logAfter(JoinPoint joinPoint, Object result) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    public void logAfter(/*JoinPoint joinPoint, */Object result) {
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         logger.info("Response: " + result);
+
         logger.info("--------------------------------------------------");
     }
 }
