@@ -1,12 +1,16 @@
 package unical.enterprise.jokibackend.Controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import unical.enterprise.jokibackend.Utility.KeycloakManager;
-import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.KeyCloakService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeyCloakService;
+import unical.enterprise.jokibackend.Utility.KeycloakManager;
 
 @RestController
 @RequestMapping("/api/auth")
