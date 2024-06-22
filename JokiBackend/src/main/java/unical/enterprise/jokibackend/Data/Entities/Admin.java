@@ -3,10 +3,7 @@ package unical.enterprise.jokibackend.Data.Entities;
 import java.util.Collection;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -26,6 +23,6 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
-    @OneToMany
-    private Collection<Game> game;
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Game> games;
 }

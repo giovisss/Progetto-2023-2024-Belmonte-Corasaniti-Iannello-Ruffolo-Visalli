@@ -1,17 +1,13 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
 
 @Data
 @Entity(name = "users")
@@ -24,7 +20,7 @@ public class User {
 
     @Column(unique = true)
     private String username;
-    
+
     @Column(unique = true)
     private String email;
 
@@ -37,15 +33,17 @@ public class User {
     @Column(columnDefinition = "DATE")
     private Date birthdate;
 
-    @OneToOne
-    private Wishlist wishlist;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 
-    @OneToMany
-    private Collection<Cart> cart;
+    @ManyToMany
+    @JoinTable(
+        name = "libraries",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private Collection<Game> games;
 
-    @OneToOne
-    private Library library;
-
-    // @OneToMany
-    // private Collection<Game> game;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Wishlist> wishlists;
 }

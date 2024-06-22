@@ -3,12 +3,7 @@ package unical.enterprise.jokibackend.Data.Entities;
 import java.util.Collection;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -23,12 +18,18 @@ public class Cart {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
     private UUID id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(
+        name = "cart_games",
+        joinColumns = @JoinColumn(name = "cart_id"),
+        inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private Collection<Game> games;
+
     @Column
     private Double price;
-
-    @OneToMany
-    private Collection<Game> game;
-
-    @ManyToOne
-    private User user;
 }

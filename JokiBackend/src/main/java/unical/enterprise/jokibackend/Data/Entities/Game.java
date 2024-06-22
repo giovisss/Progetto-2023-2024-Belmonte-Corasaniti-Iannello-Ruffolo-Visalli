@@ -1,13 +1,10 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -38,7 +35,7 @@ public class Game {
     private String genre;
 
     @Column
-    private String author;
+    private String developer;
 
     @Column
     private String publisher;
@@ -50,14 +47,9 @@ public class Game {
     private Integer stock;
 
     @ManyToOne
+    @JoinColumn(name = "admin_id")
     private Admin admin;
 
-    @ManyToOne
-    private Cart cart;
-
-    @ManyToOne
-    private Library library;
-
-    // @ManyToOne
-    // private User user;
+    @ManyToMany(mappedBy = "games")
+    private Collection<User> users;
 }
