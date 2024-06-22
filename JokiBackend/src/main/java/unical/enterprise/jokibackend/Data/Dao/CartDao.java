@@ -9,5 +9,4 @@ import unical.enterprise.jokibackend.Data.Entities.Cart;
 
 @Repository
 public interface CartDao extends JpaRepository<Cart, UUID>{
-
 }

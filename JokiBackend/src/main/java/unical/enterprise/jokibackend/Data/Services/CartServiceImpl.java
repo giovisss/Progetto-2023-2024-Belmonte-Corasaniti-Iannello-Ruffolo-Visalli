@@ -52,28 +52,4 @@ public class CartServiceImpl implements CartService {
                 .map(cart, CartDto.class))
                 .toList();
     }
-
-    // @Override
-    // public Collection<CartDto> getByUserId(UUID id) {
-    //     return CartDao.findCartsByUserId(id)
-    //             .stream().map(Cart -> modelMapper
-    //             .map(Cart, CartDto.class))
-    //             .toList();
-    // }
-
-    // @Override
-    // public Collection<CartDto> getByGameId(UUID id) {
-    //     return CartDao.findCartsByGameId(id)
-    //             .stream().map(Cart -> modelMapper
-    //             .map(Cart, CartDto.class))
-    //             .toList();
-    // }
-
-    // @Override
-    // public Collection<CartDto> getCartsByGameTitle(String title) {
-    //     return CartDao.findCartsByGameTitle(title)
-    //             .stream().map(Cart -> modelMapper
-    //             .map(Cart, CartDto.class))
-    //             .toList();
-    // }
 }
