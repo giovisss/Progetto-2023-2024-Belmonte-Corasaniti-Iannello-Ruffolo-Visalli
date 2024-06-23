@@ -17,66 +17,70 @@ import unical.enterprise.jokibackend.Data.Dto.UserDto;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-   private final UserDao userDao;
+    private final UserDao userDao;
 
-   private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-   @Override
-   public void save(User user) {
-       userDao.save(user);
-   }
+    @Override
+    public void save(User user) {
+        userDao.save(user);
+    }
 
-   @Override
-   public UserDto getUserById(UUID id) {
-       User user = userDao.findById(id).orElse(null);
-       return checkBeforeReturn(user);
-   }
+    @Override
+    public UserDto getUserById(UUID id) {
+        User user = userDao.findById(id).orElse(null);
+        return checkBeforeReturn(user);
+    }
 
-   @Override
-   public UserDto getUserByUsername(String username) {
-       User user = userDao.findUserByUsername(username).orElse(null);
-       return checkBeforeReturn(user);
-   }
+    @Override
+    public UserDto getUserByUsername(String username) {
+        User user = userDao.findUserByUsername(username).orElse(null);
+        return checkBeforeReturn(user);
+    }
 
-   @Override
-   public UserDto getUserByEmail(String email) {
-       User user = userDao.findUserByEmail(email).orElse(null);
-       return checkBeforeReturn(user);
-   }
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = userDao.findUserByEmail(email).orElse(null);
+        return checkBeforeReturn(user);
+    }
 
-   @Override
-   public Collection<UserDto> getAllUsers() {
-       return userDao.findAll()
-           .stream().map(user -> modelMapper
-           .map(user, UserDto.class))
-           .collect(Collectors.toList());
-   }
+    @Override
+    public Collection<UserDto> getAllUsers() {
+        return userDao.findAll()
+            .stream().map(user -> modelMapper
+            .map(user, UserDto.class))
+            .collect(Collectors.toList());
+    }
 
-   @Override
-   public UserDto updateUser(String username, UserDto userDto) {
-       User user = userDao.findUserByUsername(username).orElse(null);
-       if (user == null) {
-           return null;
-       }
-       user = modelMapper.map(userDto, User.class);
-       userDao.save(user);
-       return modelMapper.map(user, UserDto.class);
-   }
+    @Override
+    public UserDto updateUser(String username, UserDto userDto) {
+        User user = userDao.findUserByUsername(username).orElse(null);
+            if (user == null) {
+                return null;
+            }
+            ModelMapper modelMapperUpdater = new ModelMapper();
+            modelMapperUpdater.typeMap(UserDto.class, User.class).addMappings(mapper -> {
+                mapper.skip(User::setId);
+            });
+            modelMapperUpdater.map(userDto, user);
+            userDao.save(user);
+            return modelMapperUpdater.map(user, UserDto.class);
+    }
 
-   @Override
-   public void delete(UUID id) {
-       userDao.deleteById(id);
-   }
+    @Override
+    public void delete(UUID id) {
+        userDao.deleteById(id);
+    }
 
 
-   @Override
-   public void deleteByUsername(String username) {
-       userDao.deleteByUsername(username);
-   }
+    @Override
+    public void deleteByUsername(String username) {
+        userDao.deleteByUsername(username);
+    }
 
-   private UserDto checkBeforeReturn(User user) {
-       if(user == null) return null;
+    private UserDto checkBeforeReturn(User user) {
+        if(user == null) return null;
 
-       return modelMapper.map(user, UserDto.class);
-   }
+        return modelMapper.map(user, UserDto.class);
+    }
 }

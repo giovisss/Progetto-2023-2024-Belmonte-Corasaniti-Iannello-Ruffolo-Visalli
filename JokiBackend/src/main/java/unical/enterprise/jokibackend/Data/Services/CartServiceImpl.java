@@ -5,8 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.CartDao;
 import unical.enterprise.jokibackend.Data.Entities.Cart;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.CartService;
 import unical.enterprise.jokibackend.Data.Dto.CartDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -34,8 +36,18 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void update(Cart cart) {
+    public CartDto update(UUID id, CartDto cartDto) {
+        Cart cart = cartDao.findById(id).orElse(null);
+        if (cart == null) {
+            return null;
+        }
+        ModelMapper modelMapperUpdater = new ModelMapper();
+        modelMapperUpdater.typeMap(CartDto.class, Cart.class).addMappings(mapper -> {
+            mapper.skip(Cart::setId);
+        });
+        modelMapperUpdater.map(cartDto, cart);
         cartDao.save(cart);
+        return modelMapperUpdater.map(cart, CartDto.class);
     }
 
 

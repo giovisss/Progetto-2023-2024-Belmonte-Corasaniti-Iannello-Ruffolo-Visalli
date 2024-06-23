@@ -10,7 +10,7 @@ public interface CartService {
     void save(Cart cart);
     void delete(Cart cart);
     void deleteById(UUID id);
-    void update(Cart cart);
+    CartDto update(UUID id, CartDto cartDto);
     CartDto getById(UUID id);
     Collection<CartDto> findAll();  
 }
