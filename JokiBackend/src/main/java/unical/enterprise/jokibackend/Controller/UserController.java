@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
@@ -60,11 +61,10 @@ public class UserController {
    @PutMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
-   public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UserDto userDto) {
+   public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
        try {
-           Gson gson = new Gson();
-           var out = keycloakService.updateUser(username, userDto);
-           return ResponseEntity.ok(gson.toJson(out));
+           if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
+           else return ResponseEntity.notFound().build();
        }
        catch (Exception e) {
            logger.warning(e.getMessage());

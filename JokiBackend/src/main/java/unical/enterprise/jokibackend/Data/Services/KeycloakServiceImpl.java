@@ -1,10 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import java.security.Key;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -14,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Entities.User;
@@ -78,20 +75,20 @@ public class KeycloakServiceImpl implements KeyCloakService{
 
     @Override
     @Transactional
-    public UserDto updateUser(String userId, UserDto userDTO){
-        // CredentialRepresentation credential = createPasswordCredentials(userDTO.getPassword());
+    public Boolean updateUser(String username, UpdateUserDto userDTO){
+        if (!username.equals(userDTO.getUsername())) return false;
+
         UserRepresentation user = new UserRepresentation();
 
-        user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
-        // user.setCredentials(Collections.singletonList(credential));
+        user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
 
         UsersResource usersResource = getInstance();
-        usersResource.get(userId).update(user);
+        usersResource.get(userService.getUserByUsername(username).getId().toString()).update(user);
 
-        return userService.updateUser(userDTO.getUsername(), userDTO);
+        return userService.updateUser(username, userDTO);
     }
 
     @Override

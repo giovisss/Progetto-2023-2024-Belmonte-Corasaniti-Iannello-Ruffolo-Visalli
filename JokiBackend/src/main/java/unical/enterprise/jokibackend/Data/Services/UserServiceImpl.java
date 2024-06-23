@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
+import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
@@ -53,18 +54,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(String username, UserDto userDto) {
+    public Boolean updateUser(String username, UpdateUserDto userDto) {
         User user = userDao.findUserByUsername(username).orElse(null);
-            if (user == null) {
-                return null;
-            }
-            ModelMapper modelMapperUpdater = new ModelMapper();
-            modelMapperUpdater.typeMap(UserDto.class, User.class).addMappings(mapper -> {
-                mapper.skip(User::setId);
-            });
-            modelMapperUpdater.map(userDto, user);
-            userDao.save(user);
-            return modelMapperUpdater.map(user, UserDto.class);
+
+        if (user == null)   return false;
+
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setBirthdate(userDto.getBirthdate());
+
+        userDao.save(user);
+
+        return true;
     }
 
     @Override

@@ -6,9 +6,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class KeycloakUserDTO {
     private UUID userId;
     private String username;
