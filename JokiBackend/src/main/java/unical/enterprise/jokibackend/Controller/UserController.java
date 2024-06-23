@@ -22,6 +22,7 @@ public class UserController {
    private final KeycloakServiceImpl keycloakService;
    private final UserServiceImpl userService;
 
+    // lista degli utenti
    @GetMapping("")
    @PreAuthorize("hasRole('client_admin')")
    @Produces("application/json")
@@ -37,6 +38,7 @@ public class UserController {
        }
    }
 
+    // ottieni un utente
    @GetMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
@@ -54,6 +56,7 @@ public class UserController {
        }
    }
 
+    // modifica un utente
    @PutMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
@@ -69,6 +72,7 @@ public class UserController {
        }
    }
 
+    // elimina un utente
    @DeleteMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("plain/text")
