@@ -9,11 +9,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -79,7 +79,7 @@ public class GameController {
     }
 
    @GetMapping(value = "/{id}", produces = "application/json")
-   public ResponseEntity<String> getGameById(@RequestParam UUID id) {
+   public ResponseEntity<String> getGameById(@PathVariable UUID id) {
        try {
            GameDto game = gameService.getGameById(id);
            if (game != null) {
@@ -112,7 +112,7 @@ public class GameController {
 
    @PutMapping("/{id}")
    @PreAuthorize("hasRole('client_admin')")
-   public ResponseEntity<String> updateGame(@RequestParam UUID id, @RequestBody GameDto gameDto) {
+   public ResponseEntity<String> updateGame(@PathVariable UUID id, @RequestBody GameDto gameDto) {
        try {
            if(gameService.update(id, gameDto) != null) {
                return ResponseEntity.ok("Successfully updated game");
@@ -128,7 +128,7 @@ public class GameController {
 
    @DeleteMapping("/{id}")
    @PreAuthorize("hasRole('client_admin')")
-   public ResponseEntity<String> deleteGame(@RequestParam UUID id) {
+   public ResponseEntity<String> deleteGame(@PathVariable UUID id) {
        try {
            gameService.delete(id);
            return ResponseEntity.ok("Game deleted");

@@ -65,17 +65,21 @@ public class GameServiceImpl implements GameService{
        return modelMapper.map(game, GameDto.class);
    }
 
-   @Override
-   @Transactional
-   public GameDto update(UUID id, GameDto gameDto) {
-       Game game = gameDao.findById(id).orElse(null);
-       if (game == null) {
-           return null;
-       }
-       game = modelMapper.map(gameDto, Game.class);
-       gameDao.save(game);
-       return modelMapper.map(game, GameDto.class);
-   }
+    @Override
+    @Transactional
+    public GameDto update(UUID id, GameDto gameDto) {
+        Game game = gameDao.findById(id).orElse(null);
+        if (game == null) {
+            return null;
+        }
+        ModelMapper modelMapperUpdater = new ModelMapper();
+        modelMapperUpdater.typeMap(GameDto.class, Game.class).addMappings(mapper -> {
+            mapper.skip(Game::setId);
+        });
+        modelMapperUpdater.map(gameDto, game);
+        gameDao.save(game);
+        return modelMapperUpdater.map(game, GameDto.class);
+    }
 
    @Override
    @Transactional

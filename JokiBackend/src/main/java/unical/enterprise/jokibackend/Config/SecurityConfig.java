@@ -1,8 +1,8 @@
 package unical.enterprise.jokibackend.Config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+
+import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Component.JwtAuthConverter;
 
 @Configuration
@@ -28,10 +30,10 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(
-                        "/api/auth/**"
-                ).permitAll())
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/auth/**").permitAll() // permetti tutte le richieste a /api/auth/** */
+                .requestMatchers(HttpMethod.GET, "/api/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
+                .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
 
         http
                 .oauth2ResourceServer(oauth2 ->
