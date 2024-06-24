@@ -28,7 +28,7 @@ public class Cart {
         joinColumns = @JoinColumn(name = "cart_id"),
         inverseJoinColumns = @JoinColumn(name = "game_id")
     )
-    private Collection<Game> games;
+    private Collection<GameDto> games;
 
     @Column
     private Double price;

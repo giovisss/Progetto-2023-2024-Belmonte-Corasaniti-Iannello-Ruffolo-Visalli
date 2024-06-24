@@ -42,7 +42,7 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "game_id")
     )
-    private Collection<Game> games;
+    private Collection<GameDto> games;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Wishlist> wishlists;

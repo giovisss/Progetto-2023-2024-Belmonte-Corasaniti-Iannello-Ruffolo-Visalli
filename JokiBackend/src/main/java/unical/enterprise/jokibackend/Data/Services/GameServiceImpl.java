@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
-import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Entities.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 @Service
@@ -22,12 +21,12 @@ public class GameServiceImpl implements GameService{
    private final ModelMapper modelMapper;
 
    @Override
-   public GameDto getGameById(UUID id) {
-       Game game = gameDao.findById(id).orElse(null);
+   public unical.enterprise.jokibackend.Data.Dto.GameDto getGameById(UUID id) {
+       GameDto game = gameDao.findById(id).orElse(null);
        if (game == null) {
            return null;
        }
-       return modelMapper.map(game, GameDto.class);
+       return modelMapper.map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class);
    }
    
 
@@ -50,35 +49,35 @@ public class GameServiceImpl implements GameService{
 //    }
 
    @Override
-   public Collection<GameDto> findAll() {
+   public Collection<unical.enterprise.jokibackend.Data.Dto.GameDto> findAll() {
        return gameDao.findAll()
                .stream().map(game -> modelMapper
-               .map(game, GameDto.class))
+               .map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class))
                .toList();
    }
 
    @Override
    @Transactional
-   public GameDto save(GameDto gameDto) {
-       Game game = modelMapper.map(gameDto, Game.class);
+   public unical.enterprise.jokibackend.Data.Dto.GameDto save(unical.enterprise.jokibackend.Data.Dto.GameDto gameDto) {
+       GameDto game = modelMapper.map(gameDto, GameDto.class);
        gameDao.save(game);
-       return modelMapper.map(game, GameDto.class);
+       return modelMapper.map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class);
    }
 
     @Override
     @Transactional
-    public GameDto update(UUID id, GameDto gameDto) {
-        Game game = gameDao.findById(id).orElse(null);
+    public unical.enterprise.jokibackend.Data.Dto.GameDto update(UUID id, unical.enterprise.jokibackend.Data.Dto.GameDto gameDto) {
+        GameDto game = gameDao.findById(id).orElse(null);
         if (game == null) {
             return null;
         }
         ModelMapper modelMapperUpdater = new ModelMapper();
-        modelMapperUpdater.typeMap(GameDto.class, Game.class).addMappings(mapper -> {
-            mapper.skip(Game::setId);
+        modelMapperUpdater.typeMap(unical.enterprise.jokibackend.Data.Dto.GameDto.class, GameDto.class).addMappings(mapper -> {
+            mapper.skip(GameDto::setId);
         });
         modelMapperUpdater.map(gameDto, game);
         gameDao.save(game);
-        return modelMapperUpdater.map(game, GameDto.class);
+        return modelMapperUpdater.map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class);
     }
 
    @Override

@@ -1,6 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
-import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Entities.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import java.util.UUID;
@@ -13,7 +13,7 @@ public interface WishlistService {
     Collection<WishlistDto> findAll();
     WishlistDto getByUserId(UUID id);
     WishlistDto getByUserUsername(String username);
-    boolean addGameToWishlist(Game game, String wishlistName);
+    boolean addGameToWishlist(GameDto game, String wishlistName);
     void addWishlist(String wishlistName);
     // Collection<WishlistDto> getByGameId(UUID id);
     // Collection<WishlistDto> getByGameName(String name);

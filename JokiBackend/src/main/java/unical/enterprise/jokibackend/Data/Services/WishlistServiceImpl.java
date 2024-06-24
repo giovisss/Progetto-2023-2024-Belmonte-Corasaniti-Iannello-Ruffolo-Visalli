@@ -2,8 +2,11 @@ package unical.enterprise.jokibackend.Data.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.GameDto;
+import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
@@ -63,7 +66,7 @@ public class WishlistServiceImpl implements WishlistService {
    }
 
     @Override
-    public boolean addGameToWishlist(Game game, String wishlistName) {
+    public boolean addGameToWishlist(GameDto game, String wishlistName) {
         WishlistDto wishlistDto = wishlistDao.getWishlistByWishlistName(wishlistName);
         if (wishlistDto == null) {
             return false;
@@ -79,6 +82,9 @@ public class WishlistServiceImpl implements WishlistService {
     public void addWishlist(String wishlistName) {
         WishlistDto wishlistDto = new WishlistDto();
         wishlistDto.setWishlistName(wishlistName);
+        UserDto user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        wishlistDto.setUser(modelMapper.map(user, User.class));
+
         wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
     }
 

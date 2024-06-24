@@ -24,5 +24,5 @@ public class Admin {
     private String email;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Game> games;
+    private Collection<GameDto> games;
 }

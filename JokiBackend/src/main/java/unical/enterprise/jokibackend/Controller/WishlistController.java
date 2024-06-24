@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Entities.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
 
 import java.util.logging.Logger;
@@ -46,9 +46,9 @@ public class WishlistController {
     }
 
     @PostMapping(value = "/{wishlistName}", produces = "application/json")
-    public ResponseEntity<String> addGameToWishlist(@RequestBody Game game, @PathVariable String wishlistName){
+    public ResponseEntity<String> addGameToWishlist(@RequestBody GameDto gameDto, @PathVariable String wishlistName){
         try {
-            wishlistService.addGameToWishlist(game, wishlistName);
+            wishlistService.addGameToWishlist(gameDto, wishlistName);
             return ResponseEntity.ok("Game added to wishlist");
         }
         catch (Exception e) {
