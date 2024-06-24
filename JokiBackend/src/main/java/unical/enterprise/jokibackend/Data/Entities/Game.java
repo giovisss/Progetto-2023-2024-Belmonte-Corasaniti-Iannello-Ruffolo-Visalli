@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity(name = "games") // jakarta, fa riferimento alla tabella games
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameDto {
+public class Game {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
     @Column

@@ -1,6 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
-import unical.enterprise.jokibackend.Data.Entities.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import java.util.UUID;

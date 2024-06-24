@@ -46,11 +46,11 @@ public class KeycloakServiceImpl implements KeyCloakService{
         try {
             var response = instance.create(user);
             if(response.getStatus() == 201){
-                var tmp = getUser(user.getUsername()).get(0);
+                var tmp = getUser(user.getUsername());
                 return createLocalUser(tmp);
             }
         } catch (Exception e){
-            deleteUser(getUser(user.getUsername()).get(0).getId());
+            deleteUser(getUser(user.getUsername()).getId());
             userDao.deleteByUsername(user.getUsername());
         }
 
@@ -68,9 +68,9 @@ public class KeycloakServiceImpl implements KeyCloakService{
     }
 
     @Override
-    public List<UserRepresentation> getUser(String userName){
+    public UserRepresentation getUser(String userName){
         UsersResource usersResource = getInstance();
-        return usersResource.search(userName, true);
+        return usersResource.search(userName, true).get(0);
     }
 
     @Override

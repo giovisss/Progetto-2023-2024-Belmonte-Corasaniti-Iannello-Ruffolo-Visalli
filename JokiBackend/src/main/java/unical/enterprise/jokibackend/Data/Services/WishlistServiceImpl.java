@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
-import unical.enterprise.jokibackend.Data.Entities.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;

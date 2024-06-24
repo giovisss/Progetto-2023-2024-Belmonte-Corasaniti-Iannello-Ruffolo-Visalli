@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import unical.enterprise.jokibackend.Data.Entities.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 
 @Data

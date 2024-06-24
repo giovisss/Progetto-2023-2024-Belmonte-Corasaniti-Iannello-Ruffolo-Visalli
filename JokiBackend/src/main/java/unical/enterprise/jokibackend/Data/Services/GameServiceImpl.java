@@ -1,16 +1,15 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import java.util.Collection;
-import java.util.UUID;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
-import unical.enterprise.jokibackend.Data.Entities.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
+
+import java.util.Collection;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +20,12 @@ public class GameServiceImpl implements GameService{
    private final ModelMapper modelMapper;
 
    @Override
-   public unical.enterprise.jokibackend.Data.Dto.GameDto getGameById(UUID id) {
+   public GameDto getGameById(UUID id) {
        GameDto game = gameDao.findById(id).orElse(null);
        if (game == null) {
            return null;
        }
-       return modelMapper.map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class);
+       return modelMapper.map(game, GameDto.class);
    }
    
 
