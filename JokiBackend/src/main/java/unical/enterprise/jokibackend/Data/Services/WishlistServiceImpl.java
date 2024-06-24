@@ -3,12 +3,13 @@ package unical.enterprise.jokibackend.Data.Services;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import unical.enterprise.jokibackend.Data.Dao.WishlistDao;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class WishlistServiceImpl implements WishlistService {
 
    private final WishlistDao wishlistDao;
+   private final UserService userService;
    private final ModelMapper modelMapper;
 
    @Override
@@ -59,6 +61,26 @@ public class WishlistServiceImpl implements WishlistService {
        Wishlist wishlist = wishlistDao.findWishlistByUserId(UUID.fromString(username)).orElse(null);
        return modelMapper.map(wishlist, WishlistDto.class);
    }
+
+    @Override
+    public boolean addGameToWishlist(Game game, String wishlistName) {
+        WishlistDto wishlistDto = wishlistDao.getWishlistByWishlistName(wishlistName);
+        if (wishlistDto == null) {
+            return false;
+        }
+        else {
+            wishlistDto.setGame(game);
+            wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
+            return true;
+        }
+    }
+
+    @Override
+    public void addWishlist(String wishlistName) {
+        WishlistDto wishlistDto = new WishlistDto();
+        wishlistDto.setWishlistName(wishlistName);
+        wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
+    }
 
 //    @Override
 //    public Collection<WishlistDto> getByGameName(String name) {

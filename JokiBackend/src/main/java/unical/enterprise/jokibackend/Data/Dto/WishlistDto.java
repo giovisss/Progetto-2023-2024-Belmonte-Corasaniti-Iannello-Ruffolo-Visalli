@@ -13,6 +13,7 @@ import unical.enterprise.jokibackend.Data.Entities.User;
 @NoArgsConstructor
 public class WishlistDto {
     private UUID id;
+    private String wishlistName;
     private User user;
     private Game game;
     private Integer visibility;

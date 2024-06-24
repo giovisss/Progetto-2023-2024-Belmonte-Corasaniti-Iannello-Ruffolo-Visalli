@@ -18,6 +18,9 @@ public class Wishlist {
     @Column
     private UUID id;
 
+    @Column
+    private String wishlistName;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

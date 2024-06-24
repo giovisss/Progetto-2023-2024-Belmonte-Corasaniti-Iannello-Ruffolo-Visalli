@@ -75,7 +75,6 @@ public class GameController {
             logger.warning(e.getMessage());
             return ResponseEntity.badRequest().body("An error occurred");
         }
-
     }
 
    @GetMapping(value = "/{id}", produces = "application/json")
