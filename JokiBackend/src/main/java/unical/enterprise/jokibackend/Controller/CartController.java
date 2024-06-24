@@ -2,6 +2,7 @@ package unical.enterprise.jokibackend.Controller;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.service.GenericResponseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.CartDto;
@@ -23,16 +24,19 @@ public class CartController {
     private final CartService cartService;
     private final UserService userService;
     private final GameService gameService;
+    private final GenericResponseService responseBuilder;
 
     Logger logger = Logger.getLogger(CartController.class.getName());
 
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<String> getCartByUserId(@PathVariable UUID id){
+    @GetMapping(value = "/{username}", produces = "application/json")
+    public ResponseEntity<String> getCartByUsername(@PathVariable String username){
         try {
-            return ResponseEntity.ok(new Gson().toJson(cartService.getCartByUserid(id)));
+            UserDto user = userService.getUserByUsername(username);
+            CartDto userCart = cartService.getCartByUserid(user.getId());
+            return ResponseEntity.ok(new Gson().toJson(userCart));
         } catch (Exception e) {
             logger.severe(e.getMessage());
-            return ResponseEntity.badRequest().body("Error");
+            return ResponseEntity.badRequest().body("Error Cart not found");
         }
     }
 
