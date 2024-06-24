@@ -32,39 +32,6 @@ public class GameController {
 
    Logger logger = Logger.getLogger(UserController.class.getName());
 
-//    @GetMapping(value = "", produces = "application/json")
-//    public ResponseEntity<String> getGamesList(@RequestParam(required = false) String method, @RequestParam(required = false) String value){
-//        try {
-//            if(method == null) method = "";
-//            else if(value == null || value.trim().isEmpty()) {
-//                return ResponseEntity.badRequest().body("value cannot be empty");
-//            }
-
-//            return switch (method) {
-//                case "title" -> {
-//                    GameDto gameByTitle = gameService.getGameByTitle(value);
-//                    yield ResponseEntity.ok(new Gson().toJson(gameByTitle));
-//                }
-//                case "author" -> {
-//                    GameDto gameByAuthor = gameService.getGameByAuthor(value);
-//                    yield ResponseEntity.ok(new Gson().toJson(gameByAuthor));
-//                }
-//                case "genre" -> {
-//                    GameDto gameByGenre = gameService.getGameByGenre(value);
-//                    yield ResponseEntity.ok(new Gson().toJson(gameByGenre));
-//                }
-//                default -> {
-//                    Collection<GameDto> games = gameService.findAll();
-//                    yield ResponseEntity.ok(new Gson().toJson(games));
-//                }
-//            };
-//        }
-//        catch (Exception e) {
-//            logger.warning(e.getMessage());
-//            return ResponseEntity.badRequest().body("An error occurred");
-//        }
-//    }
-
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(){
         try {

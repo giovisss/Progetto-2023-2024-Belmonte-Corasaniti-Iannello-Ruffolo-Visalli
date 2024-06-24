@@ -2,7 +2,6 @@ package unical.enterprise.jokibackend.Controller;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.service.GenericResponseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.CartDto;
@@ -24,7 +23,6 @@ public class CartController {
     private final CartService cartService;
     private final UserService userService;
     private final GameService gameService;
-    private final GenericResponseService responseBuilder;
 
     Logger logger = Logger.getLogger(CartController.class.getName());
 

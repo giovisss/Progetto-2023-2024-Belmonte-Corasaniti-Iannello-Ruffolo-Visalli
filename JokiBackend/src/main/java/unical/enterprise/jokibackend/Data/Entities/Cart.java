@@ -1,12 +1,12 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
-import java.util.Collection;
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Collection;
+import java.util.UUID;
 
 @Data
 @Entity(name = "carts")
@@ -28,7 +28,7 @@ public class Cart {
         joinColumns = @JoinColumn(name = "cart_id"),
         inverseJoinColumns = @JoinColumn(name = "game_id")
     )
-    private Collection<GameDto> games;
+    private Collection<Game> games;
 
     @Column
     private Double price;

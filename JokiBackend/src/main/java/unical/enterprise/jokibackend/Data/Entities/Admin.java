@@ -1,12 +1,12 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
-import java.util.Collection;
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Collection;
+import java.util.UUID;
 
 @Data
 @Entity(name = "admins")
@@ -24,5 +24,5 @@ public class Admin {
     private String email;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<GameDto> games;
+    private Collection<Game> games;
 }

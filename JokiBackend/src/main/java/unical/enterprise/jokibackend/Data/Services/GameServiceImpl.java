@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 import java.util.Collection;
@@ -21,33 +22,15 @@ public class GameServiceImpl implements GameService{
 
    @Override
    public GameDto getGameById(UUID id) {
-       GameDto game = gameDao.findById(id).orElse(null);
+       Game game = gameDao.findById(id).orElse(null);
        if (game == null) {
            return null;
        }
        return modelMapper.map(game, GameDto.class);
    }
-   
-
-//    @Override
-//    public GameDto getGameByTitle(String title) {
-//        Game game = gameDao.findGameByTitle(title).orElse(null);
-//        return modelMapper.map(game, GameDto.class);
-//    }
-
-//    @Override
-//    public GameDto getGameByDeveloper(String developer) {
-//        Game game = gameDao.findGameByDeveloper(developer).orElse(null);
-//        return modelMapper.map(game, GameDto.class);
-//    }
-
-//    @Override
-//    public GameDto getGameByGenre(String genre) {
-//        Game game = gameDao.findGameByGenre(genre).orElse(null);
-//        return modelMapper.map(game, GameDto.class);
-//    }
 
    @Override
+   @Transactional
    public Collection<unical.enterprise.jokibackend.Data.Dto.GameDto> findAll() {
        return gameDao.findAll()
                .stream().map(game -> modelMapper
@@ -57,8 +40,8 @@ public class GameServiceImpl implements GameService{
 
    @Override
    @Transactional
-   public unical.enterprise.jokibackend.Data.Dto.GameDto save(unical.enterprise.jokibackend.Data.Dto.GameDto gameDto) {
-       GameDto game = modelMapper.map(gameDto, GameDto.class);
+   public GameDto save(GameDto gameDto) {
+       Game game = modelMapper.map(gameDto, Game.class);
        gameDao.save(game);
        return modelMapper.map(game, unical.enterprise.jokibackend.Data.Dto.GameDto.class);
    }
@@ -66,7 +49,7 @@ public class GameServiceImpl implements GameService{
     @Override
     @Transactional
     public unical.enterprise.jokibackend.Data.Dto.GameDto update(UUID id, unical.enterprise.jokibackend.Data.Dto.GameDto gameDto) {
-        GameDto game = gameDao.findById(id).orElse(null);
+        Game game = gameDao.findById(id).orElse(null);
         if (game == null) {
             return null;
         }

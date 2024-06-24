@@ -31,7 +31,7 @@ public class Wishlist {
         joinColumns = @JoinColumn(name = "wishlist_id"),
         inverseJoinColumns = @JoinColumn(name = "game_id")
     )
-    private Collection<GameDto> games;
+    private Collection<Game> games;
 
     @Column(columnDefinition = "int default 0")
     private Integer visibility;
