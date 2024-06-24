@@ -12,5 +12,6 @@ public interface CartService {
     void deleteById(UUID id);
     CartDto update(UUID id, CartDto cartDto);
     CartDto getById(UUID id);
-    Collection<CartDto> findAll();  
+    Collection<CartDto> findAll();
+    CartDto getCartByUserid(UUID userId);
 }
