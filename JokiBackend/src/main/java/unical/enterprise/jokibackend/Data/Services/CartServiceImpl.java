@@ -62,4 +62,11 @@ public class CartServiceImpl implements CartService {
                 .map(cart, CartDto.class))
                 .toList();
     }
+
+    @Override
+    public CartDto getCartByUserid(UUID userId) {
+    Cart cart = cartDao.findByUserId(userId).orElse(null);
+        return modelMapper.map(cart, CartDto.class);
+    }
+
 }
