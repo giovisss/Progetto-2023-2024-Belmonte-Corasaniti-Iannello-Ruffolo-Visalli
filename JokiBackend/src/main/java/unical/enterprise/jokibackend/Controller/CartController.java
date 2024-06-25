@@ -38,7 +38,7 @@ public class CartController {
         }
     }
 
-    @PostMapping("/{username}")
+    @PutMapping("/{username}")
     @Produces("application/json")
     public ResponseEntity<String> updateCart(@PathVariable String username, @RequestBody String gameId){
         try {

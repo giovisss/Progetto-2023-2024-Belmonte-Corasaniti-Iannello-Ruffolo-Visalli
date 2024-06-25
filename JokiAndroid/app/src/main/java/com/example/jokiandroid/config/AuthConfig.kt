@@ -8,5 +8,5 @@ object AuthConfig {
     // viene utilizzato per ottenere dinamicamente i dettagli di configurazione di Keycloak, come gli endpoint di autorizzazione, token, ecc. Utilizzando questo URL,
     // non è necessario specificare manualmente gli endpoint di autorizzazione e token.
 
-    const val DISCOVERY_URI = "http://192.168.1.6:8080/realms/JokiRealm/.well-known/openid-configuration"
+    const val DISCOVERY_URI = "http://192.168.1.5:8080/realms/JokiRealm/.well-known/openid-configuration"
 }
