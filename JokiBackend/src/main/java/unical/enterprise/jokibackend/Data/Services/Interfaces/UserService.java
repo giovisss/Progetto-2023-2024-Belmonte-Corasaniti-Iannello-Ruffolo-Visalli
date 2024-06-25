@@ -1,10 +1,11 @@
-package unical.enterprise.jokibackend.Data.Services;
+package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
 import java.util.Collection;
 import java.util.UUID;
 
+import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 
 public interface UserService {
 
@@ -18,7 +19,9 @@ public interface UserService {
 
     Collection<UserDto> getAllUsers();
 
-    UserDto updateUser(UUID id, UserDto userDto);
+    Boolean updateUser(String username, UpdateUserDto userDto);
 
     void delete(UUID id);
+
+    void deleteByUsername(String username);
 }

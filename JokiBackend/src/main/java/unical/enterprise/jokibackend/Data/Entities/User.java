@@ -1,17 +1,13 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
 
 @Data
 @Entity(name = "users")
@@ -22,33 +18,32 @@ public class User {
     @Column
     private UUID id;
 
-    @Column
-    private String password;
-
     @Column(unique = true)
     private String username;
-    
+
     @Column(unique = true)
     private String email;
 
     @Column
-    private String name;
+    private String firstName;
 
     @Column
-    private String surname;
+    private String lastName;
 
     @Column(columnDefinition = "DATE")
     private Date birthdate;
 
-    @Column
-    private String address;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 
-    @OneToOne
-    private Wishlist wishlist;
+    @ManyToMany
+    @JoinTable(
+        name = "libraries",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private Collection<Game> games;
 
-    @OneToMany
-    private Collection<Order> order;
-
-    @OneToMany
-    private Collection<Game> game;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Wishlist> wishlists;
 }

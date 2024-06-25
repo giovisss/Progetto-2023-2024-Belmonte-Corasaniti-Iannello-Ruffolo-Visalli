@@ -1,9 +1,10 @@
-package unical.enterprise.jokibackend.Dto;
+package unical.enterprise.jokibackend.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.UUID;
 
 @Data
@@ -13,5 +14,5 @@ public class AdminDto {
     private UUID id;
     private String username;
     private String email;
-    private String password;
+    // private Collection<GameDto> games;
 }

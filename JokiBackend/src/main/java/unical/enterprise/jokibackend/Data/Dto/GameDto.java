@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Dto;
+package unical.enterprise.jokibackend.Data.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +13,11 @@ import java.util.UUID;
 public class GameDto {
     private UUID id;
     private String title;
+    private String description;
     private Double price;
     private String imagePath;
-    private String category;
-    private String author;
+    private String genre;
+    private String developer;
     private String publisher;
     private Date releaseDate;
     private Integer stock;
