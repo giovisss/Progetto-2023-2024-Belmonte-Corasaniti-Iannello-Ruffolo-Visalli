@@ -39,7 +39,6 @@ public class UserController {
        }
    }
 
-    // ottieni un utente
    @GetMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
@@ -57,35 +56,31 @@ public class UserController {
        }
    }
 
-    // modifica un utente
    @PutMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
-//       try {
-//           if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
-//           else return ResponseEntity.notFound().build();
-//       }
-//       catch (Exception e) {
-//           logger.warning(e.getMessage());
-//           return ResponseEntity.badRequest().body("An error occurred");
-//       }
-       return ResponseEntity.internalServerError().body("Not implemented");
+    try {
+        if(userService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
+        else return ResponseEntity.notFound().build();
+    }
+    catch (Exception e) {
+        logger.warning(e.getMessage());
+        return ResponseEntity.badRequest().body("An error occurred");
+    }
    }
 
-    // elimina un utente
    @DeleteMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("plain/text")
    public ResponseEntity<String> deleteUser(@PathVariable String username) {
-//       try {
-//           keycloakService.deleteUser(username);
-//           return ResponseEntity.ok("User deleted");
-//       }
-//       catch (Exception e) {
-//           logger.warning(e.getMessage());
-//           return ResponseEntity.badRequest().body("An error occurred");
-//       }
-       return ResponseEntity.internalServerError().body("Not implemented");
+    try {
+        userService.deleteByUsername(username);
+        return ResponseEntity.ok("User deleted");
+    }
+    catch (Exception e) {
+        logger.warning(e.getMessage());
+        return ResponseEntity.badRequest().body("An error occurred");
+    }
    }
 }
