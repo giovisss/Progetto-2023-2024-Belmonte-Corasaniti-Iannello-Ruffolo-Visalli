@@ -24,14 +24,10 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-//                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll() // permetti tutte le richieste a /api/auth/** */
+//                .requestMatchers("/api/auth/**").permitAll() // permetti tutte le richieste a /api/auth/** */
                 .requestMatchers(HttpMethod.GET, "/api/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
                 .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
 
