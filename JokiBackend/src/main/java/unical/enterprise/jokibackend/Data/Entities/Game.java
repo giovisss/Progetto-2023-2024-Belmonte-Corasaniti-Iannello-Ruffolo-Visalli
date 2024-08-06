@@ -50,6 +50,6 @@ public class Game {
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
-    @ManyToMany(mappedBy = "games")
-    private Collection<User> users;
+//    @ManyToMany(mappedBy = "games")
+//    private Collection<User> users;
 }

@@ -4,32 +4,27 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Collection;
-import java.util.UUID;
+import unical.enterprise.jokibackend.Data.Entities.Embeddable.CartId;
 
 @Data
 @Entity(name = "carts")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(
+        name = "carts",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
+)
 public class Cart {
-    @Id
-    @Column
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    private UUID id;
+    @EmbeddedId
+    private CartId id;
 
     @OneToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-        name = "cart_games",
-        joinColumns = @JoinColumn(name = "cart_id"),
-        inverseJoinColumns = @JoinColumn(name = "game_id")
-    )
-    private Collection<Game> games;
-
-    @Column
-    private Double price;
+    @ManyToOne
+    @MapsId("gameId")
+    @JoinColumn(name = "game_id")
+    private Game game;
 }

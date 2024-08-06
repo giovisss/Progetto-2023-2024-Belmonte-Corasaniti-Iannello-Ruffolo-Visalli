@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Controller;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -20,7 +21,11 @@ import com.google.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 
 @RestController
 @RequestMapping("/api/games")
@@ -29,6 +34,7 @@ import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 public class GameController {
 
    private final GameService gameService;
+   private final UserService userService;
 
    Logger logger = Logger.getLogger(UserController.class.getName());
 
@@ -37,6 +43,32 @@ public class GameController {
         try {
             Collection<GameDto> games = gameService.findAll();
             return ResponseEntity.ok(new Gson().toJson(games));
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
+    }
+
+    @GetMapping(value = "/start", produces = "application/json")
+    public ResponseEntity<String> start(){
+        try {
+            for (int i = 0; i < 10; i++) {
+                GameDto game = new GameDto();
+                game.setTitle("Game " + i);
+                gameService.save(game);
+            }
+
+            for (int i = 0; i < 3; i++) {
+                User user = new User();
+                user.setId(UUID.randomUUID());
+                user.setUsername("User " + i);
+                user.setEmail("user" + i + "@gmail.com");
+                userService.save(user);
+            }
+
+
+            return ResponseEntity.ok("Server setup successfully");
         }
         catch (Exception e) {
             logger.warning(e.getMessage());

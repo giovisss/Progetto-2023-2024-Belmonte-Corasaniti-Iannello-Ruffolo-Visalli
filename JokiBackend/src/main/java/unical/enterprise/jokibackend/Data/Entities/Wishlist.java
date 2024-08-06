@@ -12,10 +12,12 @@ import java.util.UUID;
 @Entity(name = "wishlists")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "wishlist_name"})
+)
 public class Wishlist {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    @Column
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column
@@ -25,14 +27,30 @@ public class Wishlist {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(columnDefinition = "int default 0")
+    private Integer visibility;
+
+
     @ManyToMany
     @JoinTable(
         name = "wishlist_games",
         joinColumns = @JoinColumn(name = "wishlist_id"),
-        inverseJoinColumns = @JoinColumn(name = "game_id")
+        inverseJoinColumns = @JoinColumn(name = "game_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"wishlist_id", "game_id"})
     )
     private Collection<Game> games;
 
-    @Column(columnDefinition = "int default 0")
-    private Integer visibility;
+//    @ManyToOne
+//    @JoinColumn(name = "game_id")
+//    private Game game;
+//
+
+
+//    @JoinTable(
+//        name = "wishlist_games",
+//        joinColumns = @JoinColumn(name = "wishlist_id"),
+//        inverseJoinColumns = @JoinColumn(name = "game_id")
+//    )
+//    private Collection<Game> games;
+
 }

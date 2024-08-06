@@ -12,12 +12,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import unical.enterprise.jokibackend.Component.JwtAuthConverter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpSecurity> {
 
     private final JwtAuthConverter jwtAuthConverter;

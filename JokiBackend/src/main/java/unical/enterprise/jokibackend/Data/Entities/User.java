@@ -46,4 +46,14 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Wishlist> wishlists;
+
+    //manytomany per fare gli amici
+    @ManyToMany
+    @JoinTable(
+        name = "friends",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "friend_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "friend_id"})
+    )
+    private Collection<User> friends;
 }
