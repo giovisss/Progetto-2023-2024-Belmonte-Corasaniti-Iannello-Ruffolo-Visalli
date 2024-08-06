@@ -8,9 +8,7 @@ import {UserService} from "../../services/user.service";
 })
 export class LoginComponent {
   constructor(private userService:UserService) {
-      this.userService.getUser().subscribe((data) => {
-      console.log(data.toString());
-    });
+
   }
 
 

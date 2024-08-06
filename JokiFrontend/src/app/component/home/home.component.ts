@@ -8,8 +8,6 @@ import {UserService} from "../../services/user.service";
 })
 export class HomeComponent {
   constructor(private userService:UserService) {
-    this.userService.getUser().subscribe((data) => {
-      console.log(data);
-    });
+
   }
 }

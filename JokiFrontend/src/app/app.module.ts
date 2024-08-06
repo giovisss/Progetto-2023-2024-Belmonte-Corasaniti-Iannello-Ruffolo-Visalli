@@ -13,6 +13,10 @@ import { LoginComponent } from './component/login/login.component';
 import { ProductComponent } from './component/product/product.component';
 import { CartComponent } from './component/cart/cart.component';
 import { HttpClientModule } from "@angular/common/http";
+import { LibraryComponent } from './component/library/library.component';
+import { AboutComponent } from './component/about/about.component';
+import { WishlistsComponent } from './component/wishlists/wishlists.component';
+import { WishlistProductsComponent } from './component/wishlist-products/wishlist-products.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,11 @@ import { HttpClientModule } from "@angular/common/http";
     ListProductsComponent,
     LoginComponent,
     ProductComponent,
-    CartComponent
+    CartComponent,
+    LibraryComponent,
+    AboutComponent,
+    WishlistsComponent,
+    WishlistProductsComponent
   ],
   imports: [
     BrowserModule,
