@@ -36,11 +36,12 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "libraries",
         joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "game_id")
+        inverseJoinColumns = @JoinColumn(name = "game_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
     )
     private Collection<Game> games;
 

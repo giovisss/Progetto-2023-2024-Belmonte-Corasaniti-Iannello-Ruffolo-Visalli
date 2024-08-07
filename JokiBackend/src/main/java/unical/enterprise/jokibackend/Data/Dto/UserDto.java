@@ -20,4 +20,5 @@ public class UserDto {
     private Date birthdate;
     private WishlistDto wishlist;
     private Collection<CartDto> carts;
+    private Collection<GameDto> games;
 }

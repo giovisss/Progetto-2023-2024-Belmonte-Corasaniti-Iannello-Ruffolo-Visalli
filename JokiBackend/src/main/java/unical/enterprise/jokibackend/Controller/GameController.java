@@ -1,7 +1,6 @@
 package unical.enterprise.jokibackend.Controller;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -21,9 +20,7 @@ import com.google.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 
@@ -62,7 +59,7 @@ public class GameController {
             for (int i = 0; i < 3; i++) {
                 User user = new User();
                 user.setId(UUID.randomUUID());
-                user.setUsername("User " + i);
+                user.setUsername("User" + i);
                 user.setEmail("user" + i + "@gmail.com");
                 userService.save(user);
             }
