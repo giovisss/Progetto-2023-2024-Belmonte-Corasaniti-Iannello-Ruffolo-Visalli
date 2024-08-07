@@ -20,4 +20,7 @@ public interface UserDao extends JpaRepository<User, UUID> {
 
    @Query("SELECT u.games FROM users u WHERE u.username = :username")
    Optional<Collection<Game>> findGamesByUsername(@Param("username") String username);
+
+    @Query("SELECT u.friends FROM users u WHERE u.username = :username")
+    Optional<Collection<User>> findFriendsByUsername(@Param("username") String username);
 }

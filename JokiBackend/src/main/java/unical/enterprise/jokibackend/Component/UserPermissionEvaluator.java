@@ -1,15 +1,23 @@
 package unical.enterprise.jokibackend.Component;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 
 @Component
+@RequiredArgsConstructor
 public class UserPermissionEvaluator {
-
-    // Aggiungi il tuo servizio o repository qui se necessario per verificare l'amicizia tra utenti
+    private final UserService userService;
 
     public boolean isFriend(Authentication auth, Object targetUser) {
-        System.out.println("Checking if " + auth.getName() + " is friend with " + targetUser.toString());
-        return false; // Restituisci true se sono amici, false altrimenti
+        // Implementa il controllo dell'amicizia tra utenti
+        String user=auth.getName();
+        String target=targetUser.toString();
+
+        if(user.equals(target)) return true;
+
+        return (userService.getFriendByUsername(user, target) != null) &&
+                (userService.getFriendByUsername(target,user) != null);
     }
 }

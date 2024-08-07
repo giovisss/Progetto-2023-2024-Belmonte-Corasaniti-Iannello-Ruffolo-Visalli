@@ -29,4 +29,6 @@ public interface UserService {
     void deleteByUsername(String username);
 
     Collection<Game> getUsernameGames(String username);
+
+    User getFriendByUsername(String first, String second);
 }

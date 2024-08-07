@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +96,14 @@ public class UserServiceImpl implements UserService {
         return userDao.findGamesByUsername(username)
                       .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-    
+
+    @Override
+    public User getFriendByUsername(String first, String second) {
+        Collection<User> friends = userDao.findFriendsByUsername(first).orElse(null);
+
+        if(friends == null) return null;
+
+        return friends.stream().filter(friend -> friend.getUsername().equals(second)).findFirst().orElse(null);
+    }
+
 }
