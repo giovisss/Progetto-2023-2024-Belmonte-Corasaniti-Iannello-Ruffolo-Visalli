@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.CartDao;
 import unical.enterprise.jokibackend.Data.Entities.Cart;
+import unical.enterprise.jokibackend.Data.Entities.Embeddable.CartId;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.CartService;
 import unical.enterprise.jokibackend.Data.Dto.CartDto;
 
@@ -29,12 +30,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(CartId id) {
         cartDao.deleteById(id);
     }
 
     @Override
-    public CartDto update(UUID id, CartDto cartDto) {
+    public CartDto update(CartId id, CartDto cartDto) {
         Cart cart = cartDao.findById(id).orElse(null);
         if (cart == null) {
             return null;
@@ -50,7 +51,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartDto getById(UUID id) {
+    public CartDto getById(CartId id) {
         Cart cart = cartDao.findById(id).orElse(null);
         return modelMapper.map(cart, CartDto.class);
     }
