@@ -40,11 +40,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         ).collect(Collectors.toSet());
 
         // Estrazione e stampa dei dati del token
-        try {
-            extractAndPrintTokenDetails(jwt.getTokenValue());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            extractAndPrintTokenDetails(jwt.getTokenValue());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         return new JwtAuthenticationToken(jwt, authorities, getPricipleClaimName(jwt));
     }
