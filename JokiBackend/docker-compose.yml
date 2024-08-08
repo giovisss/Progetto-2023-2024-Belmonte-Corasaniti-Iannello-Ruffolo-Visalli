@@ -1,18 +1,18 @@
-#version: '3.8'
-#
-#services:
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:24.0.4
-#    container_name: keycloak
-#    environment:
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#      KC_DB: postgres
-#      KC_DB_URL_HOST: magora.it
-#      KC_DB_URL_PORT: 5432
-#      KC_DB_URL_DATABASE: ea
-#      KC_DB_USERNAME: giovanni
-#      KC_DB_PASSWORD: penepiccolo
-#    ports:
-#      - "8080:8080"
-#    command: start-dev
+version: '3.8'
+
+services:
+ keycloak:
+   image: quay.io/keycloak/keycloak:24.0.4
+   container_name: keycloak
+   environment:
+     KEYCLOAK_ADMIN: admin
+     KEYCLOAK_ADMIN_PASSWORD: admin
+     KC_DB: postgres
+     KC_DB_URL_HOST: magora.it
+     KC_DB_URL_PORT: 5432
+     KC_DB_URL_DATABASE: ea
+     KC_DB_USERNAME: giovanni
+     KC_DB_PASSWORD: penepiccolo
+   ports:
+     - "8080:8080"
+   command: start-dev
