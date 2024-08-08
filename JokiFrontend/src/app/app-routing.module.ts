@@ -7,10 +7,12 @@ import {ProductComponent} from "./component/product/product.component";
 import {LibraryComponent} from "./component/library/library.component";
 import {AboutComponent} from "./component/about/about.component";
 import {WishlistsComponent} from "./component/wishlists/wishlists.component";
+import {WishlistProductsComponent} from "./component/wishlist-products/wishlist-products.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'product/:id', component: ProductComponent },
+  { path: 'wishlists/:name', component: WishlistProductsComponent },
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
   { path: 'library', component: LibraryComponent},
   { path: 'wishlists', component: WishlistsComponent},

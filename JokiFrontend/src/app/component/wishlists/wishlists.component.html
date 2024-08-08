@@ -12,11 +12,12 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let wishlist of wishlists" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+    <tr *ngFor="let wishlist of wishlists" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        (click)="OpenWishlistDetails(wishlist)">
       <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white text-center">{{ wishlist.name }}</td>
       <td class="px-6 py-4 text-center">
         <ul>
-          <li>{{ wishlist.wishListProducts.length }}</li>
+          <li class="px-6 py-4 font-semibold text-gray-900 dark:text-white text-center">{{ wishlist.wishListProducts.length }}</li>
         </ul>
       </td>
       <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white text-center">{{ wishlist.visibility }}</td>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Wishlist} from "../model/wishlist";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,11 @@ export class WishlistService {
 
   getWishlists() {
     return JSON.parse(localStorage.getItem('wishlists') || '[]');
+  }
+
+  getWishlist(name: string) {
+    const wishlists = this.getWishlists();
+    return of(wishlists.find((w: { name: string; }) => w.name === name));
   }
 
   addWishlist(wishlist: Wishlist) {

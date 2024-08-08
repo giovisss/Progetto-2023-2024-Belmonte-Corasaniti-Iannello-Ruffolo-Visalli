@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {Wishlist} from "../../model/wishlist";
 import {WishlistService} from "../../services/wishlist.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-wishlists',
@@ -10,7 +11,7 @@ import {WishlistService} from "../../services/wishlist.service";
 export class WishlistsComponent {
   wishlists: Wishlist[] = [];
 
-  constructor(private wishlistService: WishlistService) {}
+  constructor(private wishlistService: WishlistService, private router: Router) {}
 
   ngOnInit() {
     this.wishlists = this.wishlistService.getWishlists();
@@ -24,4 +25,9 @@ export class WishlistsComponent {
     this.wishlistService.removeWishlist(wishlist);
     this.loadWishlists();
   }
+
+  OpenWishlistDetails(wishlist: Wishlist) {
+    this.router.navigate(['/wishlists', wishlist.name]);
+  }
+
 }
