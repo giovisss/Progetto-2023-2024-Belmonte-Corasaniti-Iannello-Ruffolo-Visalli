@@ -12,6 +12,7 @@ import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
+import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -77,6 +78,12 @@ public class GameController {
     @PreAuthorize("@userPermissionEvaluator.isFriend(authentication, #username)")
     public ResponseEntity<String> getFriends(@PathVariable String username) {
         return ResponseEntity.ok("You are friends");
+    }
+
+    @PostMapping("tmp")
+    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
+    public ResponseEntity<String> tmp() {
+        return ResponseEntity.ok(UserContextHolder.getContext().toString());
     }
 
 
