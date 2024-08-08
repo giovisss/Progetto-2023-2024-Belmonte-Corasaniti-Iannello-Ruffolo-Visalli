@@ -39,13 +39,6 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet());
 
-        // Estrazione e stampa dei dati del token
-//        try {
-//            extractAndPrintTokenDetails(jwt.getTokenValue());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
         return new JwtAuthenticationToken(jwt, authorities, getPricipleClaimName(jwt));
     }
 
@@ -78,28 +71,5 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         return resourceRoles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toSet());
-    }
-
-    private void extractAndPrintTokenDetails(String token) throws ParseException {
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-
-        String scope = claims.getStringClaim("scope");
-        String sid = claims.getStringClaim("sid");
-        Boolean emailVerified = claims.getBooleanClaim("email_verified");
-        String name = claims.getStringClaim("name");
-        String preferredUsername = claims.getStringClaim("preferred_username");
-        String givenName = claims.getStringClaim("given_name");
-        String familyName = claims.getStringClaim("family_name");
-        String email = claims.getStringClaim("email");
-
-        System.out.println("Scope: " + scope);
-        System.out.println("SID: " + sid);
-        System.out.println("Email Verified: " + emailVerified);
-        System.out.println("Name: " + name);
-        System.out.println("Preferred Username: " + preferredUsername);
-        System.out.println("Given Name: " + givenName);
-        System.out.println("Family Name: " + familyName);
-        System.out.println("Email: " + email);
     }
 }
