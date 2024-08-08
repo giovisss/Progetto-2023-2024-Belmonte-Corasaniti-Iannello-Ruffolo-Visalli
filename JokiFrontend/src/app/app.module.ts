@@ -17,6 +17,7 @@ import { LibraryComponent } from './component/library/library.component';
 import { AboutComponent } from './component/about/about.component';
 import { WishlistsComponent } from './component/wishlists/wishlists.component';
 import { WishlistProductsComponent } from './component/wishlist-products/wishlist-products.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { WishlistProductsComponent } from './component/wishlist-products/wishlis
     BrowserModule,
     AppRoutingModule,
     KeycloakAngularModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     {

@@ -1,1 +1,30 @@
-<p>wishlists works!</p>
+<div class="relative overflow-x-auto shadow-md">
+  <div class="py-4 text-center">
+    <h2 class="text-2xl font-bold tracking-tight text-gray-900">Le mie Wishlist</h2>
+  </div>
+  <table class="w-full max-w-7xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8 pb-32">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <tr>
+      <th scope="col" class="px-6 py-3 text-center">Wishlist</th>
+      <th scope="col" class="px-6 py-3 text-center">Prodotti</th>
+      <th scope="col" class="px-6 py-3 text-center">Visibilità</th>
+      <th scope="col" class="px-6 py-3 text-center">Elimina</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let wishlist of wishlists" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+      <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white text-center">{{ wishlist.name }}</td>
+      <td class="px-6 py-4 text-center">
+        <ul>
+          <li>{{ wishlist.wishListProducts.length }}</li>
+        </ul>
+      </td>
+      <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white text-center">{{ wishlist.visibility }}</td>
+      <td class="px-6 py-4 text-center">
+        <button (click)="removeWishlist(wishlist)" class="text-red-500 hover:text-red-700">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+    </tr>
+    </tbody>
+  </table>
+</div>
