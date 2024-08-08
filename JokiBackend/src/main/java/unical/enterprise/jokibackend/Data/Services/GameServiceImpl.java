@@ -56,6 +56,7 @@ public class GameServiceImpl implements GameService{
         ModelMapper modelMapperUpdater = new ModelMapper();
         modelMapperUpdater.typeMap(unical.enterprise.jokibackend.Data.Dto.GameDto.class, GameDto.class).addMappings(mapper -> {
             mapper.skip(GameDto::setId);
+            mapper.skip(GameDto::setAdmin);
         });
         modelMapperUpdater.map(gameDto, game);
         gameDao.save(game);

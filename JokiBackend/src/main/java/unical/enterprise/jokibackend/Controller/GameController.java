@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
@@ -116,13 +114,13 @@ public class GameController {
    @PreAuthorize("hasRole('client_admin')")
    public ResponseEntity<String> addGame(@RequestBody GameDto gameDto) {
        try {
-
-			gameDto.setAdmin(adminService
-                .getByUsername(SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName())
-            );
+			// gameDto.setAdmin(adminService
+            //     .getByUsername(SecurityContextHolder
+            //     .getContext()
+            //     .getAuthentication()
+            //     .getName())
+            // );
+            gameDto.setAdmin(adminService.getByUsername(UserContextHolder.getContext().getPreferredUsername()));
 
         	if(gameService.save(gameDto) != null) {
                return ResponseEntity.ok("Successfully added game");
