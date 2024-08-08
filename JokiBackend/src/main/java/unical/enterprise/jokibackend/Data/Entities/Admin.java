@@ -23,6 +23,6 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Game> games;
+    // @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private Collection<Game> games;
 }
