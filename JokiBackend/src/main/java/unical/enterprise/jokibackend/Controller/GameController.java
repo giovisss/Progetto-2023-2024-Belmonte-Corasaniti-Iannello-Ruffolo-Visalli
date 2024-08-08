@@ -163,6 +163,23 @@ public class GameController {
        }
    }
 
+    @GetMapping(value = "/by-admin", produces = "application/json")
+    @PreAuthorize("hasRole('client_admin')")
+    public ResponseEntity<String> getGamesByAdmin() {
+        try {
+            Collection<GameDto> games = adminService.findGamesByAdminUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null);
+            if (games != null) {
+                return ResponseEntity.ok(new Gson().toJson(games));
+            } else {
+                throw new Exception("Games not found");
+            }
+        }
+        catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("An error occurred");
+        }
+    }
+
    // @GetMapping("/by-title/{title}")
    // @PreAuthorize("hasRole('client_user')")
    // @Produces("application/json")

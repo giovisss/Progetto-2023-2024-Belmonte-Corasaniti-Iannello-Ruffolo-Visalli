@@ -5,9 +5,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.AdminDao;
 import unical.enterprise.jokibackend.Data.Entities.Admin;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Dto.AdminDto;
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
+
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -44,15 +48,6 @@ public class AdminServiceImpl implements AdminService{
                 .toList();
     }
 
-    // @Override
-    // public Collection<GameDto> getGamesInsertByAdminId(UUID id) {
-    //     List<GameDto> games = adminDao.findGamesInsertByAdminId(id)
-    //             .stream().map(game -> modelMapper
-    //             .map(game, GameDto.class))
-    //             .toList();
-    //     return games;
-    // }
-
     @Override
     public AdminDto updateAdmin(UUID id, AdminDto adminDto) {
         Admin admin = modelMapper.map(adminDto, Admin.class);
@@ -78,5 +73,14 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public void delete(UUID id) {
         adminDao.deleteById(id);
+    }
+
+    @Override
+    public Optional<Collection<GameDto>> findGamesByAdminUsername(String username) {
+        return Optional.ofNullable(adminDao.findGamesByAdminUsername(username)
+                .map(games -> games.stream()
+                        .map(game -> modelMapper.map(game, GameDto.class))
+                        .toList())
+                .orElse(null));
     }
 }
