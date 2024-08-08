@@ -47,7 +47,7 @@ public class Game {
     private Integer stock;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Admin admin;
 
 //    @ManyToMany(mappedBy = "games")

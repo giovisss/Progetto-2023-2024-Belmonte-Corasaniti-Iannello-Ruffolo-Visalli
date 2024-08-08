@@ -21,4 +21,5 @@ public class GameDto {
     private String publisher;
     private Date releaseDate;
     private Integer stock;
+    private AdminDto admin;
 }
