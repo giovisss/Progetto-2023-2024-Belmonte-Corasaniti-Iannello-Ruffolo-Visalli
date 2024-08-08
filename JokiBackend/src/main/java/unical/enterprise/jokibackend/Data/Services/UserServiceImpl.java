@@ -1,12 +1,10 @@
 package unical.enterprise.jokibackend.Data.Services;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
@@ -91,10 +88,12 @@ public class UserServiceImpl implements UserService {
 
         return modelMapper.map(user, UserDto.class);
     }
-
-    public Collection<Game> getUsernameGames(String username) {
+    public Collection<GameDto> getUsernameGames(String username) {
         return userDao.findGamesByUsername(username)
-                      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                       .orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                       .stream()
+                       .map(game -> modelMapper.map(game, GameDto.class))
+                       .collect(Collectors.toList());
     }
 
     @Override
