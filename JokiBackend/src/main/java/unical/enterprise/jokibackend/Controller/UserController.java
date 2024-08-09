@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-//import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
+import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class UserController {
    Logger logger = Logger.getLogger(UserController.class.getName());
 
-//   private final KeycloakServiceImpl keycloakService;
+   private final KeycloakServiceImpl keycloakService;
    private final UserServiceImpl userService;
 
     // lista degli utenti
@@ -57,32 +57,50 @@ public class UserController {
        }
    }
 
-    @PutMapping("/{username}")
-    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
-    @Produces("application/json")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
-        try {
-            if(userService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
-            else return ResponseEntity.notFound().build();
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
-    }
+    // modifica un utente
+   @PutMapping("/{username}")
+   @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
+   @Produces("application/json")
+   public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
+       try {
+           if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
+           else return ResponseEntity.notFound().build();
+       }
+       catch (Exception e) {
+           logger.warning(e.getMessage());
+           return ResponseEntity.badRequest().body("An error occurred");
+       }
+       //return ResponseEntity.internalServerError().body("Not implemented");
+   }
 
+//    @DeleteMapping("/{username}")
+//    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
+//    @Produces("plain/text")
+//    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+//        try {
+//            userService.deleteByUsername(username);
+//            return ResponseEntity.ok("User deleted");
+//        }
+//        catch (Exception e) {
+//            logger.warning(e.getMessage());
+//            return ResponseEntity.badRequest().body("An error occurred");
+//        }
+//    }
+
+    // elimina un utente
     @DeleteMapping("/{username}")
     @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
     @Produces("plain/text")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
-        try {
-            userService.deleteByUsername(username);
-            return ResponseEntity.ok("User deleted");
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
+       try {
+           keycloakService.deleteUser(username);
+           return ResponseEntity.ok("User deleted");
+       }
+       catch (Exception e) {
+           logger.warning(e.getMessage());
+           return ResponseEntity.badRequest().body("An error occurred");
+       }
+        //return ResponseEntity.internalServerError().body("Not implemented");
     }
 
     @GetMapping(value = "/games", produces = "application/json")
