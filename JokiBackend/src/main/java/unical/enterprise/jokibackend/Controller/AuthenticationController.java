@@ -28,7 +28,6 @@ public class AuthenticationController {
    public ResponseEntity<String> register(@RequestBody KeycloakUserDTO userDTO) {
        if(service.addUser(userDTO) != null)
            return ResponseEntity.ok(KeycloakManager.getUserToken(userDTO.getUsername(), userDTO.getPassword()));
-
        return ResponseEntity.badRequest().body("Error while registering user");
    }
 }
