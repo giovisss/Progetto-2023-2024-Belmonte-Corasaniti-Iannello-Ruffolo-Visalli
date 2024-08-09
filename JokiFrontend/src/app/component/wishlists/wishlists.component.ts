@@ -10,6 +10,9 @@ import {Router} from "@angular/router";
 })
 export class WishlistsComponent {
   wishlists: Wishlist[] = [];
+  newWishlistName = '';
+  newWishlistVisibility: number = 1;
+  showModal = false;
 
   constructor(private wishlistService: WishlistService, private router: Router) {}
 
@@ -20,6 +23,26 @@ export class WishlistsComponent {
   loadWishlists() {
     this.wishlists = this.wishlistService.getWishlists();
   }
+
+    openModal() {
+        this.showModal = true;
+    }
+
+    closeModal() {
+        this.showModal = false;
+    }
+
+    createWishlist() {
+        const newWishlist: Wishlist = {
+            name: this.newWishlistName,
+            wishListProducts: [],
+            visibility: this.newWishlistVisibility
+        };
+        this.wishlistService.addWishlist(newWishlist)
+        this.loadWishlists();
+        console.log('Wishlist creata con successo!');
+        this.closeModal();
+    }
 
   removeWishlist(wishlist: Wishlist) {
     this.wishlistService.removeWishlist(wishlist);
