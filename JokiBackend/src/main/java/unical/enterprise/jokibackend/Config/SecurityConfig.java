@@ -6,6 +6,8 @@ import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticatio
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,9 +26,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class SecurityConfig {
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
+    public void configureGlobal(AuthenticationManagerBuilder auth, @Lazy KeycloakAuthenticationProvider keycloakAuthenticationProvider) {
         auth.authenticationProvider(keycloakAuthenticationProvider);
     }
 
@@ -41,21 +41,22 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Lazy
+    public KeycloakAuthenticationProvider keycloakAuthenticationProvider() {
+        KeycloakAuthenticationProvider provider = new KeycloakAuthenticationProvider();
+        provider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
+        return provider;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/secure/*").hasRole("USER")
                         .anyRequest().permitAll()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
-    }
-
-    @Bean
-    public KeycloakAuthenticationProvider keycloakAuthenticationProvider() {
-        KeycloakAuthenticationProvider provider = new KeycloakAuthenticationProvider();
-        provider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
-        return provider;
     }
 }
 
