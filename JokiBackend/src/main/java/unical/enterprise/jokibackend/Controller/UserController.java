@@ -4,11 +4,12 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
-import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
+// import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import javax.ws.rs.Produces;
 
@@ -108,8 +109,8 @@ public class UserController {
     public ResponseEntity<String> getUserGameList() {
         try {
             Gson gson = new Gson();
-            // var out = userService.getUsernameGames(SecurityContextHolder.getContext().getAuthentication().getName());
-            var out = userService.getUsernameGames(UserContextHolder.getContext().getPreferredUsername());
+            var out = userService.getUsernameGames(SecurityContextHolder.getContext().getAuthentication().getName());
+            // var out = userService.getUsernameGames(UserContextHolder.getContext().getPreferredUsername());
             return ResponseEntity.ok(gson.toJson(out));
         }
         catch (Exception e) {

@@ -50,8 +50,8 @@ public class KeycloakServiceImpl implements KeyCloakService{
                 return createLocalUser(tmp);
             }
         } catch (Exception e){
-            deleteUser(getUser(user.getUsername()).getId());
-            userDao.deleteByUsername(user.getUsername());
+            // deleteUser(getUser(user.getUsername()).getId());
+            // userDao.deleteByUsername(user.getUsername());
         }
 
         return null;
