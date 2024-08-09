@@ -44,6 +44,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
+import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.GameViewModel
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        IPManager.setIps(this)
         enableEdgeToEdge()
         authManager = AuthManager(this)
         setContent {
