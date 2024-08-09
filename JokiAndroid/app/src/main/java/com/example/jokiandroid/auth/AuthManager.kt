@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.example.jokiandroid.config.AuthConfig
+import com.example.jokiandroid.utility.IPManager
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -95,7 +96,7 @@ class AuthManager(private val context: Context) {
     }
 
     fun callApiWithAuthorization(accessToken: String?) {
-        val url = "http://192.168.1.5:8081/api/carts/bbb"
+        val url = "http://${IPManager.BACKEND_IP}/api/carts/bbb"
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)

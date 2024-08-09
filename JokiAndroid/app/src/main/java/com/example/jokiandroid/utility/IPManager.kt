@@ -5,7 +5,6 @@ import com.example.jokiandroid.R
 
 object IPManager {
     var KEYCLOAK_IP: String = ""
-        get() = field
         set(value) {
             if (field == "") {
                 field = value
@@ -14,7 +13,6 @@ object IPManager {
             }
         }
     var BACKEND_IP: String = ""
-        get() = field
         set(value) {
             if (field == "") {
                 field = value

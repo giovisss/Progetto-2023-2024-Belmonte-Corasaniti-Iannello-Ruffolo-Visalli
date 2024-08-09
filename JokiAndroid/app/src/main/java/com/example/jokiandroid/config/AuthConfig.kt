@@ -1,5 +1,7 @@
 package com.example.jokiandroid.config
 
+import com.example.jokiandroid.utility.IPManager
+
 object AuthConfig {
     const val CLIENT_ID = "JokiClient"
     const val REDIRECT_URI = "joki://login"
@@ -8,5 +10,8 @@ object AuthConfig {
     // viene utilizzato per ottenere dinamicamente i dettagli di configurazione di Keycloak, come gli endpoint di autorizzazione, token, ecc. Utilizzando questo URL,
     // non è necessario specificare manualmente gli endpoint di autorizzazione e token.
 
-    const val DISCOVERY_URI = "http://192.168.1.5:8080/realms/JokiRealm/.well-known/openid-configuration"
+    var DISCOVERY_URI = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm/.well-known/openid-configuration"
+        set(value) {
+            throw Exception("Non puoi cambiare il valore di questa variabile")
+        }
 }
