@@ -58,7 +58,7 @@ public class User {
     )
     private Collection<User> friends;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "carts",
         joinColumns = @JoinColumn(name = "user_id"),

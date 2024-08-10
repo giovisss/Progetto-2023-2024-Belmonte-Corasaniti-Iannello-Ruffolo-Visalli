@@ -1,7 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,6 @@ import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
@@ -124,12 +122,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean removeGameFromUserLibrary(String username, UUID gameId) {
-        // Verifica se il gioco esiste
         if (!gameDao.existsById(gameId)) {
             throw new EntityNotFoundException("Game not found");
         }
-
-        // Rimuovi il gioco dalla libreria dell'utente
         int updatedRows = userDao.removeGameFromLibrary(username, gameId);
         return updatedRows > 0;
     }
@@ -138,8 +133,6 @@ public class UserServiceImpl implements UserService {
     public Collection<GameDto> getUserCart(String username) {
         User user = userDao.findUserByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // Mappa i giochi del carrello dell'utente in GameDto
         return user.getCartGames()
                 .stream()
                 .map(game -> modelMapper.map(game, GameDto.class))
@@ -149,12 +142,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean addGameToUserCart(String username, UUID gameId) {
-        // Verifica se il gioco esiste
         if (!gameDao.existsById(gameId)) {
             throw new EntityNotFoundException("Game not found");
         }
-
-        // Aggiungi il gioco al carrello dell'utente utilizzando il DAO
         int updatedRows = userDao.addGameToCart(username, gameId);
         return updatedRows > 0;
     }
@@ -162,7 +152,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean removeGameFromUserCart(String username, UUID gameId) {
-        // Rimuovi il gioco dal carrello dell'utente utilizzando il DAO
         int updatedRows = userDao.removeGameFromCart(username, gameId);
         return updatedRows > 0;
     }
