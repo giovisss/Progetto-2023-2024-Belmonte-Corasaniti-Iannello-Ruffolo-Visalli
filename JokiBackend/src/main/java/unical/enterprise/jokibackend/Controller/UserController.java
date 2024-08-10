@@ -14,6 +14,7 @@ import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHol
 
 import javax.ws.rs.Produces;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -88,6 +89,7 @@ public class UserController {
         }
     }
 
+    // Controller libreria
     @GetMapping(value = "/games", produces = "application/json")
     @PreAuthorize("hasRole('client_user')")
     public ResponseEntity<String> getUserGameList() {
@@ -104,6 +106,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/{username}/library/{gameId}", produces = "application/json")
+    @PreAuthorize("hasRole('client_user') or #username == authentication.name")
     public ResponseEntity<String> addGameToLibrary(@PathVariable String username, @PathVariable UUID gameId) {
         boolean added = userService.addGameToUserLibrary(username, gameId);
         if (added) {
@@ -114,6 +117,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{username}/library/{gameId}", produces = "application/json")
+    @PreAuthorize("hasRole('client_user') or #username == authentication.name")
     public ResponseEntity<String> removeGameFromLibrary(@PathVariable String username, @PathVariable UUID gameId) {
         boolean removed = userService.removeGameFromUserLibrary(username, gameId);
         if (removed) {
@@ -122,4 +126,52 @@ public class UserController {
             return ResponseEntity.badRequest().body("{\"message\": \"Failed to remove game from library\"}");
         }
     }
+    // Fine controller libreria
+
+    // Controller carrello
+    @GetMapping(value = "/{username}/cart", produces = "application/json")
+    @PreAuthorize("hasRole('client_user') or #username == authentication.name")
+    public ResponseEntity<String> getUserCart(@PathVariable String username) {
+        try {
+            Gson gson = new Gson();
+            Collection<GameDto> cartGames = userService.getUserCart(username);
+            return ResponseEntity.ok(gson.toJson(cartGames));
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
+        }
+    }
+
+    @PostMapping(value = "/{username}/cart/{gameId}", produces = "application/json")
+    @PreAuthorize("hasRole('client_user') or #username == authentication.name")
+    public ResponseEntity<String> addGameToCart(@PathVariable String username, @PathVariable UUID gameId) {
+        try {
+            boolean added = userService.addGameToUserCart(username, gameId);
+            if (added) {
+                return ResponseEntity.ok("{\"message\": \"Game added to cart successfully\", \"gameId\": \"" + gameId + "\"}");
+            } else {
+                return ResponseEntity.badRequest().body("{\"message\": \"Failed to add game to cart\"}");
+            }
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
+        }
+    }
+
+    @DeleteMapping(value = "/{username}/cart/{gameId}", produces = "application/json")
+    @PreAuthorize("hasRole('client_user') or #username == authentication.name")
+    public ResponseEntity<String> removeGameFromCart(@PathVariable String username, @PathVariable UUID gameId) {
+        try {
+            boolean removed = userService.removeGameFromUserCart(username, gameId);
+            if (removed) {
+                return ResponseEntity.ok("{\"message\": \"Game removed from cart successfully\", \"gameId\": \"" + gameId + "\"}");
+            } else {
+                return ResponseEntity.badRequest().body("{\"message\": \"Failed to remove game from cart\"}");
+            }
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
+        }
+    }
+    // Fine controller carrello
 }

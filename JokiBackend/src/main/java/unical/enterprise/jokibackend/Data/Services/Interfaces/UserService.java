@@ -33,4 +33,10 @@ public interface UserService {
     boolean addGameToUserLibrary(String username, UUID gameId);
 
     boolean removeGameFromUserLibrary(String username, UUID gameId);
+
+    Collection<GameDto> getUserCart(String username);
+
+    boolean addGameToUserCart(String username, UUID gameId);
+
+    boolean removeGameFromUserCart(String username, UUID gameId);
 }

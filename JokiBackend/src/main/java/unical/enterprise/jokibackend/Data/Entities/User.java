@@ -33,8 +33,8 @@ public class User {
     @Column(columnDefinition = "DATE")
     private Date birthdate;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Cart cart;
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private Cart cart;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -57,4 +57,13 @@ public class User {
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "friend_id"})
     )
     private Collection<User> friends;
+
+    @ManyToMany
+    @JoinTable(
+        name = "carts",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "game_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
+    )
+    private Collection<Game> cartGames;
 }
