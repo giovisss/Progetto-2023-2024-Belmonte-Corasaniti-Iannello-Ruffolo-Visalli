@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,19 @@ public interface UserDao extends JpaRepository<User, UUID> {
 
     @Query("SELECT u.friends FROM users u WHERE u.username = :username")
     Optional<Collection<User>> findFriendsByUsername(@Param("username") String username);
+    
+    @Modifying
+    @Query(value = "INSERT INTO libraries (user_id, game_id) " +
+                   "SELECT u.id, :gameId FROM users u WHERE u.username = :username", 
+           nativeQuery = true)
+    int addGameToLibrary(@Param("username") String username, @Param("gameId") UUID gameId);
+    
+
+    @Modifying
+    @Query(value = "DELETE FROM libraries " +
+                   "WHERE user_id = (SELECT id FROM users WHERE username = :username) " +
+                   "AND game_id = :gameId", 
+           nativeQuery = true)
+    int removeGameFromLibrary(@Param("username") String username, @Param("gameId") UUID gameId);
+    ;
 }

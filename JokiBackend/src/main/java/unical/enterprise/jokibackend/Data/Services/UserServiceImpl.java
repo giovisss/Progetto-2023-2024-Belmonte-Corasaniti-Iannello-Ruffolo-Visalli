@@ -8,10 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
@@ -21,8 +25,8 @@ import unical.enterprise.jokibackend.Data.Dto.UserDto;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
-
     private final ModelMapper modelMapper;
+    private final GameDao gameDao;
 
     @Override
     public void save(User user) {
@@ -105,4 +109,26 @@ public class UserServiceImpl implements UserService {
         return friends.stream().filter(friend -> friend.getUsername().equals(second)).findFirst().orElse(null);
     }
 
+    @Override
+    @Transactional
+    public boolean addGameToUserLibrary(String username, UUID gameId) {
+        if (!gameDao.existsById(gameId)) {
+            throw new EntityNotFoundException("Game not found");
+        }
+        int updatedRows = userDao.addGameToLibrary(username, gameId);
+        return updatedRows > 0;
+    }
+    
+    @Override
+    @Transactional
+    public boolean removeGameFromUserLibrary(String username, UUID gameId) {
+        // Verifica se il gioco esiste
+        if (!gameDao.existsById(gameId)) {
+            throw new EntityNotFoundException("Game not found");
+        }
+
+        // Rimuovi il gioco dalla libreria dell'utente
+        int updatedRows = userDao.removeGameFromLibrary(username, gameId);
+        return updatedRows > 0;
+    }
 }

@@ -29,4 +29,8 @@ public interface UserService {
     Collection<GameDto> getUsernameGames(String username);
 
     User getFriendByUsername(String first, String second);
+
+    boolean addGameToUserLibrary(String username, UUID gameId);
+
+    boolean removeGameFromUserLibrary(String username, UUID gameId);
 }

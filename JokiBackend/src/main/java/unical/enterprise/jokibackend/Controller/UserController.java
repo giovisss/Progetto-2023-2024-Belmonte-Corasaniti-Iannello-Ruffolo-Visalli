@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 //import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
 import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
@@ -12,6 +14,7 @@ import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHol
 
 import javax.ws.rs.Produces;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
@@ -97,6 +100,26 @@ public class UserController {
         catch (Exception e) {
             logger.warning(e.getMessage());
             return ResponseEntity.badRequest().body("An error occurred");
+        }
+    }
+
+    @PostMapping(value = "/{username}/library/{gameId}", produces = "application/json")
+    public ResponseEntity<String> addGameToLibrary(@PathVariable String username, @PathVariable UUID gameId) {
+        boolean added = userService.addGameToUserLibrary(username, gameId);
+        if (added) {
+            return ResponseEntity.ok("{\"message\": \"Game added to library successfully\", \"gameId\": \"" + gameId + "\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Failed to add game to library\"}");
+        }
+    }
+
+    @DeleteMapping(value = "/{username}/library/{gameId}", produces = "application/json")
+    public ResponseEntity<String> removeGameFromLibrary(@PathVariable String username, @PathVariable UUID gameId) {
+        boolean removed = userService.removeGameFromUserLibrary(username, gameId);
+        if (removed) {
+            return ResponseEntity.ok("{\"message\": \"Game removed from library successfully\", \"gameId\": \"" + gameId + "\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Failed to remove game from library\"}");
         }
     }
 }
