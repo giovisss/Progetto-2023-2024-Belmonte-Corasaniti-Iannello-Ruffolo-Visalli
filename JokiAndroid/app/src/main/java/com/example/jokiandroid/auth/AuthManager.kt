@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.jokiandroid.config.AuthConfig
 import com.example.jokiandroid.utility.IPManager
 import net.openid.appauth.AppAuthConfiguration
@@ -75,6 +78,8 @@ class AuthManager(private val context: Context) {
                 val tokenRequest = response.createTokenExchangeRequest()
                 authService.performTokenRequest(tokenRequest) { tokenResponse, exception ->
                     if (tokenResponse != null) {
+//                        authState.update(tokenResponse, exception) // TODO: capire come funonzia
+
                         Log.d("Auth", "Access Token: ${tokenResponse.accessToken}")
                         Log.d("Auth", "ID Token: ${tokenResponse.idToken}")
                         onTokenReceived(tokenResponse.accessToken, tokenResponse.idToken)
@@ -93,6 +98,20 @@ class AuthManager(private val context: Context) {
 
     companion object {
         const val RC_AUTH = 100  // Codice di richiesta univoco per la richiesta di autenticazione
+
+//        private val _token = MutableLiveData<String>()
+//        val token: LiveData<String> get() = _token
+//
+//        fun setToken(t: String) {
+//            _token.value = t
+//        }
+//
+//        private val _isLogged = MutableLiveData<Boolean>()
+//        val isLogged: LiveData<Boolean> get() = _isLogged
+//
+//        fun setContent(b:Boolean) {
+//            _isLogged.value = b
+//        }
     }
 
     fun callApiWithAuthorization(accessToken: String?) {
