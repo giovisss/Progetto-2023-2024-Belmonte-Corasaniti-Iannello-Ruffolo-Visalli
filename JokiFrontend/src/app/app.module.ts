@@ -4,7 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
-import {initializeKeycloak} from "./init/keycloak-init.factory";
+import {KeycloakInitService} from "./services/keycloak-init.service";
+//import {initializeKeycloak} from "./init/keycloak-init.factory";
 import { HomeComponent } from './component/home/home.component';
 import { HeaderComponent } from './component/header/header.component';
 import { FooterComponent } from './component/footer/footer.component';
@@ -18,6 +19,10 @@ import { AboutComponent } from './component/about/about.component';
 import { WishlistsComponent } from './component/wishlists/wishlists.component';
 import { WishlistProductsComponent } from './component/wishlist-products/wishlist-products.component';
 import {FormsModule} from "@angular/forms";
+
+function initializeKeycloak(keycloak: KeycloakInitService) {
+  return () => keycloak.init();
+}
 
 @NgModule({
   declarations: [
@@ -46,7 +51,7 @@ import {FormsModule} from "@angular/forms";
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService],
+      deps: [KeycloakInitService],
     }
   ],
   bootstrap: [AppComponent]

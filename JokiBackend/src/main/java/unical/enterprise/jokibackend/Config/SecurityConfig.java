@@ -19,6 +19,10 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
@@ -126,6 +130,23 @@ class SecurityConfig {
     Collection<GrantedAuthority> generateAuthoritiesFromClaim(Collection<String> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(
                 Collectors.toList());
+    }
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(this.keycloakClientRegistration());
+    }
+
+    private ClientRegistration keycloakClientRegistration() {
+        return ClientRegistration.withRegistrationId("keycloak")
+                .clientId("JokiBackend")
+                .clientSecret("BAAHnEU37J7LX0Do6sRcsDN9IZNVs20g")
+                .scope("openid")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/auth")
+                .tokenUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/token")
+                .userInfoUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/userinfo")
+                .redirectUri("http://localhost:8081/login/oauth2/code/keycloak")
+                .build();
     }
 }
 
