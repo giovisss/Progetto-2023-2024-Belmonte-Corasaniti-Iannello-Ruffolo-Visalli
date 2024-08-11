@@ -15,7 +15,6 @@ fun LoginActivity(navController: NavController) {
     Surface {
         Text(
             modifier = Modifier
-                .padding(top = 50.dp)
                 .fillMaxWidth()
                 .padding(16.dp),
 
