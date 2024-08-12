@@ -1,18 +1,20 @@
-package unical.enterprise.jokibackend.Controller;
+package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
-import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
+// import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -81,7 +83,8 @@ public class GameController {
     @PostMapping("tmp")
     @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
     public ResponseEntity<String> tmp() {
-        return ResponseEntity.ok(UserContextHolder.getContext().toString());
+        // return ResponseEntity.ok(UserContextHolder.getContext().toString());
+        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 
@@ -120,7 +123,8 @@ public class GameController {
             //     .getAuthentication()
             //     .getName())
             // );
-            gameDto.setAdmin(adminService.getByUsername(UserContextHolder.getContext().getPreferredUsername()));
+            // gameDto.setAdmin(adminService.getByUsername(UserContextHolder.getContext().getPreferredUsername()));
+            gameDto.setAdmin(adminService.getByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
 
         	if(gameService.save(gameDto) != null) {
                return ResponseEntity.ok("Successfully added game");
@@ -167,7 +171,8 @@ public class GameController {
     @PreAuthorize("hasRole('client_admin')")
     public ResponseEntity<String> getGamesByAdmin() {
         try {
-            Collection<GameDto> games = adminService.findGamesByAdminUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null);
+            // Collection<GameDto> games = adminService.findGamesByAdminUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null);
+            Optional<Collection<GameDto>> games = adminService.findGamesByAdminUsername(SecurityContextHolder.getContext().getAuthentication().getName());
             if (games != null) {
                 return ResponseEntity.ok(new Gson().toJson(games));
             } else {

@@ -1,9 +1,10 @@
-package unical.enterprise.jokibackend.Controller;
+package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unical.enterprise.jokibackend.Controller.UserController;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
 
