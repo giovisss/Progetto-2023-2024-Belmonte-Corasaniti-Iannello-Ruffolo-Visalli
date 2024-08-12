@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ProductsService} from "../../services/products.service";
-import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-list-products',
@@ -9,8 +8,7 @@ import {UserService} from "../../services/user.service";
 })
 export class ListProductsComponent {
   protected products: any;
-  constructor(private productsService: ProductsService, private userService:UserService) {
-    this.userService.test()
+  constructor(private productsService: ProductsService) {
     this.productsService.getProductList().subscribe((products: any) => {
       this.products = products;
     });
