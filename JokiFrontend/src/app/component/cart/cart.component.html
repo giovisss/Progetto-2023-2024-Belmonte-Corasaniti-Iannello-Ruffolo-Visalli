@@ -45,14 +45,14 @@
                   <ul role="list" class="-my-6 divide-y divide-gray-200">
                     <li class="flex py-6" *ngFor="let item of cart">
                       <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <img [src]="item.product.url" [alt]="item.product.name" class="h-full w-full object-cover object-center">
+                        <img [src]="item.product.imagePath" [alt]="item.product.title" class="h-full w-full object-cover object-center">
                       </div>
 
                       <div class="ml-4 flex flex-1 flex-col">
                         <div>
                           <div class="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                              <a href="/product/{{item.product.id}}">{{item.product.name}}</a>
+                              <a href="/product/{{item.product.id}}">{{item.product.title}}</a>
                             </h3>
                             <p class="ml-4">{{item.product.price|currency:"EUR"}}</p>
                           </div>

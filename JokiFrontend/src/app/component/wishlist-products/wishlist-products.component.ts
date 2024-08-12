@@ -11,7 +11,7 @@ import {ActivatedRoute} from "@angular/router";
 export class WishlistProductsComponent {
   wishlist: Wishlist | null = null; // Memorizza i dati della wishlist
 
-  showProductDetails: { [productId: number]: boolean } = {}; // Oggetto per tenere traccia della visibilità dei dettagli
+  showProductDetails: { [productId: string]: boolean } = {}; // Oggetto per tenere traccia della visibilità dei dettagli
 
   constructor(private wishlistService: WishlistService, private route: ActivatedRoute) {}
 
