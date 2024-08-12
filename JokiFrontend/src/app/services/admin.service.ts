@@ -5,10 +5,9 @@ import {of} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class AdminService {
 
-  private apiUrl = 'http://localhost:8081/api/user/personal';
+  private apiUrl = 'http://localhost:8081/api/admin/personal';
 
   constructor(private httpClient:HttpClient) { }
-
 }
