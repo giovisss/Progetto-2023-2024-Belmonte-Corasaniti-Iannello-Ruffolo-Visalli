@@ -54,4 +54,12 @@ public class KeycloakManager {
 
         return token;
     }
+
+    public static Object getUserInfo(String token) {
+        return getInstance().tokenManager().getAccessToken();
+    }
+
+    public static Object getAdminInfo(String token) {
+        return getInstance().tokenManager().getAccessToken();
+    }
 }
