@@ -1,4 +1,4 @@
-package unical.enterprise.jokibackend.Controller.v1;
+package unical.enterprise.jokibackend.Controller;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
