@@ -7,9 +7,7 @@ import {UserService} from "../../services/user.service";
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private userService:UserService) {
-
-  }
+  constructor(private userService:UserService) {}
 
 
 }
