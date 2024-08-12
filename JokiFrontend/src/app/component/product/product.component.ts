@@ -19,7 +19,12 @@ export class ProductComponent {
   constructor(private route : ActivatedRoute, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
-    productsService.getProduct(id).subscribe((product: any) => {
+    // productsService.getProduct(id).subscribe((product: any) => {
+    //   this.product = product;
+    //   console.log(this.product);
+    // });
+
+  productsService.getGame(id).subscribe((product: any) => {
       this.product = product;
       console.log(this.product);
     });

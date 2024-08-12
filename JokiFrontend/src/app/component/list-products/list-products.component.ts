@@ -9,7 +9,7 @@ import {ProductsService} from "../../services/products.service";
 export class ListProductsComponent {
   protected products: any;
   constructor(private productsService: ProductsService) {
-    this.productsService.getProductList().subscribe((products: any) => {
+    this.productsService.getGamesList().subscribe((products: any) => {
       this.products = products;
     });
   }
