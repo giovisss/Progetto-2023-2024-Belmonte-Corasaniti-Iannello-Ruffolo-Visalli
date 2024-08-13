@@ -11,4 +11,7 @@ interface ApiService {
 
     @GET("api/games/{id}") // Assumiamo che questo sia l'endpoint per recuperare i dettagli di un gioco specifico
     suspend fun getGameById(@Path("id") id: String): Response<Game>
+
+    @GET("api/users/games")
+    suspend fun getGamesByUser(): Response<List<Game>>
 }

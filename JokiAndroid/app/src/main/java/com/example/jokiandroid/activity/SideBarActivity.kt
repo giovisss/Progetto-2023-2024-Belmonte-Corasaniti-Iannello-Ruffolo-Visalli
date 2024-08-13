@@ -41,6 +41,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
+import com.example.jokiandroid.viewmodel.WishlistViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -86,13 +87,18 @@ fun BasicUI(navController: NavController, authManager: AuthManager) {
                     onClick = { selectPage("home", coroutineScope, drawerState, navController, selectedItem) }
                 )
                 NavigationDrawerItem(
-                    label = { Text(text = "Library") },
-                    selected = selectedItem.value == "library",
-                    onClick = { /*TODO*/ }
+                    label = { Text(text = "La tua Libreria") },
+                    selected = selectedItem.value == "libreria",
+                    onClick = { selectPage("libreria", coroutineScope, drawerState, navController, selectedItem) }
                 )
                 NavigationDrawerItem(
-                    label = { Text(text = "Settings") },
-                    selected = selectedItem.value == "settings",
+                    label = { Text(text = "Le tue wishlists") },
+                    selected = selectedItem.value == "Impostazioni",
+                    onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Impostazioni") },
+                    selected = selectedItem.value == "Impostazioni",
                     onClick = { /*TODO*/ }
                 )
                 NavigationDrawerItem(
@@ -169,4 +175,20 @@ fun SetLoginContent(navController: NavController) {
     SideBarActivity.setContent {
         LoginActivity(navController = navController)
     }
+
 }
+
+@Composable
+fun SetLibraryContent(navController: NavController, gameViewModel: GameViewModel) {
+    SideBarActivity.setContent {
+        LibraryActivity(navController, gameViewModel)
+    }
+}
+
+@Composable
+fun SetWishlistContent(navController: NavController, wishlistViewModel: WishlistViewModel) {
+    SideBarActivity.setContent {
+        WishlistsActivity(navController, wishlistViewModel)
+    }
+}
+
