@@ -18,7 +18,7 @@ class CartViewModel : ViewModel() {
 
     fun addGame(game: Game) {
         val currentList = _cartItems.value ?: emptyList()
-        val item = currentList.find { it.id == game.id }
+        val item = currentList.find { it.id.equals(game.id) }
         if (item == null) {
             _cartItems.value = currentList + CartItem(game.id, game.title, game.price)
         }

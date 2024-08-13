@@ -1,5 +1,6 @@
 package com.example.jokiandroid.activity
 
+import GameViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,11 +25,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.viewmodel.CartViewModel
-import com.example.jokiandroid.viewmodel.GameViewModel
 
 @Composable
 fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
-    val gameList by gameViewModel.games.observeAsState(emptyList())
+    val gamesResponse by gameViewModel.games.observeAsState()
+
+    // Estrai la lista di giochi dalla risposta o mostra un messaggio di errore
+    val gameList = gamesResponse?.let { response ->
+        if (response.isSuccessful) {
+            response.body() ?: emptyList()
+        } else {
+            // Gestisci l'errore in modo appropriato (ad esempio, visualizza un messaggio all'utente)
+            emptyList()
+        }
+    } ?: emptyList() // Nel caso in cui gamesResponse sia null
+
     val cartItems = cartViewModel.cartItems.observeAsState(emptyList())
     Column(
         modifier = Modifier

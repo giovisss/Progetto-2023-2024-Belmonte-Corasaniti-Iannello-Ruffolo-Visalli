@@ -1,5 +1,6 @@
 package com.example.jokiandroid.activity
 
+import GameViewModel
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
-import com.example.jokiandroid.viewmodel.GameViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

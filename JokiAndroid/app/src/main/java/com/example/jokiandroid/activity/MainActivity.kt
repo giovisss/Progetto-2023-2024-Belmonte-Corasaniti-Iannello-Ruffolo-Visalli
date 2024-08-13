@@ -2,6 +2,7 @@ package com.example.jokiandroid.activity
 
 import CartActivity
 import GameDetailsActivity
+import GameViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +22,6 @@ import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
-import com.example.jokiandroid.viewmodel.GameViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
@@ -99,7 +99,7 @@ fun MainScreen(authManager: AuthManager) { //navController per gestire la naviga
         composable("cart") { CartActivity(navController, cartViewModel) }
         composable("login") { SetLoginContent(navController) }
         composable("game_detail/{gameId}") { backStackEntry ->
-            val gameId = backStackEntry.arguments?.getString("gameId")?.toIntOrNull()
+            val gameId = backStackEntry.arguments?.getString("gameId")
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = viewModel, navController) }
         }
     }
