@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { AuthGuard } from '../guard/auth.guard';
+import { game } from '../model/game';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8081/api/user/personal';
+  private apiUrl = 'http://localhost:8081/api/users';
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard) { }
 
@@ -45,5 +46,12 @@ export class UserService {
     // this.auth.keycloak.getToken().then(token => {
     //   console.log(token);
     // })
+  }
+
+  getUserLibrary(): Observable<game[]> {
+    return this.httpClient.get<string>(this.apiUrl + '/games')
+      .pipe(
+        map(response => response as unknown as game[])
+      );
   }
 }
