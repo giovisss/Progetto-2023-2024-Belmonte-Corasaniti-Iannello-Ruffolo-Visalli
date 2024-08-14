@@ -24,8 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.jokiandroid.R
 import com.example.jokiandroid.model.CartItem
+import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,10 +106,10 @@ fun CartItem(cartItem: CartItem, onRemove: () -> Unit) {
         // Colonna per immagine, titolo e prezzo
         Column {
             Box {
-                Image(
-                    painter = painterResource(id = R.drawable.games_image),
-                    contentDescription = "game image",
-                    modifier = Modifier.size(80.dp)
+                AsyncImage(
+                    model = "http://" + IPManager.BACKEND_IP+"/images/" + cartItem.imagePath,
+                    contentDescription = cartItem.title,
+                    error = painterResource(id = R.drawable.games_image),
                 )
             }
 

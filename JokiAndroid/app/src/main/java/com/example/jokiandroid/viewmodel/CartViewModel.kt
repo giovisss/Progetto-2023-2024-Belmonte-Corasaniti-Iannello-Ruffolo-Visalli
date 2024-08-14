@@ -20,7 +20,7 @@ class CartViewModel : ViewModel() {
         val currentList = _cartItems.value ?: emptyList()
         val item = currentList.find { it.id.equals(game.id) }
         if (item == null) {
-            _cartItems.value = currentList + CartItem(game.id, game.title, game.price)
+            _cartItems.value = currentList + CartItem(game.id, game.title, game.imagePath ,game.price)
         }
         Log.d("CartViewModel", "Added game: ${game.title}")
         Log.d("CartViewModel", "number of games: ${currentList.size}")

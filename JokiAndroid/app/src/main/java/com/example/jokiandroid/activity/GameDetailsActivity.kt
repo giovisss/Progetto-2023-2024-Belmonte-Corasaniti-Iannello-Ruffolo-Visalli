@@ -1,4 +1,4 @@
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -6,11 +6,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.jokiandroid.R
+import com.example.jokiandroid.utility.IPManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,13 +52,16 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
         ) { innerPadding ->
 
             LazyColumn(
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier
+                    .fillMaxHeight()
                     .padding(innerPadding)
             ) {
                 item {
-                    Image(
-                        painter = painterResource(R.drawable.games_image),
-                        contentDescription = "Immagine di ${it.title}",
+                    AsyncImage(
+                        model = "http://"+ IPManager.BACKEND_IP + "/images/" + it.imagePath,
+                        contentDescription = it.title,
+                        error = painterResource(id = R.drawable.games_image),
+                        placeholder = painterResource(id = R.drawable.games_image),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
@@ -75,12 +81,22 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                         Text("Descrizione: ${it.description}")
                         Text("Valutazione:")
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Genere: ")
+                        Text("Genere: ${it.genre}")
+                        Text("Prezzo: €${String.format("%.2f", it.price)}")
+                        Text("Developer: ${it.developer}")
                     }
                 }
             }
         }
-    } ?: run { // Se il gioco non è stato trovato, visualizza un messaggio di errore
-        Text("Gioco non trovato o errore durante il caricamento")
+    }  ?: run {
+        // Gestisci il caso in cui il gioco non è stato trovato o si è verificato un errore
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Gioco non trovato o errore durante il caricamento")
+            // Puoi aggiungere un pulsante per ricaricare i dati o tornare alla schermata precedente
+        }
     }
 }

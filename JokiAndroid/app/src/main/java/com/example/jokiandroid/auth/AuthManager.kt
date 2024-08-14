@@ -132,7 +132,7 @@ class AuthManager(private val context: Context) {
                     if (!it.isSuccessful) {
                         Log.e("API", "Unexpected code $response")
                     } else {
-                        Log.d("API", "Response: ${it.body()?.string()}")
+                        Log.d("API", "Response: ${it.body?.string()}")
                     }
                 }
             }

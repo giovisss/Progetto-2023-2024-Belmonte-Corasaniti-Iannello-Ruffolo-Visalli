@@ -5,5 +5,8 @@ data class Game(
     var title: String,
     var price: Double,
     var description: String,
-    var image: String = ""
+    var imagePath: String = "",
+    var stock: Int,
+    var genre: String,
+    var developer: String
 )

@@ -69,17 +69,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
-    implementation (libs.appauth)// boh
+    implementation(libs.appauth)// boh
     // Retrofit
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     // Coroutine Call Adapter (per usare le coroutine con Retrofit)
-    implementation (libs.retrofit2.kotlin.coroutines.adapter)
+    implementation(libs.retrofit2.kotlin.coroutines.adapter)
 
     // Gson (per la serializzazione/deserializzazione JSON)
-    implementation (libs.gson)
+    implementation(libs.gson)
 
-    implementation (libs.androidx.navigation.compose.v253)
-    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose.v253)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.coil.compose)
 }
