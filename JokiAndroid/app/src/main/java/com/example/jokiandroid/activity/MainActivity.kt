@@ -100,6 +100,10 @@ fun MainScreen(authManager: AuthManager) { //navController per gestire la naviga
         composable("home") { SetGameListContent(gameViewModel, cartViewModel, navController) }
         composable("libreria") { SetLibraryContent(navController, gameViewModel) }
         composable("wishlist") { SetWishlistContent(navController, wishlistViewModel) }
+        composable("wishlists/{wishlistName}") { backStackEntry ->
+            val wishlistName = backStackEntry.arguments?.getString("wishlistName")
+            wishlistName?.let { SetSingleWishlistContent() }
+        }
         composable("cart") { CartActivity(navController, cartViewModel) }
         composable("login") { SetLoginContent(navController) }
         composable("game_detail/{gameId}") { backStackEntry ->

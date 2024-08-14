@@ -192,3 +192,9 @@ fun SetWishlistContent(navController: NavController, wishlistViewModel: Wishlist
     }
 }
 
+@Composable
+fun SetSingleWishlistContent() {
+    SideBarActivity.setContent {
+        SingleWishlistActivity()
+    }
+}
