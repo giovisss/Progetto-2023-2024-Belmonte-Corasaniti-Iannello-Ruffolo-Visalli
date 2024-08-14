@@ -44,6 +44,7 @@ class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
                         .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
+//                        .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
         http
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults()).jwt(
