@@ -22,38 +22,20 @@ public class WishlistController {
 
     @GetMapping(value = "/{username}", produces = "application/json")
     public ResponseEntity<String> getWishlist(@PathVariable String username){
-        try {
-            Gson gson = new Gson();
-            var out = wishlistService.getByUserUsername(username);
-            return ResponseEntity.ok(gson.toJson(out));
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
+        Gson gson = new Gson();
+        var out = wishlistService.getByUserUsername(username);
+        return ResponseEntity.ok(gson.toJson(out));
     }
 
     @PostMapping(value = "/add", produces = "application/json")
     public ResponseEntity<String> addWishlist(@RequestBody String wishlistName){
-        try {
-            wishlistService.addWishlist(wishlistName);
-            return ResponseEntity.ok("Wishlist added");
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
+        wishlistService.addWishlist(wishlistName);
+        return ResponseEntity.ok("Wishlist added");
     }
 
     @PostMapping(value = "/{wishlistName}", produces = "application/json")
     public ResponseEntity<String> addGameToWishlist(@RequestBody GameDto gameDto, @PathVariable String wishlistName){
-        try {
-            wishlistService.addGameToWishlist(gameDto, wishlistName);
-            return ResponseEntity.ok("Game added to wishlist");
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
+        wishlistService.addGameToWishlist(gameDto, wishlistName);
+        return ResponseEntity.ok("Game added to wishlist");
     }
 }
