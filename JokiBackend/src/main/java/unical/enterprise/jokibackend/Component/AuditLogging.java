@@ -3,10 +3,7 @@ package unical.enterprise.jokibackend.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -58,5 +55,15 @@ public class AuditLogging {
         } finally {
             lock.unlock();
         }
+    }
+
+    @AfterThrowing(pointcut = "allControllerMethods()", throwing = "error")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable error) {
+        logger.info("**************************************************");
+        logger.severe("AN EXCEPTION HAS BEEN THROWN");
+        logger.severe("Cause : " + error);
+        logger.info("**************************************************");
+        logger.info("--------------------------------------------------");
+        lock.unlock();
     }
 }

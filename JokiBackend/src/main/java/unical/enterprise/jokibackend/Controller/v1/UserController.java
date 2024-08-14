@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
@@ -34,32 +34,20 @@ public class UserController {
    @PreAuthorize("hasRole('client_admin')")
    @Produces("application/json")
    public ResponseEntity<String> getUsersList(){
-       try {
-           Gson gson = new Gson();
-           var out = userService.getAllUsers();
-           return ResponseEntity.ok(gson.toJson(out));
-       }
-       catch (Exception e) {
-           logger.warning(e.getMessage());
-           return ResponseEntity.badRequest().body("An error occurred");
-       }
+       Gson gson = new Gson();
+       var out = userService.getAllUsers();
+       return ResponseEntity.ok(gson.toJson(out));
    }
 
    @GetMapping("/{username}")
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
    public ResponseEntity<String> getUser(@PathVariable String username) {
-       try {
-           Gson gson = new Gson();
-           var out = userService.getUserByUsername(username);
+       Gson gson = new Gson();
+       var out = userService.getUserByUsername(username);
 
-           if (out == null) return ResponseEntity.notFound().build();
-           else return ResponseEntity.ok(gson.toJson(out));
-       }
-       catch (Exception e) {
-           logger.warning(e.getMessage());
-           return ResponseEntity.badRequest().body("An error occurred");
-       }
+       if (out == null) return ResponseEntity.notFound().build();
+       else return ResponseEntity.ok(gson.toJson(out));
    }
 
     // modifica un utente
@@ -67,14 +55,8 @@ public class UserController {
    @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
    @Produces("application/json")
    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
-       try {
-           if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
-           else return ResponseEntity.notFound().build();
-       }
-       catch (Exception e) {
-           logger.warning(e.getMessage());
-           return ResponseEntity.badRequest().body("An error occurred");
-       }
+       if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
+       else return ResponseEntity.notFound().build();
        //return ResponseEntity.internalServerError().body("Not implemented");
    }
 
@@ -97,14 +79,8 @@ public class UserController {
     @PreAuthorize("hasRole('client_admin') or #username == authentication.name")
     @Produces("plain/text")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
-       try {
-           keycloakService.deleteUser(username);
-           return ResponseEntity.ok("User deleted");
-       }
-       catch (Exception e) {
-           logger.warning(e.getMessage());
-           return ResponseEntity.badRequest().body("An error occurred");
-       }
+       keycloakService.deleteUser(username);
+       return ResponseEntity.ok("User deleted");
         //return ResponseEntity.internalServerError().body("Not implemented");
     }
 
@@ -112,16 +88,10 @@ public class UserController {
     @GetMapping(value = "/games", produces = "application/json")
     @PreAuthorize("hasRole('client_user')")
     public ResponseEntity<String> getUserGameList() {
-        try {
-            Gson gson = new Gson();
-            var out = userService.getUsernameGames(SecurityContextHolder.getContext().getAuthentication().getName());
-            // var out = userService.getUsernameGames(UserContextHolder.getContext().getPreferredUsername());
-            return ResponseEntity.ok(gson.toJson(out));
-        }
-        catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("An error occurred");
-        }
+        Gson gson = new Gson();
+        var out = userService.getUsernameGames(SecurityContextHolder.getContext().getAuthentication().getName());
+        // var out = userService.getUsernameGames(UserContextHolder.getContext().getPreferredUsername());
+        return ResponseEntity.ok(gson.toJson(out));
     }
 
     @PostMapping(value = "/{username}/library/{gameId}", produces = "application/json")
@@ -151,45 +121,30 @@ public class UserController {
     @GetMapping(value = "/{username}/cart", produces = "application/json")
     @PreAuthorize("hasRole('client_user') or #username == authentication.name")
     public ResponseEntity<String> getUserCart(@PathVariable String username) {
-        try {
-            Gson gson = new Gson();
-            Collection<GameDto> cartGames = userService.getUserCart(username);
-            return ResponseEntity.ok(gson.toJson(cartGames));
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
-        }
+        Gson gson = new Gson();
+        Collection<GameDto> cartGames = userService.getUserCart(username);
+        return ResponseEntity.ok(gson.toJson(cartGames));
     }
 
     @PostMapping(value = "/{username}/cart/{gameId}", produces = "application/json")
     @PreAuthorize("hasRole('client_user') or #username == authentication.name")
     public ResponseEntity<String> addGameToCart(@PathVariable String username, @PathVariable UUID gameId) {
-        try {
-            boolean added = userService.addGameToUserCart(username, gameId);
-            if (added) {
-                return ResponseEntity.ok("{\"message\": \"Game added to cart successfully\", \"gameId\": \"" + gameId + "\"}");
-            } else {
-                return ResponseEntity.badRequest().body("{\"message\": \"Failed to add game to cart\"}");
-            }
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
+        boolean added = userService.addGameToUserCart(username, gameId);
+        if (added) {
+            return ResponseEntity.ok("{\"message\": \"Game added to cart successfully\", \"gameId\": \"" + gameId + "\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Failed to add game to cart\"}");
         }
     }
 
     @DeleteMapping(value = "/{username}/cart/{gameId}", produces = "application/json")
     @PreAuthorize("hasRole('client_user') or #username == authentication.name")
     public ResponseEntity<String> removeGameFromCart(@PathVariable String username, @PathVariable UUID gameId) {
-        try {
-            boolean removed = userService.removeGameFromUserCart(username, gameId);
-            if (removed) {
-                return ResponseEntity.ok("{\"message\": \"Game removed from cart successfully\", \"gameId\": \"" + gameId + "\"}");
-            } else {
-                return ResponseEntity.badRequest().body("{\"message\": \"Failed to remove game from cart\"}");
-            }
-        } catch (Exception e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.badRequest().body("{\"message\": \"An error occurred\"}");
+        boolean removed = userService.removeGameFromUserCart(username, gameId);
+        if (removed) {
+            return ResponseEntity.ok("{\"message\": \"Game removed from cart successfully\", \"gameId\": \"" + gameId + "\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Failed to remove game from cart\"}");
         }
     }
     // Fine controller carrello
