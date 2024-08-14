@@ -16,9 +16,9 @@
 
       <div *ngFor="let product of wishlist.wishListProducts" class="flex flex-col px-4 py-8">
         <div class="relative">
-          <img class="hidden lg:block w-45 h-45 object-cover" [src]="product.imagePath" [alt]="product.title" />
-          <img class="hidden sm:block lg:hidden" [src]="product.imagePath" [alt]="product.title" />
-          <img class="sm:hidden" [src]="product.imagePath" [alt]="product.title" />
+          <img class="hidden lg:block w-45 h-45 object-cover" [src]="'http://localhost:8081/api/images/' + product.imagePath" [alt]="product.title" />
+          <img class="hidden sm:block lg:hidden" [src]="'http://localhost:8081/api/images/' + product.imagePath" [alt]="product.title" />
+          <img class="sm:hidden" [src]="'http://localhost:8081/api/images/' + product.imagePath" [alt]="product.title" />
           <button (click)="removeProduct(product)" aria-label="close" class="top-4 right-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 absolute p-1.5 bg-gray-800 dark:bg-white dark:text-gray-800 text-white hover:text-gray-400">
             <svg class="fill-stroke" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
