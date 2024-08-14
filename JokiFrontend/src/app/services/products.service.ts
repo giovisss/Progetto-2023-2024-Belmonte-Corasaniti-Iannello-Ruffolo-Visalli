@@ -9,7 +9,7 @@ import { game } from '../model/game';
 })
 export class ProductsService {
 
-  private apiUrl = 'http://localhost:8081/api/games';
+  private apiUrl = 'http://localhost:8081/api/v1/games';
 
   // products: Product[] = [
   //   new Product(1, 'Product 1', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg', 100, 'Description 1'),
