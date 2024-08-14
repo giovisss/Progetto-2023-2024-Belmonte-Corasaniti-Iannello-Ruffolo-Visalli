@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-@SpringBootApplication(scanBasePackages = "unical.enterprise.jokibackend")
+@SpringBootApplication
 @EnableAspectJAutoProxy
 @EnableCaching
 public class JokiBackendApplication {

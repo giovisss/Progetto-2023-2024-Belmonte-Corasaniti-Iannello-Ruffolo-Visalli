@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import {BASE_IMAGE_URL} from "../../global";
 
 @Component({
   selector: 'app-library',
@@ -13,4 +14,6 @@ export class LibraryComponent {
       this.games = games;
     });
   }
+
+    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

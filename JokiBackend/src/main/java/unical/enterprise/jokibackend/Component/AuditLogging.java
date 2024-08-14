@@ -36,7 +36,7 @@ public class AuditLogging {
             logger.info("--------------------------------------------------");
 
             if(request.getUserPrincipal() == null) logger.info("User: Anonymous");
-            else logger.info("User: " + UserContextHolder.getContext().toShortString());
+            else logger.info("User: {" + UserContextHolder.getContext().toShortString() + "}");
 
             logger.info("Request Method: " + request.getMethod());
             logger.info("Endpoint: " + request.getRequestURI());

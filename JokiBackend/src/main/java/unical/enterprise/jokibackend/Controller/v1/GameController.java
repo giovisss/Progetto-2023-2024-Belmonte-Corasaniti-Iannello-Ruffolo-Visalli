@@ -32,7 +32,6 @@ public class GameController {
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(){
-        System.out.println("getGamesList");
         try {
             Collection<GameDto> games = gameService.findAll();
             return ResponseEntity.ok(new Gson().toJson(games));

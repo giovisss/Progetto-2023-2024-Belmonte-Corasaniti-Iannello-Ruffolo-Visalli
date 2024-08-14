@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {ProductsService} from "../../services/products.service";
+import {BASE_IMAGE_URL} from "../../global";
 
 @Component({
   selector: 'app-list-products',
@@ -13,4 +14,6 @@ export class ListProductsComponent {
       this.products = products;
     });
   }
+
+  protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

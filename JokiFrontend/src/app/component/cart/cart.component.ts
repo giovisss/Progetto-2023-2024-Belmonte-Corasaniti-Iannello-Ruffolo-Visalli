@@ -1,6 +1,7 @@
 import {Component, EventEmitter, input, Output} from '@angular/core';
 import {CartService} from "../../services/cart.service";
 import {Product} from "../../model/product";
+import {BASE_IMAGE_URL} from "../../global";
 
 @Component({
   selector: 'app-cart',
@@ -33,4 +34,6 @@ export class CartComponent {
     this.total = this.cartService.getTotal();
     this.cartUpdate();
   }
+
+    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

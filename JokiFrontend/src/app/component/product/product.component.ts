@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ProductsService} from "../../services/products.service";
 import {CartService} from "../../services/cart.service";
 import {WishlistService} from "../../services/wishlist.service";
+import {BASE_IMAGE_URL} from "../../global";
 
 @Component({
   selector: 'app-product',
@@ -61,4 +62,5 @@ export class ProductComponent {
   }
 
 
+    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

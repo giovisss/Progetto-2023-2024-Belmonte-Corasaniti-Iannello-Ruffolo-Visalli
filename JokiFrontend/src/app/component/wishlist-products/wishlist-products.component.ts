@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {Wishlist} from "../../model/wishlist";
 import {WishlistService} from "../../services/wishlist.service";
 import {ActivatedRoute} from "@angular/router";
+import {BASE_IMAGE_URL} from "../../global";
 
 @Component({
   selector: 'app-wishlist-products',
@@ -39,4 +40,6 @@ export class WishlistProductsComponent {
         });
     }
   }
+
+    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }
