@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/games")
+@RequestMapping("/api/v1/games")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class GameController {
@@ -32,6 +32,7 @@ public class GameController {
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(){
+        System.out.println("getGamesList");
         try {
             Collection<GameDto> games = gameService.findAll();
             return ResponseEntity.ok(new Gson().toJson(games));
