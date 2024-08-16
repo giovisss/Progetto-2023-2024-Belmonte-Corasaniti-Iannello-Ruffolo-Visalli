@@ -2,13 +2,8 @@
 
  import com.nimbusds.jwt.JWTClaimsSet;
  import com.nimbusds.jwt.SignedJWT;
- import jakarta.servlet.Filter;
- import jakarta.servlet.FilterChain;
- import jakarta.servlet.ServletException;
- import jakarta.servlet.ServletRequest;
- import jakarta.servlet.ServletResponse;
+ import jakarta.servlet.*;
  import jakarta.servlet.http.HttpServletRequest;
- import java.io.IOException;
 
  public class UserContextFilter implements Filter {
 
@@ -16,7 +11,7 @@
  //    public void init(FilterConfig filterConfig) throws ServletException {}
 
      @Override
-     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
          try {
  //            TODO: GESTIRE BENE ECCEZIONE
 
