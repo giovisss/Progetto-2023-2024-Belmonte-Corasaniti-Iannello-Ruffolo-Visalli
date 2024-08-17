@@ -9,7 +9,7 @@ import { game } from '../model/game';
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8081/api/users';
+  private apiUrl = 'http://localhost:8081/api/v1/users';
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard) { }
 
