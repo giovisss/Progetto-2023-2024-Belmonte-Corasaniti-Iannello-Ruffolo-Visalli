@@ -19,7 +19,6 @@ import { AboutComponent } from './component/about/about.component';
 import { WishlistsComponent } from './component/wishlists/wishlists.component';
 import { WishlistProductsComponent } from './component/wishlist-products/wishlist-products.component';
 import {FormsModule} from "@angular/forms";
-import { UserInfoComponent } from './user-info/user-info.component';
 
 function initializeKeycloak(keycloak: KeycloakInitService) {
   return () => keycloak.init();
@@ -38,8 +37,7 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     LibraryComponent,
     AboutComponent,
     WishlistsComponent,
-    WishlistProductsComponent,
-    UserInfoComponent
+    WishlistProductsComponent
   ],
   imports: [
     BrowserModule,
