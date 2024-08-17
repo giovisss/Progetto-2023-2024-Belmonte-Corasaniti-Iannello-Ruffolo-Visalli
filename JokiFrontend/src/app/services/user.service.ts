@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { AuthGuard } from '../guard/auth.guard';
 import { game } from '../model/game';
+import { BASE_API_URL } from '../global';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8081/api/v1/users';
+  private apiUrl = BASE_API_URL + '/users';
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard) { }
 

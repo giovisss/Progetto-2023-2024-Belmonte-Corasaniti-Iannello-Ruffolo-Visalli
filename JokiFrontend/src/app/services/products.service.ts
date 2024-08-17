@@ -3,13 +3,14 @@ import {map, Observable, of} from "rxjs";
 import {Product} from "../model/product";
 import { HttpClient } from '@angular/common/http';
 import { game } from '../model/game';
+import { BASE_API_URL } from '../global';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
 
-  private apiUrl = 'http://localhost:8081/api/v1/games';
+  private apiUrl = BASE_API_URL + '/games';
 
   // products: Product[] = [
   //   new Product(1, 'Product 1', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg', 100, 'Description 1'),
