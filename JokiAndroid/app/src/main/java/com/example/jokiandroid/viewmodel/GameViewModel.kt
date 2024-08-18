@@ -3,8 +3,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jokiandroid.auth.TokenManager
 import com.example.jokiandroid.model.Game
-import com.example.jokiandroid.model.RetrofitInstance
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -23,16 +23,32 @@ class GameViewModel : ViewModel() {
     val error: LiveData<String?> get() = _error
 
     init {
-        fetchGames()
+        if (TokenManager.getToken() == null) {
+            _error.value = "Token non disponibile. Effettua il login."
+        } else {
+            fetchGames()
+        }
     }
+
+    fun refreshData() {
+        fetchGames()
+        fetchGamesByUser()
+        // Aggiungi qui altre chiamate di fetch se necessario
+    }
+
 
     private fun fetchGames() {
         viewModelScope.launch {
             try {
-                _games.value = RetrofitInstance.api.getGames()
+                val token = TokenManager.getToken()
+                if (token != null) {
+                    val response = RetrofitInstance.createApi(token).getGames()
+                    _games.value = response
+                } else {
+                    _error.value = "Token non disponibile. Effettua il login."
+                }
             } catch (e: Exception) {
-                Log.e("GameViewModel", "Error fetching games", e)
-                _error.value = "Errore durante il caricamento dei giochi" // Imposta un messaggio di errore
+                _error.value = "Errore durante il caricamento dei giochi: ${e.message}"
             }
         }
     }
@@ -40,22 +56,45 @@ class GameViewModel : ViewModel() {
     fun fetchGameById(gameId: String) {
         viewModelScope.launch {
             try {
-                _gameDetails.value = RetrofitInstance.api.getGameById(gameId)
+                val token = TokenManager.getToken()
+                if (token != null) {
+                    _gameDetails.value = RetrofitInstance.createApi(token).getGameById(gameId)
+                } else {
+                    _error.value = "Token non disponibile. Effettua il login."
+                }
             } catch (e: Exception) {
-                Log.e("GameViewModel", "Error fetching game by id", e)
-                _error.value = "Errore durante il caricamento dei dettagli del gioco"
+                Log.e("GameViewModel", "Error fetching games", e)
+                _error.value = "Errore durante il caricamento dei giochi"
             }
+//            try {
+//                val token = TokenManager.getToken()
+//                _gameDetails.value = RetrofitInstance.createApi(token).getGameById(gameId)
+//            } catch (e: Exception) {
+//                Log.e("GameViewModel", "Error fetching game by id", e)
+//                _error.value = "Errore durante il caricamento dei dettagli del gioco"
+//            }
         }
     }
 
     fun fetchGamesByUser() {
         viewModelScope.launch {
             try {
-                _libraryGames.value = RetrofitInstance.api.getGamesByUser()
+                val token = TokenManager.getToken()
+                if (token != null) {
+                    _libraryGames.value = RetrofitInstance.createApi(token).getGamesByUser()
+                } else {
+                    _error.value = "Token non disponibile. Effettua il login."
+                }
             } catch (e: Exception) {
-                Log.e("GameViewModel", "Error fetching games by user", e)
-                _error.value = "Errore durante il caricamento dei giochi dell'utente"
+                Log.e("GameViewModel", "Error fetching games", e)
+                _error.value = "Errore durante il caricamento dei giochi"
             }
+//            try {
+//                _libraryGames.value = RetrofitInstance.api.getGamesByUser()
+//            } catch (e: Exception) {
+//                Log.e("GameViewModel", "Error fetching games by user", e)
+//                _error.value = "Errore durante il caricamento dei giochi dell'utente"
+//            }
         }
     }
 

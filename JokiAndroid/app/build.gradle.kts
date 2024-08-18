@@ -83,4 +83,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose.v253)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.coil.compose)
+
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 }

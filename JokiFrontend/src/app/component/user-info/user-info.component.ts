@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { KeycloakService } from 'keycloak-angular';
 
 
 @Component({
@@ -10,11 +10,9 @@ import { UserService } from '../../services/user.service';
 export class UserInfoComponent implements OnInit {
   user: any;
 
-  constructor(private userService: UserService) {}
+  constructor(private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
-    this.userService.getUserInfo().subscribe(data => {
-      this.user = data;
-    });
+    this.user = this.keycloakService.getKeycloakInstance().tokenParsed;
   }
 }
