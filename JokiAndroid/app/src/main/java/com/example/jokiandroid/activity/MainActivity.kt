@@ -15,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jokiandroid.auth.AuthManager
+import com.example.jokiandroid.auth.TokenManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
@@ -26,6 +28,7 @@ import com.example.jokiandroid.viewmodel.WishlistViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
+    private lateinit var gameViewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -33,13 +36,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         IPManager.setIps(this)
         authManager = AuthManager(this)
+
+        // Inizializziamo sempre il GameViewModel
+        gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+
+        if (TokenManager.getToken() == null) {
+            authManager.startAuthorization(this)
+        } else {
+            initializeContent()
+        }
+    }
+
+    private fun initializeContent() {
         setContent {
             JokiAndroidTheme {
                 Surface {
-                    MainScreen(authManager)
+                    MainScreen(authManager, gameViewModel)
                 }
             }
         }
+        // Forziamo un refresh dei dati
+        gameViewModel.refreshData()
     }
 
     override fun onResume() {
@@ -57,41 +74,27 @@ class MainActivity : ComponentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("Auth", "onActivityResult")
-        Log.d("Auth", "Request Code: $requestCode")
-        Log.d("Auth", "Result Code: $resultCode")
-        Log.d("Auth", "Data: $data")
-
         if (requestCode == AuthManager.RC_AUTH) {
-            if (data != null) {
-                authManager.handleAuthorizationResponse(
-                    requestCode,
-                    resultCode,
-                    data
-                ) { accessToken, idToken ->
-                    if (accessToken != null && idToken != null) {
-                        // Usa i token come necessario
-                        Log.d("Auth", "Access Token: $accessToken")
-                        Log.d("Auth", "ID Token: $idToken")
-                    } else {
-                        // Gestisci l'errore di autenticazione
-                        Log.e("Auth", "Authentication failed")
+            authManager.handleAuthorizationResponse(requestCode, resultCode, data) { accessToken, idToken ->
+                if (accessToken != null && idToken != null) {
+                    TokenManager.setToken(accessToken)
+                    runOnUiThread {
+                        initializeContent()
+                        gameViewModel.refreshData() // Forziamo un refresh dei dati dopo l'autenticazione
                     }
+                } else {
+                    Log.e("Auth", "Authentication failed")
+                    // Gestisci l'errore di autenticazione
                 }
-            } else {
-                Log.e("Auth", "Intent data is null")
             }
-        } else {
-            Log.d("Auth", "Unknown request code: $requestCode")
         }
     }
 }
 
 @Composable
-fun MainScreen(authManager: AuthManager) { //navController per gestire la navigazione tra le varie pagine
+fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel) {
     val navController = rememberNavController()
     val cartViewModel = remember { CartViewModel() }
-    val gameViewModel = remember { GameViewModel() }
     val wishlistViewModel = remember { WishlistViewModel() }
 
     BasicUI(navController = navController, authManager = authManager)
@@ -111,5 +114,4 @@ fun MainScreen(authManager: AuthManager) { //navController per gestire la naviga
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }
         }
     }
-
 }

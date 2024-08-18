@@ -75,6 +75,9 @@ class AuthManager(private val context: Context) {
             val ex = AuthorizationException.fromIntent(data)
 
             if (response != null) {
+                Log.d("Auth", "Access Token: ${response.accessToken}")
+                response.accessToken?.let { TokenManager.setToken(it) }
+                onTokenReceived(response.accessToken, response.idToken)
                 val tokenRequest = response.createTokenExchangeRequest()
                 authService.performTokenRequest(tokenRequest) { tokenResponse, exception ->
                     if (tokenResponse != null) {
@@ -83,7 +86,7 @@ class AuthManager(private val context: Context) {
                         Log.d("Auth", "Access Token: ${tokenResponse.accessToken}")
                         Log.d("Auth", "ID Token: ${tokenResponse.idToken}")
                         onTokenReceived(tokenResponse.accessToken, tokenResponse.idToken)
-                        callApiWithAuthorization(tokenResponse.accessToken)
+//                        callApiWithAuthorization(tokenResponse.accessToken)
                     } else {
                         Log.e("AuthManager", "Token Exchange failed", exception)
                         onTokenReceived(null, null)

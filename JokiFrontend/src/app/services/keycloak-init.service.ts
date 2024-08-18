@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
+import { BASE_KEYCLOAK_URL } from '../global';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class KeycloakInitService {
   init(): Promise<boolean> {
     return this.keycloak.init({
       config: {
-        url: 'http://localhost:8080',
+        url: BASE_KEYCLOAK_URL,
         realm: 'JokiRealm',
         clientId: 'JokiClient'
       },
