@@ -55,4 +55,8 @@ export class UserService {
         map(response => response as unknown as game[])
       );
   }
+
+  getUserInfo(): Observable<any> {
+    return this.httpClient.get<any>(this.apiUrl + '/info');
+  }
 }
