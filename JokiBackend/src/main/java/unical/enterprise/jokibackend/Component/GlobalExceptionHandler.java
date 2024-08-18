@@ -27,4 +27,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.badRequest().body("An error occurred");
     }
+
+    @ExceptionHandler(value={Throwable.class})
+    public ResponseEntity<String> handleThrowable(Throwable e) {
+        return ResponseEntity.badRequest().body("An error occurred");
+    }
+
+    @ExceptionHandler(value={Error.class})
+    public ResponseEntity<String> handleError(Error e) {
+        return ResponseEntity.badRequest().body("An error occurred");
+    }
 }

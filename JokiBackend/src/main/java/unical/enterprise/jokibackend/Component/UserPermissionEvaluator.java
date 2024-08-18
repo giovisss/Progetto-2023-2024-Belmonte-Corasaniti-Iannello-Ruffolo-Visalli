@@ -20,4 +20,9 @@ public class UserPermissionEvaluator {
         return (userService.getFriendByUsername(user, target) != null) &&
                 (userService.getFriendByUsername(target,user) != null);
     }
+
+    public boolean canVisulize(Object targetUser) {
+        // Implementa il controllo della visibilità del profilo
+        return true;
+    }
 }

@@ -26,7 +26,7 @@ public interface UserService {
 
     void deleteByUsername(String username);
 
-    Collection<GameDto> getUsernameGames(String username);
+    Collection<GameDto> getGamesByUsername(String username);
 
     User getFriendByUsername(String first, String second);
 
@@ -39,4 +39,6 @@ public interface UserService {
     boolean addGameToUserCart(String username, UUID gameId);
 
     boolean removeGameFromUserCart(String username, UUID gameId);
+
+    void clearUserCart(String username);
 }

@@ -31,19 +31,18 @@ import javax.ws.rs.HttpMethod;
 class SecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
     private final String prefix="/api/*";
-    private final String tmpPrefix="/tmp/*";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(tmpPrefix+"/admin/**").hasRole("client_admin")
                         .requestMatchers(prefix+"/admin/**").hasRole("client_admin")
-                        .requestMatchers(prefix+"/user/**").hasRole("client_user")
+//                        .requestMatchers(prefix+"/user/**").hasRole("client_user")
                         .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
-                        .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
+                        .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
+//                        .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
 //                        .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
         http
                 .oauth2ResourceServer(oauth2 ->

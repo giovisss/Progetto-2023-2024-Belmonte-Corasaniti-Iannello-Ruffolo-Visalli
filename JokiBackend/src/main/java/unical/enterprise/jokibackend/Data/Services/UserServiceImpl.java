@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserDto.class);
     }
 
-    public Collection<GameDto> getUsernameGames(String username) {
+    public Collection<GameDto> getGamesByUsername(String username) {
         return userDao.findGamesByUsername(username)
                        .orElseThrow(() -> new UsernameNotFoundException("User not found"))
                        .stream()
@@ -154,5 +154,10 @@ public class UserServiceImpl implements UserService {
     public boolean removeGameFromUserCart(String username, UUID gameId) {
         int updatedRows = userDao.removeGameFromCart(username, gameId);
         return updatedRows > 0;
+    }
+
+    @Override
+    public void clearUserCart(String username) {
+        userDao.clearUserCart(username);
     }
 }

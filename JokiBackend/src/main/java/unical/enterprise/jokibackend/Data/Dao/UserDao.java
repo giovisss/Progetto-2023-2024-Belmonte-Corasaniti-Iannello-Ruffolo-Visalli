@@ -60,5 +60,11 @@ public interface UserDao extends JpaRepository<User, UUID> {
                    "AND game_id = :gameId", 
            nativeQuery = true)
     int removeGameFromCart(@Param("username") String username, @Param("gameId") UUID gameId);
-    
+
+    // Svuotare il carrello
+    @Modifying
+    @Query(value = "DELETE FROM carts " +
+                   "WHERE user_id = (SELECT id FROM users WHERE username = :username)",
+           nativeQuery = true)
+    void clearUserCart(@Param("username") String username);
 }
