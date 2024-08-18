@@ -50,7 +50,7 @@ export class UserService {
   }
 
   getUserLibrary(): Observable<game[]> {
-    return this.httpClient.get<string>(this.apiUrl + '/games')
+    return this.httpClient.get<string>(this.apiUrl + '/user/library')
       .pipe(
         map(response => response as unknown as game[])
       );
