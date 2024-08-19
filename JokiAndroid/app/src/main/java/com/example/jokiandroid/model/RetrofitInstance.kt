@@ -1,5 +1,3 @@
-import android.util.Log
-import com.example.jokiandroid.auth.TokenManager
 import com.example.jokiandroid.service.ApiService
 import com.example.jokiandroid.utility.IPManager
 import okhttp3.OkHttpClient
