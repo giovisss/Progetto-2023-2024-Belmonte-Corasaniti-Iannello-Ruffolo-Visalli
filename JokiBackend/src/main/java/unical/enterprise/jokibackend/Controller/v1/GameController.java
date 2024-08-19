@@ -3,19 +3,12 @@ package unical.enterprise.jokibackend.Controller.v1;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/games")
@@ -23,66 +16,13 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class GameController {
 
-   private final GameService gameService;
-   private final UserService userService;
-   private final AdminService adminService;
-
-   Logger logger = Logger.getLogger(GameController.class.getName());
+    private final GameService gameService;
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(){
         Collection<GameDto> games = gameService.findAll();
         return ResponseEntity.ok(new Gson().toJson(games));
     }
-
-
-
-
-
-
-    @GetMapping(value = "/start", produces = "application/json")
-    public ResponseEntity<String> start(){
-        for (int i = 0; i < 10; i++) {
-            GameDto game = new GameDto();
-            game.setTitle("Game " + i);
-            gameService.save(game);
-        }
-
-        for (int i = 0; i < 3; i++) {
-            User user = new User();
-            user.setId(UUID.randomUUID());
-            user.setUsername("User" + i);
-            user.setEmail("user" + i + "@gmail.com");
-            userService.save(user);
-        }
-
-
-            return ResponseEntity.ok("Server setup successfully");
-    }
-
-
-    @GetMapping("friends/{username}")
-    @PreAuthorize("@userPermissionEvaluator.isFriend(authentication, #username)")
-    public ResponseEntity<String> getFriends(@PathVariable String username) {
-        return ResponseEntity.ok("You are friends");
-    }
-
-    @PostMapping("tmp")
-    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
-    public ResponseEntity<String> tmp() {
-        // return ResponseEntity.ok(UserContextHolder.getContext().toString());
-        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getName());
-    }
-
-
-
-
-
-
-
-
-
-
 
    @GetMapping(value = "/{id}", produces = "application/json")
    public ResponseEntity<String> getGameById(@PathVariable UUID id) {
@@ -93,54 +33,14 @@ public class GameController {
            return ResponseEntity.notFound().build();
        }
    }
+}
 
-   @PostMapping("")
-   @PreAuthorize("hasRole('client_admin')")
-   public ResponseEntity<String> addGame(@RequestBody GameDto gameDto) {
-        // gameDto.setAdmin(adminService
-        //     .getByUsername(SecurityContextHolder
-        //     .getContext()
-        //     .getAuthentication()
-        //     .getName())
-        // );
-        // gameDto.setAdmin(adminService.getByUsername(UserContextHolder.getContext().getPreferredUsername()));
-        gameDto.setAdmin(adminService.getByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
 
-        if(gameService.save(gameDto) != null) {
-           return ResponseEntity.ok("Successfully added game");
-       } else {
-           throw new RuntimeException("Game save failed");
-       }
-   }
 
-   @PutMapping("/{id}")
-   @PreAuthorize("hasRole('client_admin')")
-   public ResponseEntity<String> updateGame(@PathVariable UUID id, @RequestBody GameDto gameDto) {
-       if(gameService.update(id, gameDto) != null) {
-           return ResponseEntity.ok("Successfully updated game");
-       } else {
-           throw new RuntimeException("Game update failed");
-       }
-   }
 
-   @DeleteMapping("/{id}")
-   @PreAuthorize("hasRole('client_admin')")
-   public ResponseEntity<String> deleteGame(@PathVariable UUID id) {
-       gameService.delete(id);
-       return ResponseEntity.ok("Game deleted");
-   }
 
-    @GetMapping(value = "/by-admin", produces = "application/json")
-    @PreAuthorize("hasRole('client_admin')")
-    public ResponseEntity<String> getGamesByAdmin() {
-        // Collection<GameDto> games = adminService.findGamesByAdminUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null);
-        Optional<Collection<GameDto>> games = adminService.findGamesByAdminUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (games.isPresent()) {
-            return ResponseEntity.ok(new Gson().toJson(games));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
+
 
    // @GetMapping("/by-title/{title}")
    // @PreAuthorize("hasRole('client_user')")
@@ -169,4 +69,36 @@ public class GameController {
    // public GameDto getGameByGenre(@RequestParam String genre) {
    //     return gameService.getGameByGenre(genre);
    // }
-}
+//    @GetMapping(value = "/start", produces = "application/json")
+//    public ResponseEntity<String> start(){
+//        for (int i = 0; i < 10; i++) {
+//            GameDto game = new GameDto();
+//            game.setTitle("Game " + i);
+//            gameService.save(game);
+//        }
+//
+//        for (int i = 0; i < 3; i++) {
+//            User user = new User();
+//            user.setId(UUID.randomUUID());
+//            user.setUsername("User" + i);
+//            user.setEmail("user" + i + "@gmail.com");
+//            userService.save(user);
+//        }
+//
+//
+//            return ResponseEntity.ok("Server setup successfully");
+//    }
+//
+//
+//    @GetMapping("friends/{username}")
+//    @PreAuthorize("@userPermissionEvaluator.isFriend(authentication, #username)")
+//    public ResponseEntity<String> getFriends(@PathVariable String username) {
+//        return ResponseEntity.ok("You are friends");
+//    }
+//
+//    @PostMapping("tmp")
+//    @PreAuthorize("hasRole('client_user') or hasRole('client_admin')")
+//    public ResponseEntity<String> tmp() {
+//        // return ResponseEntity.ok(UserContextHolder.getContext().toString());
+//        return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getName());
+//    }

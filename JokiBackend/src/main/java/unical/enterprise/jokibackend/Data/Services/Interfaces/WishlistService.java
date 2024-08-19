@@ -11,9 +11,11 @@ public interface WishlistService {
     void delete(Wishlist wishlist);
     void deleteById(UUID id);
     Collection<WishlistDto> findAll();
+    WishlistDto getByWishlistName(String wishlistName);
     WishlistDto getByUserId(UUID id);
     WishlistDto getByUserUsername(String username);
     boolean addGameToWishlist(GameDto game, String wishlistName);
+    void removeGameFromWishlist(GameDto game, String wishlistName);
     void addWishlist(String wishlistName);
     // Collection<WishlistDto> getByGameId(UUID id);
     // Collection<WishlistDto> getByGameName(String name);

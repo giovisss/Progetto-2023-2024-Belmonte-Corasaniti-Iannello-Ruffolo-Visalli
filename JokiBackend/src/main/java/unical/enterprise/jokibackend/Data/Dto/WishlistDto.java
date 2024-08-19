@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Dto;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +16,6 @@ public class WishlistDto {
     private UUID id;
     private String wishlistName;
     private User user;
-    private GameDto game;
+    private Collection<GameDto> game;
     private Integer visibility;
 }
