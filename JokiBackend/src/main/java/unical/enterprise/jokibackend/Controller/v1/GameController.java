@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Assemblers.GameModelAssembler;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.HATEOAS.GameModel;
+import unical.enterprise.jokibackend.Data.Models.GameModel;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 import java.util.Collection;
@@ -42,6 +42,7 @@ public class GameController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 }
 
