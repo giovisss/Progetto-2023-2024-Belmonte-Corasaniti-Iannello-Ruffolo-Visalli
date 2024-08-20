@@ -7,5 +7,9 @@ object TokenManager {
         token = newToken
     }
 
+    fun clearToken() {
+        token = null
+    }
+
     fun getToken(): String? = token
 }

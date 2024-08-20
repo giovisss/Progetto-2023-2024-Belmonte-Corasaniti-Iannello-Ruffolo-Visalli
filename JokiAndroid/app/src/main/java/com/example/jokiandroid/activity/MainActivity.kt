@@ -40,11 +40,12 @@ class MainActivity : ComponentActivity() {
         // Inizializziamo sempre il GameViewModel
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
-        if (TokenManager.getToken() == null) {
-            authManager.startAuthorization(this)
-        } else {
-            initializeContent()
-        }
+//        if (TokenManager.getToken() == null) {
+//            authManager.startAuthorization(this)
+//        } else {
+//            initializeContent()
+//        }
+        initializeContent()
     }
 
     private fun initializeContent() {
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         // Forziamo un refresh dei dati
-        gameViewModel.refreshData()
+//        gameViewModel.refreshData()
     }
 
     override fun onResume() {
@@ -80,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     TokenManager.setToken(accessToken)
                     runOnUiThread {
                         initializeContent()
-                        gameViewModel.refreshData() // Forziamo un refresh dei dati dopo l'autenticazione
+//                        gameViewModel.refreshData() // Forziamo un refresh dei dati dopo l'autenticazione
                     }
                 } else {
                     Log.e("Auth", "Authentication failed")

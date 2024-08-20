@@ -23,11 +23,12 @@ class GameViewModel : ViewModel() {
     val error: LiveData<String?> get() = _error
 
     init {
-        if (TokenManager.getToken() == null) {
-            _error.value = "Token non disponibile. Effettua il login."
-        } else {
-            fetchGames()
-        }
+//        if (TokenManager.getToken() == null) {
+//            _error.value = "Token non disponibile. Effettua il login."
+//        } else {
+//            fetchGames()
+//        }
+        fetchGames()
     }
 
     fun refreshData() {
@@ -40,13 +41,8 @@ class GameViewModel : ViewModel() {
     private fun fetchGames() {
         viewModelScope.launch {
             try {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    val response = RetrofitInstance.createApi(token).getGames()
-                    _games.value = response
-                } else {
-                    _error.value = "Token non disponibile. Effettua il login."
-                }
+                val response = RetrofitInstance.createApi().getGames()
+                _games.value = response
             } catch (e: Exception) {
                 _error.value = "Errore durante il caricamento dei giochi: ${e.message}"
             }
@@ -56,15 +52,10 @@ class GameViewModel : ViewModel() {
     fun fetchGameById(gameId: String) {
         viewModelScope.launch {
             try {
-                val token = TokenManager.getToken()
-                if (token != null) {
-                    _gameDetails.value = RetrofitInstance.createApi(token).getGameById(gameId)
-                } else {
-                    _error.value = "Token non disponibile. Effettua il login."
-                }
+                _gameDetails.value = RetrofitInstance.createApi().getGameById(gameId)
             } catch (e: Exception) {
                 Log.e("GameViewModel", "Error fetching games", e)
-                _error.value = "Errore durante il caricamento dei giochi"
+                _error.value = "Errore durante il caricamento del gioco"
             }
 //            try {
 //                val token = TokenManager.getToken()
