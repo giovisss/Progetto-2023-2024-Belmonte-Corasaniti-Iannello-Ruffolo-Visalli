@@ -22,7 +22,8 @@ def update_ip_in_file(file_path, ip_pattern, new_ip):
         with open(file_path, 'r+') as file:
             content = file.read()
             file.seek(0)
-            updated_content = re.sub(ip_pattern, new_ip, content)
+            # Sostituisce solo l'IP, lasciando intatta la porta
+            updated_content = re.sub(ip_pattern, fr'{new_ip}:\2' if '(\d+)' in ip_pattern else new_ip, content)
             file.write(updated_content)
             file.truncate()
         print(f"IP aggiornato nel file: {file_path}")
@@ -35,20 +36,24 @@ def main():
     print(f"IP Locale trovato: {ip_locale}")
 
     # Aggiornamento del file .ENV
-    update_ip_in_file('JokiBackend/.ENV', r'LOCAL_MACHINE_IP\s*=\s*\d+\.\d+\.\d+\.\d+', f'LOCAL_MACHINE_IP = {ip_locale}')
+    update_ip_in_file(
+        'JokiBackend/.ENV', 
+        r'LOCAL_MACHINE_IP\s*=\s*(\d+\.\d+\.\d+\.\d+)', 
+        f'LOCAL_MACHINE_IP = {ip_locale}'
+    )
 
     # Aggiornamento del file global.ts
     update_ip_in_file(
         'JokiFrontend/src/app/global.ts',
-        r'export const BASE_KEYCLOAK_URL\s*=\s*\'http://\d+\.\d+\.\d+\.\d+:8080\'',
-        f'export const BASE_KEYCLOAK_URL = \'http://{ip_locale}:8080\''
+        r'http://(\d+\.\d+\.\d+\.\d+):(\d+)',
+        f'http://{ip_locale}'
     )
 
     # Aggiornamento del file ips.xml
     update_ip_in_file(
         'JokiAndroid/app/src/main/res/values/ips.xml',
-        r'(\d+\.\d+\.\d+\.\d+):808\d',
-        f'{ip_locale}:8080'
+        r'(\d+\.\d+\.\d+\.\d+):(\d+)',
+        ip_locale
     )
 
 if __name__ == "__main__":
