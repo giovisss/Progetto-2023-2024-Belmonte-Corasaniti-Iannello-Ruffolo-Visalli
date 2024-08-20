@@ -16,8 +16,11 @@ export class KeycloakInitService {
         clientId: 'JokiClient'
       },
       initOptions: {
-        onLoad: 'login-required',
-        checkLoginIframe: false
+        onLoad: 'login-required', // TODO: login-required | check-sso | none
+                                  // login-required richiede il login all'avvio della'applicazione
+                                  // check-sso controlla se l'utente è già autenticato (cercate su chatGPT)
+                                  // none non fa nulla
+        checkLoginIframe: false // anche questo cercate su chatGPT
       }
     });
   }
