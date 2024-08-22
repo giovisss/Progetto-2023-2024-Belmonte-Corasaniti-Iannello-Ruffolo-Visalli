@@ -5,20 +5,30 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,42 +40,121 @@ import com.example.jokiandroid.model.Game
 @Composable
 fun LibraryActivity(navController: NavController, gameViewModel: GameViewModel) {
     val gamesResponse by gameViewModel.libraryGames.observeAsState()
+    val isLoading by gameViewModel.isLoading.collectAsState()
+    var showLoginDialog by remember { mutableStateOf(false) }
+    var showEmptyLibraryDialog by remember { mutableStateOf(false) }
+    val isLoggedIn by TokenManager.token.collectAsState()
 
-    LaunchedEffect(Unit) {
-        gameViewModel.fetchGamesByUser()
-    }
+    if (isLoggedIn == null) {
+        LoginRequiredDialog(
+            onDismissRequest = { /* Non fare nulla, l'utente deve effettuare il login */ },
+            onConfirmClick = { navController.popBackStack() }
+        )
+    } else {
+        val canMakeDecisions = !isLoading && gamesResponse != null
 
-    // Estrai la lista di giochi dalla risposta o mostra un messaggio di errore
-    val gameList = gamesResponse?.let { response ->
-        if (response.isSuccessful) {
-            Log.e("LibraryActivity", "GameList: $response")
-            response.body() ?: emptyList()
-        } else {
-            // Gestisci l'errore in modo appropriato (ad esempio, visualizza un messaggio all'utente)
-            emptyList()
+        LaunchedEffect(Unit) {
+            gameViewModel.fetchGamesByUser()
         }
-    } ?: emptyList() // Nel caso in cui gamesResponse sia null
 
+        val gameList = gamesResponse?.let { response ->
+            if (response.isSuccessful) {
+                Log.d("LibraryActivity", "GameList: $response")
+                response.body() ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } ?: emptyList()
 
-    Column(
+        LaunchedEffect(canMakeDecisions) {
+            if (canMakeDecisions) {
+                showEmptyLibraryDialog = gameList.isEmpty()
+            }
+        }
+
+        if (!canMakeDecisions) {
+            LoadingIndicator()
+        } else {
+            if (showEmptyLibraryDialog) {
+                EmptyListDialog(
+                    onDismissRequest = { showEmptyLibraryDialog = false },
+                    onConfirmClick = { navController.popBackStack() }
+                )
+            } else {
+                GameList(gameList, navController)
+            }
+        }
+    }
+}
+
+@Composable
+fun LoadingIndicator() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun GameList(gameList: List<Game>, navController: NavController) {
+    LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
             .padding(8.dp)
-    ){
-        LazyColumn(
-            content = {
-                itemsIndexed(gameList){index: Int, game: Game ->
-                    LibraryItem(
-                        item = game,
-                        onGameClick = { navController.navigate("game_detail/${game.id}") }
-                    )
-                }
-            }
-        )
+    ) {
+        itemsIndexed(gameList) { _, game ->
+            LibraryItem(
+                item = game,
+                onGameClick = { navController.navigate("game_detail/${game.id}") }
+            )
+        }
     }
+}
 
+@Composable
+fun EmptyListDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = "Libreria vuota") },
+        text = { Text("Non hai ancora aggiunto giochi alla tua libreria.") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmClick()
+                    onDismissRequest()
+                }
+            ) {
+                Text("OK")
+            }
+        }
+    )
+}
 
-
+@Composable
+fun LoginRequiredDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = "Login richiesto") },
+        text = { Text("Per visualizzare la tua libreria devi effettuare il login.") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirmClick()
+                    onDismissRequest()
+                }
+            ) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 @Composable

@@ -72,7 +72,7 @@ public interface UserDao extends JpaRepository<User, UUID> {
             SELECT COUNT(*)
             FROM friends
             WHERE (user_id = :primo AND friend_id = :secondo)
-               OR (user_id = :secondo AND friend_id = :primo);""",
+               OR (user_id = :secondo AND friend_id = :primo)""",
         nativeQuery = true)
     int checkFriendship(@Param("primo") UUID primo, @Param("secondo") UUID secondo);
 }
