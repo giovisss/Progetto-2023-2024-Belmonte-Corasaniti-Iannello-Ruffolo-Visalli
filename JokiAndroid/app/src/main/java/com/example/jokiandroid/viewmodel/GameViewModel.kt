@@ -3,8 +3,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jokiandroid.auth.TokenManager
 import com.example.jokiandroid.model.Game
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -21,6 +22,9 @@ class GameViewModel : ViewModel() {
     // LiveData per gestire gli errori
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
 //        if (TokenManager.getToken() == null) {
@@ -76,6 +80,7 @@ class GameViewModel : ViewModel() {
 
     fun fetchGamesByUser() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val token = TokenManager.getToken()
                 if (token != null) {
@@ -93,6 +98,7 @@ class GameViewModel : ViewModel() {
 //                Log.e("GameViewModel", "Error fetching games by user", e)
 //                _error.value = "Errore durante il caricamento dei giochi dell'utente"
 //            }
+            _isLoading.value = false
         }
     }
 
