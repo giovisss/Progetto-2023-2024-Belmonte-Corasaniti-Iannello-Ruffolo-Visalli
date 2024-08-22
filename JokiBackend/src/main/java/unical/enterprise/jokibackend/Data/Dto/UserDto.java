@@ -1,12 +1,11 @@
 package unical.enterprise.jokibackend.Data.Dto;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -18,8 +17,8 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
-    private WishlistDto wishlist;
-    private Collection<GameDto> games;
-    // private Collection<CartDto> carts;
-    private Collection<GameDto> cartGames;
+//    private WishlistDto wishlist;
+//    private Collection<GameDto> games;
+//    private Collection<GameDto> cartGames;
 }
+    // private Collection<CartDto> carts;

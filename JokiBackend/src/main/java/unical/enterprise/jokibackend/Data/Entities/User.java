@@ -2,14 +2,18 @@ package unical.enterprise.jokibackend.Data.Entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -66,4 +70,22 @@ public class User {
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
     )
     private Collection<Game> cartGames;
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("id", id)
+                .append("username", username)
+                .append("email", email)
+                .append("firstName", firstName)
+                .append("lastName", lastName)
+                .append("birthdate", birthdate)
+                // .append("games", games) // Evitiamo i cicli
+                // .append("friends", friends)
+                // .append("wishlists", wishlists)
+                .toString();
+    }
+
+
+
 }

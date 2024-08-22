@@ -2,6 +2,7 @@ package unical.enterprise.jokibackend.Data.Dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
@@ -15,9 +16,9 @@ import java.util.UUID;
 public interface WishlistDao extends JpaRepository<Wishlist, UUID> {
    Optional<Wishlist> findWishlistByUserId(UUID id);
 
-   @Query(value = "select w from wishlists w where w.user_id = :user_id and w.visibility between :visibility and :visibility2",
+   @Query(value = "select * from wishlists w where w.user_id = :user_id and w.visibility between :visibility and :visibility2",
            nativeQuery = true)
-   Optional<Collection<Wishlist>> findWishlistByUserFriendship(UUID user_id, Integer visibility, Integer visibility2);
+   Optional<Collection<Wishlist>> findWishlistByUserFriendship(@Param("user_id") UUID user_id, @Param("visibility") Integer visibility, @Param("visibility2") Integer visibility2);
    Optional<Wishlist> findWishlistByWishlistName(String name);
    void deleteByWishlistName(String name);
    void deleteByUserAndWishlistNameAndGamesContaining(User user, String wishlistName, Game games);

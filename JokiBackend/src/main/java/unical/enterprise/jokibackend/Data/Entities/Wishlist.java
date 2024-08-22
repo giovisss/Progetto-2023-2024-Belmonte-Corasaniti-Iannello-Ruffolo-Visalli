@@ -1,14 +1,15 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import lombok.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collection;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "wishlists")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,17 +41,9 @@ public class Wishlist {
     )
     private Collection<Game> games;
 
-//    @ManyToOne
-//    @JoinColumn(name = "game_id")
-//    private Game game;
-//
-
-
-//    @JoinTable(
-//        name = "wishlist_games",
-//        joinColumns = @JoinColumn(name = "wishlist_id"),
-//        inverseJoinColumns = @JoinColumn(name = "game_id")
-//    )
-//    private Collection<Game> games;
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 
 }

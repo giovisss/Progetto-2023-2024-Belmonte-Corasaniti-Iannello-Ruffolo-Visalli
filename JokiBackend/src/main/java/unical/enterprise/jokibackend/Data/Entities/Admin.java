@@ -1,14 +1,19 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Collection;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "admins")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +28,8 @@ public class Admin {
     @Column(unique = true)
     private String email;
 
-    // @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private Collection<Game> games;
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

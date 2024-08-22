@@ -1,15 +1,18 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
-import java.util.Collection;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.util.Date;
 import java.util.UUID;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
-
-@Data // lombok, genera getter e setter
+@Getter
+@Setter // lombok, genera getter e setter
 @Entity(name = "games") // jakarta, fa riferimento alla tabella games
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,6 +53,9 @@ public class Game {
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Admin admin;
 
-//    @ManyToMany(mappedBy = "games")
-//    private Collection<User> users;
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
 }

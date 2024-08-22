@@ -56,16 +56,11 @@ public class WishlistServiceImpl implements WishlistService {
         // check if friends
         if(userService.checkIfFriend(other)) lower=1;
 
-        System.out.println(lower);
-
         // 0 private, 1 friend, 2 public
         // if friend check for wishlist with 1 or 2 as visibility
         // otherwise just 2
-        System.out.println("DIOCANE");
-        Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(userService.getUserByUsername(other).getId(),lower,upper);
-        System.out.println("DIOCANE");
-        found.ifPresent(wishlists -> wishlists.forEach(System.out::println));
-        System.out.println("DIOCANE");
+        UUID porcodio=userService.getUserByUsername(other).getId();
+        Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(porcodio,lower,upper);
         Collection<WishlistDto> out = new ArrayList<>();
 
         if (found.isPresent())
