@@ -4,6 +4,7 @@ import GameViewModel
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -81,16 +82,29 @@ fun LibraryItem(item : Game, onGameClick: (Game) -> Unit = {}){
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = item.title,
-                fontSize = 20.sp,
-                color = Color.LightGray
-            )
-            Text(
-                text = item.description,
-                fontSize = 15.sp,
-                color = Color.White
-            )
+            if (isSystemInDarkTheme()) {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.DarkGray
+                )
+            } else {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.LightGray
+                )
+            }
         }
     }
 }

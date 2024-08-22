@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-        hideSystemUI()
+//        hideSystemUI()
         super.onCreate(savedInstanceState)
         IPManager.setIps(this)
         authManager = AuthManager(this)
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        hideSystemUI()
+//        hideSystemUI()
     }
 
     private fun hideSystemUI() {
