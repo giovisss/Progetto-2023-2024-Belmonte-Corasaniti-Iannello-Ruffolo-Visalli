@@ -3,6 +3,7 @@ package com.example.jokiandroid.activity
 import GameViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,27 +29,16 @@ import com.example.jokiandroid.viewmodel.CartViewModel
 
 @Composable
 fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
-    val gamesResponse by gameViewModel.games.observeAsState()
+    val games by gameViewModel.games.observeAsState(emptyList())
 
-    // Estrai la lista di giochi dalla risposta o mostra un messaggio di errore
-    val gameList = gamesResponse?.let { response ->
-        if (response.isSuccessful) {
-            response.body() ?: emptyList()
-        } else {
-            // Gestisci l'errore in modo appropriato (ad esempio, visualizza un messaggio all'utente)
-            emptyList()
-        }
-    } ?: emptyList() // Nel caso in cui gamesResponse sia null
-
-    val cartItems = cartViewModel.cartItems.observeAsState(emptyList())
     Column(
         modifier = Modifier
             .fillMaxHeight()
             .padding(8.dp)
-    ){
+    ) {
         LazyColumn(
             content = {
-                itemsIndexed(gameList){index: Int, game: Game ->
+                itemsIndexed(games) { index: Int, game: Game ->
                     GameItem(
                         item = game,
                         onAddToCart = { cartViewModel.addGame(it) },
@@ -74,16 +64,29 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, onGameClick: (Game) 
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = item.title,
-                fontSize = 20.sp,
-                color = Color.LightGray
-            )
-            Text(
-                text = item.description,
-                fontSize = 15.sp,
-                color = Color.White
-            )
+            if (isSystemInDarkTheme()) {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.DarkGray
+                )
+            } else {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.LightGray
+                )
+            }
         }
         Button(onClick = { onAddToCart(item) }) {
             Text(text = "Aggiungi al carrello")

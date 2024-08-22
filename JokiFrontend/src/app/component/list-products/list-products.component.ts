@@ -8,10 +8,10 @@ import {BASE_IMAGE_URL} from "../../global";
   styleUrl: './list-products.component.css'
 })
 export class ListProductsComponent {
-  protected products: any;
+  protected products: any[] = [];
   constructor(private productsService: ProductsService) {
-    this.productsService.getGamesList().subscribe((products: any) => {
-      this.products = products;
+    this.productsService.getGamesList().subscribe((response: any) => {
+      this.products = response._embedded.gameModelList.map((gameModel: any) => gameModel.gameDto);
     });
   }
 

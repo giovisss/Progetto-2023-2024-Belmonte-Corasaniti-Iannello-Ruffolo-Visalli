@@ -19,6 +19,7 @@ export class WishlistProductsComponent {
   ngOnInit() {
     const name = this.route.snapshot.params['name'];
     this.wishlistService.getWishlist(name).subscribe(wishlist => {
+      console.log(wishlist);
       this.wishlist = wishlist;
     });
   }

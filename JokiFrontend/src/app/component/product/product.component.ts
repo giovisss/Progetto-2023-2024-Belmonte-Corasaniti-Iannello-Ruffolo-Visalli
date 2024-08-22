@@ -26,7 +26,7 @@ export class ProductComponent {
     // });
 
   productsService.getGame(id).subscribe((product: any) => {
-      this.product = product;
+      this.product = product.gameDto;
       console.log(this.product);
     });
   }

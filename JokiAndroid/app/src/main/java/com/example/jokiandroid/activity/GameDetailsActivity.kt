@@ -18,23 +18,14 @@ import com.example.jokiandroid.utility.IPManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController: NavController) {
-    val gameDetailsResponse by viewModel.gameDetails.observeAsState()
+    val game by viewModel.gameDetails.observeAsState()
 
     LaunchedEffect(gameId) {
         viewModel.fetchGameById(gameId)
     }
 
-    // Estrai il gioco dalla risposta o null in caso di errore/assenza
-    val game = gameDetailsResponse?.let { response ->
-        if (response.isSuccessful) {
-            response.body()
-        } else {
-            null // o gestisci l'errore in modo appropriato
-        }
-    }
-
-    game?.let { // Se il gioco è stato trovato, visualizza i dettagli
-        Scaffold(topBar = {
+    Scaffold(
+        topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -44,13 +35,14 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                     Text("Dettagli del gioco")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home") }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
-                })
-        },
-        ) { innerPadding ->
-
+                }
+            )
+        }
+    ) { innerPadding ->
+        if (game != null) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -58,8 +50,8 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
             ) {
                 item {
                     AsyncImage(
-                        model = "http://"+ IPManager.BACKEND_IP + "/images/" + it.imagePath,
-                        contentDescription = it.title,
+                        model = "http://${IPManager.BACKEND_IP}/images/${game?.imagePath}",
+                        contentDescription = game?.title,
                         error = painterResource(id = R.drawable.games_image),
                         placeholder = painterResource(id = R.drawable.games_image),
                         modifier = Modifier
@@ -69,7 +61,7 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                 }
                 item {
                     Text(
-                        text = it.title,
+                        text = game?.title ?: "",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -78,25 +70,25 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text("Descrizione: ${it.description}")
+                        Text("Descrizione: ${game?.description}")
                         Text("Valutazione:")
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Genere: ${it.genre}")
-                        Text("Prezzo: €${String.format("%.2f", it.price)}")
-                        Text("Developer: ${it.developer}")
+                        Text("Genere: ${game?.genre}")
+                        Text("Prezzo: €${String.format("%.2f", game?.price ?: 0.0)}")
+                        Text("Developer: ${game?.developer}")
                     }
                 }
             }
-        }
-    }  ?: run {
-        // Gestisci il caso in cui il gioco non è stato trovato o si è verificato un errore
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("Gioco non trovato o errore durante il caricamento")
-            // Puoi aggiungere un pulsante per ricaricare i dati o tornare alla schermata precedente
+        } else {
+            // Gestisci il caso in cui il gioco non è stato trovato o si è verificato un errore
+            Column(
+                modifier = Modifier.fillMaxSize().padding(innerPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Gioco non trovato o errore durante il caricamento")
+                // Puoi aggiungere un pulsante per ricaricare i dati o tornare alla schermata precedente
+            }
         }
     }
 }
