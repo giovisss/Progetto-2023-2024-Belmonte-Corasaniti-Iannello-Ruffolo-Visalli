@@ -16,11 +16,16 @@ export class KeycloakInitService {
         clientId: 'JokiClient'
       },
       initOptions: {
-        onLoad: 'login-required', // TODO: login-required | check-sso | none
+        onLoad: 'check-sso', //
                                   // login-required richiede il login all'avvio della'applicazione
                                   // check-sso controlla se l'utente è già autenticato (cercate su chatGPT)
                                   // none non fa nulla
-        checkLoginIframe: false // anche questo cercate su chatGPT
+
+        checkLoginIframe: true,  //checkLoginIframe: true: Abilita il controllo periodico dello stato di autenticazione tramite l'iframe.
+                                //checkLoginIframe: false: Disabilita il controllo dello stato di autenticazione. L'applicazione non verificherà automaticamente
+                                // se l'utente è ancora autenticato dopo l'iniziale autenticazione.
+
+        checkLoginIframeInterval: 5  //Intervallo di controllo dello stato di autenticazione in secondi. Default: 5
       }
     });
   }
