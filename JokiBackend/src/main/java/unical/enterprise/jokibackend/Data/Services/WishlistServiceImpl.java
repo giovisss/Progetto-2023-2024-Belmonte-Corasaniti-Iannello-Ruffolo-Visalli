@@ -15,8 +15,7 @@ import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import unical.enterprise.jokibackend.Data.Dao.WishlistDao;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +48,32 @@ public class WishlistServiceImpl implements WishlistService {
                .map(wishlist, WishlistDto.class))
                .toList();
    }
+
+    @Override
+    public Collection<WishlistDto> getOthersWishlists(String other) {
+        int lower = 2,upper = 2;
+
+        // check if friends
+        if(userService.checkIfFriend(other)) lower=1;
+
+        System.out.println(lower);
+
+        // 0 private, 1 friend, 2 public
+        // if friend check for wishlist with 1 or 2 as visibility
+        // otherwise just 2
+        System.out.println("DIOCANE");
+        Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(userService.getUserByUsername(other).getId(),lower,upper);
+        System.out.println("DIOCANE");
+        found.ifPresent(wishlists -> wishlists.forEach(System.out::println));
+        System.out.println("DIOCANE");
+        Collection<WishlistDto> out = new ArrayList<>();
+
+        if (found.isPresent())
+            for(Wishlist wishlist : found.get())
+                out.add(modelMapper.map(wishlist,WishlistDto.class));
+
+        return out;
+    }
 
     @Override
     public WishlistDto getByWishlistName(String wishlistName) {

@@ -9,6 +9,7 @@
  import jakarta.servlet.ServletResponse;
  import jakarta.servlet.http.HttpServletRequest;
  import java.io.IOException;
+ import java.util.UUID;
 
  public class UserContextFilter implements Filter {
 
@@ -34,6 +35,7 @@
 
              context.setScope(claims.getStringClaim("scope"));
              context.setSid(claims.getStringClaim("sid"));
+             context.setId(UUID.fromString(claims.getStringClaim("sub")));
              context.setEmailVerified(claims.getBooleanClaim("email_verified"));
              context.setName(claims.getStringClaim("name"));
              context.setPreferredUsername(claims.getStringClaim("preferred_username"));

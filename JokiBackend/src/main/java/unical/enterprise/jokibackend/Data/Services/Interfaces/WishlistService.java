@@ -11,6 +11,7 @@ public interface WishlistService {
     void delete(Wishlist wishlist);
     void deleteById(UUID id);
     Collection<WishlistDto> findAll();
+    Collection<WishlistDto> getOthersWishlists(String other);
     WishlistDto getByWishlistName(String wishlistName);
     WishlistDto getByUserId(UUID id);
     WishlistDto getByUserUsername(String username);

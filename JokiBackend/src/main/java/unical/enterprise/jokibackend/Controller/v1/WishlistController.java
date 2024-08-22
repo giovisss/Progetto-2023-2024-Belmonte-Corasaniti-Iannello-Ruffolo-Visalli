@@ -2,17 +2,13 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/wishlist")
@@ -63,8 +59,11 @@ public class WishlistController {
     // TODO: IMPLEMENTARE LOGICA AMICIZIA
 
     @GetMapping(value = "/other/{username}", produces = "application/json")
-//    @PreAuthorize("@userPermissionEvaluator.canVisulize(#username)")
     public ResponseEntity<String> getWishlistByUsername(@PathVariable String username){
-        throw new NotImplementedException();
+        var out=wishlistService.getOthersWishlists(username);
+        if(out.size()>0) System.out.println(out.iterator().next().toString());
+        return ResponseEntity.ok("vediamo");
+//        if(out.isEmpty()) return ResponseEntity.notFound().build();
+//        else return ResponseEntity.ok(new Gson().toJson(out));
     }
 }

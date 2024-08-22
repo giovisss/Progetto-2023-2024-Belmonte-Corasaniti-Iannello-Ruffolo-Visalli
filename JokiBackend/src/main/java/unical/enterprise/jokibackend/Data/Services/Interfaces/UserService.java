@@ -1,12 +1,12 @@
 package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
-import java.util.Collection;
-import java.util.UUID;
-
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.User;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -41,4 +41,6 @@ public interface UserService {
     boolean removeGameFromUserCart(String username, UUID gameId);
 
     void clearUserCart(String username);
+
+    boolean checkIfFriend(String other);
 }

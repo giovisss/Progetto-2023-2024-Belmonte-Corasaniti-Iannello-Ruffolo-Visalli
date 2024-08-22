@@ -1,23 +1,24 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import java.util.Collection;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
-import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
+
+import javax.ws.rs.NotFoundException;
+import java.util.Collection;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -159,5 +160,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void clearUserCart(String username) {
         userDao.clearUserCart(username);
+    }
+
+    @Override
+    public boolean checkIfFriend(String other) {
+        var  tmp=userDao.findUserByUsername(other);
+        if (tmp.isEmpty()) throw new NotFoundException();
+        UUID oth=tmp.get().getId();
+
+        UUID user=UserContextHolder.getContext().getId();
+
+        int response=userDao.checkFriendship(user, oth);
+        return response == 2;
     }
 }

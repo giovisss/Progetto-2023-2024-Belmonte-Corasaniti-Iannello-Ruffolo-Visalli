@@ -1,17 +1,16 @@
 package unical.enterprise.jokibackend.Data.Dao;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserDao extends JpaRepository<User, UUID> {
@@ -67,4 +66,13 @@ public interface UserDao extends JpaRepository<User, UUID> {
                    "WHERE user_id = (SELECT id FROM users WHERE username = :username)",
            nativeQuery = true)
     void clearUserCart(@Param("username") String username);
+
+
+    @Query(value = """
+            SELECT COUNT(*)
+            FROM friends
+            WHERE (user_id = :primo AND friend_id = :secondo)
+               OR (user_id = :secondo AND friend_id = :primo);""",
+        nativeQuery = true)
+    int checkFriendship(@Param("primo") UUID primo, @Param("secondo") UUID secondo);
 }
