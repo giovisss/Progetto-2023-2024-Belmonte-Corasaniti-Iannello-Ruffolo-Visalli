@@ -1,0 +1,21 @@
+[ req ]
+default_bits       = 4096
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+x509_extensions    = v3_ca
+
+[ req_distinguished_name ]
+countryName                 = IT
+stateOrProvinceName         = Italy
+localityName                = Rende
+organizationName            = Joki
+commonName                  = JokiRootCA
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ v3_ca ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1   = localhost
