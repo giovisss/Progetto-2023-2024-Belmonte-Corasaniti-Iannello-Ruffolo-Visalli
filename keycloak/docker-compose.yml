@@ -1,0 +1,26 @@
+version: '3'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.4
+    container_name: keycloak
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./certs/fullchain.pem:/etc/x509/https/tls.crt
+      - ./certs/privkey.pem:/etc/x509/https/tls.key
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=magora.it
+      - KC_DB_URL_PORT=5432
+      - KC_DB_URL_DATABASE=ea
+      - KC_DB_USERNAME=giovanni
+      - KC_DB_PASSWORD=penepiccolo
+      - KC_HOSTNAME=localhost
+      - KC_HTTPS_CERTIFICATE_FILE=/etc/x509/https/tls.crt
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/etc/x509/https/tls.key
+    command:
+      - start-dev

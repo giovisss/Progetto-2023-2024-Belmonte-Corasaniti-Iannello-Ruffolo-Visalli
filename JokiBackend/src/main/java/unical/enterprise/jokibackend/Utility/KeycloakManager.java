@@ -9,7 +9,7 @@ public class KeycloakManager {
 
     static Keycloak keycloak = null;
 
-    final static String serverUrl = "http://localhost:8080/";
+    final static String serverUrl = "https://localhost:8443/";
     public final static String realm = "JokiRealm";
     final static String clientId = "JokiBackend";
     final static String clientSecret = "BAAHnEU37J7LX0Do6sRcsDN9IZNVs20g";

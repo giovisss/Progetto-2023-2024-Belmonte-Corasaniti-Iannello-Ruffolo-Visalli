@@ -89,10 +89,10 @@ class SecurityConfig {
                 .clientSecret("BAAHnEU37J7LX0Do6sRcsDN9IZNVs20g")
                 .scope("openid")
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/auth")
-                .tokenUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/token")
-                .userInfoUri("http://localhost:8080/auth/realms/JokiRealm/protocol/openid-connect/userinfo")
-                .redirectUri("http://localhost:8081/login/oauth2/code/keycloak")
+                .authorizationUri("https://localhost:8443/auth/realms/JokiRealm/protocol/openid-connect/auth")
+                .tokenUri("https://localhost:8443/auth/realms/JokiRealm/protocol/openid-connect/token")
+                .userInfoUri("https://localhost:8443/auth/realms/JokiRealm/protocol/openid-connect/userinfo")
+                .redirectUri("https://localhost:8081/login/oauth2/code/keycloak")
                 .build();
     }
 }
