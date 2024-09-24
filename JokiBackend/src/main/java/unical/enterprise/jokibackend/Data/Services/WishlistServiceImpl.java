@@ -4,18 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dao.WishlistDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Entities.Game;
+import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
-import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
-import unical.enterprise.jokibackend.Data.Dao.WishlistDao;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +73,10 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public WishlistDto getByWishlistName(String wishlistName) {
-        Wishlist wishlist = wishlistDao.findWishlistByWishlistName(wishlistName).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByUserAndWishlistName(
+                modelMapper.map(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()), User.class),
+                wishlistName
+        ).orElse(null);
         return modelMapper.map(wishlist, WishlistDto.class);
     }
 
@@ -112,7 +117,10 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public boolean addGameToWishlist(GameDto game, String wishlistName) {
-        Wishlist wishlist = wishlistDao.findWishlistByWishlistName(wishlistName).orElse(null);
+        Wishlist wishlist = wishlistDao.findWishlistByUserAndWishlistName(
+                modelMapper.map(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()), User.class),
+                wishlistName
+        ).orElse(null);
         WishlistDto wishlistDto = modelMapper.map(wishlist, WishlistDto.class);
         if (wishlistDto == null) {
             return false;
@@ -126,11 +134,18 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public void removeGameFromWishlist(GameDto game, String wishlistName) {
-        wishlistDao.deleteByUserAndWishlistNameAndGamesContaining(
+        Wishlist wishlist = wishlistDao.findWishlistByUserAndWishlistName(
                 modelMapper.map(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()), User.class),
-                wishlistName,
-                modelMapper.map(game, Game.class)
-        );
+                wishlistName
+        ).orElse(null);
+
+        if(wishlist == null) return;
+
+        WishlistDto wishlistDto = modelMapper.map(wishlist, WishlistDto.class);
+
+        wishlistDto.getGame().remove(game);
+
+        wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
     }
 
     @Override

@@ -2,9 +2,11 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
+import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
@@ -22,6 +24,7 @@ public class WishlistController {
     private final WishlistService wishlistService;
     private final UserService userService;
     private final GameService gameService;
+    private final ModelMapper modelMapper;
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getWishlist(){
@@ -43,7 +46,7 @@ public class WishlistController {
 
     @DeleteMapping(value = "/{wishlistName}", produces = "application/json")
     public ResponseEntity<String> deleteWishlist(@PathVariable String wishlistName){
-        wishlistService.deleteById(wishlistService.getByWishlistName(wishlistName).getId());
+        wishlistService.delete(modelMapper.map(wishlistService.getByWishlistName(wishlistName), Wishlist.class));
         return ResponseEntity.ok("Wishlist deleted");
     }
 
