@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    @PreAuthorize("@userPermissionEvaluator.canVisulize(#username)")
+    @PreAuthorize("@userPermissionEvaluator.canVisualize(#username)")
     @Produces("application/json")
     public ResponseEntity<String> getUser(@PathVariable String username) {
        var out = userService.getUserByUsername(username);

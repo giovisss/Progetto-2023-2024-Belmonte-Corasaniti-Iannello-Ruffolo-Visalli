@@ -61,38 +61,20 @@ public class WishlistController {
         return ResponseEntity.ok("Game removed from wishlist");
     }
 
-    // TODO: IMPLEMENTARE LOGICA AMICIZIA
-
     @GetMapping(value = "/other/{username}", produces = "application/json")
-    public ResponseEntity<String> getWishlistByUsername(@PathVariable String username){
-        Collection<WishlistDto> out=wishlistService.getOthersWishlists(username);
-//        if(out.size()>0) System.out.println(out.iterator().next().toString());
-//        return ResponseEntity.ok("vediamo");
-
-
-//        System.out.println("vjdsrbvghjrfedbvjhdbnvknmfvblhjsdfbvbdfvnkdfnvkndfbslkjdbsklbj");
-//        out.forEach(System.out::println);
-//        Gson g = new Gson();
-//        System.out.println("vjdsrbvghjrfedbvjhdbnvknmfvblhjsdfbvbdfvnkdfnvkndfbslkjdbsklbj");
-//        var tmp = g.toJson(out.toArray()[0]);
-//        System.out.println(tmp);
-//        System.out.println("vjdsrbvghjrfedbvjhdbnvknmfvblhjsdfbvbdfvnkdfnvkndfbslkjdbsklbj");
-//        System.out.println(covert(out));
-
-//        var u=new UserDto(UUID.fromString("ab049c2a-d9f1-44c7-a64c-579d8a72f434"),"aaa","aaa","aaa","aaa", new Date(),null,null,null);
-
-
-//        var u = userService.getUserByUsername("aaa");
-//        System.out.println(new Gson().toJson(u));
-//        System.out.println(u);
-//
-//        String cazzi = out.toArray()[0].toString();
-////        cazzi=cazzi.substring(12,cazzi.length()-1);
-//        System.out.println(new Gson().toJson(cazzi));
-//        System.out.println(cazzi);
-
+    public ResponseEntity<String> getOtherWishlistsByUsername(@PathVariable String username){
+        Collection<WishlistDto> out=wishlistService.getOtherWishlists(username);
 
         if(out.isEmpty()) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(CollectionToJson.covert(out));
+    }
+
+    // TODO: testare dopo hateoas e vedere se va in overflow
+    @GetMapping(value = "/other/{username}/{wishlistName}", produces = "application/json")
+    public ResponseEntity<String> getOtherWishlist(@PathVariable String username, @PathVariable String wishlistName){
+        var out = wishlistService.getOtherWishlistByWishlistName(username, wishlistName);
+
+        if(out == null) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok(new Gson().toJson(out));
     }
 }

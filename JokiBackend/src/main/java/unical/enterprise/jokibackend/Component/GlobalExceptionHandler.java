@@ -1,40 +1,37 @@
 package unical.enterprise.jokibackend.Component;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.ws.rs.NotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value={NotFoundException.class})
-    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.notFound().build();
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException ignoredE) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
     }
 
-    @ExceptionHandler(value={IllegalArgumentException.class})
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    @ExceptionHandler(value={RuntimeException.class})
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
-    @ExceptionHandler(value={Exception.class})
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.badRequest().body("An error occurred");
-    }
-
-    @ExceptionHandler(value={Throwable.class})
-    public ResponseEntity<String> handleThrowable(Throwable e) {
-        return ResponseEntity.badRequest().body("An error occurred");
-    }
-
-    @ExceptionHandler(value={Error.class})
-    public ResponseEntity<String> handleError(Error e) {
-        return ResponseEntity.badRequest().body("An error occurred");
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> handleException(Exception ignoredE) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
     }
 }

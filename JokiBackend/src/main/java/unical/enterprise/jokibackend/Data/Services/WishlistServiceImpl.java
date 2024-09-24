@@ -50,7 +50,7 @@ public class WishlistServiceImpl implements WishlistService {
    }
 
     @Override
-    public Collection<WishlistDto> getOthersWishlists(String other) {
+    public Collection<WishlistDto> getOtherWishlists(String other) {
         int lower = 2,upper = 2;
 
         // check if friends
@@ -59,8 +59,7 @@ public class WishlistServiceImpl implements WishlistService {
         // 0 private, 1 friend, 2 public
         // if friend check for wishlist with 1 or 2 as visibility
         // otherwise just 2
-        UUID porcodio=userService.getUserByUsername(other).getId();
-        Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(porcodio,lower,upper);
+        Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(userService.getUserByUsername(other).getId(),lower,upper);
         Collection<WishlistDto> out = new ArrayList<>();
 
         if (found.isPresent())
@@ -74,6 +73,23 @@ public class WishlistServiceImpl implements WishlistService {
     public WishlistDto getByWishlistName(String wishlistName) {
         Wishlist wishlist = wishlistDao.findWishlistByWishlistName(wishlistName).orElse(null);
         return modelMapper.map(wishlist, WishlistDto.class);
+    }
+
+    @Override
+    public WishlistDto getOtherWishlistByWishlistName(String other, String wishlistName) {
+        WishlistDto out = null;
+
+        WishlistDto wishlist = wishlistDao.findWishlistByUserAndWishlistName(
+                modelMapper.map(userService.getUserByUsername(other), User.class),
+                wishlistName
+        ).map(w -> modelMapper.map(w, WishlistDto.class)).orElse(null);
+
+        if(wishlist == null || wishlist.getVisibility() == 0) return null;
+
+        if(wishlist.getVisibility() == 2) out = wishlist;
+        else if(wishlist.getVisibility() == 1 && userService.checkIfFriend(other)) out = wishlist;
+
+        return out;
     }
 
     @Override

@@ -22,5 +22,6 @@ public interface WishlistDao extends JpaRepository<Wishlist, UUID> {
    Optional<Wishlist> findWishlistByWishlistName(String name);
    void deleteByWishlistName(String name);
    void deleteByUserAndWishlistNameAndGamesContaining(User user, String wishlistName, Game games);
+   Optional<Wishlist> findWishlistByUserAndWishlistName(User user, String wishlistName);
    // Optional<Wishlist> findWishlistByGameId(UUID id);
 }
