@@ -1,21 +1,31 @@
 [ req ]
-default_bits       = 4096
+default_bits       = 2048
 distinguished_name = req_distinguished_name
 req_extensions     = req_ext
-x509_extensions    = v3_ca
+x509_extensions    = v3_ca # The extensions to add to the self-signed cert
 
 [ req_distinguished_name ]
-countryName                 = IT
-stateOrProvinceName         = Italy
-localityName                = Rende
-organizationName            = Joki
-commonName                  = JokiRootCA
+countryName                 = Country Name (2 letter code)
+countryName_default         = US
+stateOrProvinceName         = State or Province Name (full name)
+stateOrProvinceName_default = State
+localityName                = Locality Name (eg, city)
+localityName_default        = City
+organizationName            = Organization Name (eg, company)
+organizationName_default    = Organization
+organizationalUnitName      = Organizational Unit Name (eg, section)
+organizationalUnitName_default = OrgUnit
+commonName                  = Common Name (e.g. server FQDN or YOUR name)
+commonName_default          = localhost
 
 [ req_ext ]
 subjectAltName = @alt_names
 
 [ v3_ca ]
 subjectAltName = @alt_names
+basicConstraints = critical,CA:TRUE
+keyUsage = critical,keyCertSign,cRLSign
 
 [ alt_names ]
 DNS.1   = localhost
+
