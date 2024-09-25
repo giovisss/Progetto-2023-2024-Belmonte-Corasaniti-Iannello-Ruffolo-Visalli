@@ -11,20 +11,20 @@ import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admins")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
 
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> getUsersList(){
+    public ResponseEntity<String> getAdminsList(){
         Collection<AdminDto> users = adminService.findAll();
         return ResponseEntity.ok(new Gson().toJson(users));
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<String> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<String> getAdminById(@PathVariable UUID id) {
         AdminDto user = adminService.getById(id);
         if (user != null) {
             return ResponseEntity.ok(new Gson().toJson(user));
