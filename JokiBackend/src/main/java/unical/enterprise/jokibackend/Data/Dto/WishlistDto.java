@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 
@@ -15,6 +16,7 @@ import unical.enterprise.jokibackend.Data.Entities.User;
 public class WishlistDto {
     private UUID id;
     private String wishlistName;
+    @JsonIgnore
     private User user;
     private Collection<GameDto> game;
     private Integer visibility;

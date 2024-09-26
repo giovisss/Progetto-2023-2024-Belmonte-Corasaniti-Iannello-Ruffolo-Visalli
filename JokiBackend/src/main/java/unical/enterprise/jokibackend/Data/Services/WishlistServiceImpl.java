@@ -98,9 +98,15 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-   public WishlistDto getByUserId(UUID id) {
-       Wishlist wishlist = wishlistDao.findWishlistByUserId(id).orElse(null);
-       return modelMapper.map(wishlist, WishlistDto.class);
+   public Collection<WishlistDto> getByUserId(UUID id) {
+       Collection<Wishlist> wishlist = wishlistDao.findWishlistByUserId(id).orElse(null);
+       Collection<WishlistDto> out = new ArrayList<>();
+         if (wishlist != null) {
+              for (Wishlist w : wishlist) {
+                out.add(modelMapper.map(w, WishlistDto.class));
+              }
+         }
+       return out;
    }
 
 //    @Override
@@ -109,11 +115,15 @@ public class WishlistServiceImpl implements WishlistService {
 //        return List.of(modelMapper.map(wishlist, WishlistDto.class));
 //    }
 
+
+    //todo implementare
    @Override
    public WishlistDto getByUserUsername(String username) {
-       Wishlist wishlist = wishlistDao.findWishlistByUserId(UUID.fromString(username)).orElse(null);
-       return modelMapper.map(wishlist, WishlistDto.class);
+//       Wishlist wishlist = wishlistDao.findWishlistByUserId(UUID.fromString(username)).orElse(null);
+//       return modelMapper.map(wishlist, WishlistDto.class);
+         return null;
    }
+
 
     @Override
     public boolean addGameToWishlist(GameDto game, String wishlistName) {

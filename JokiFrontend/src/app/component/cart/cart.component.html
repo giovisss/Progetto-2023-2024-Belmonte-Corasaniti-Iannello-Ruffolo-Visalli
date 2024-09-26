@@ -43,25 +43,23 @@
               <div class="mt-8">
                 <div class="flow-root">
                   <ul role="list" class="-my-6 divide-y divide-gray-200">
-                    <li class="flex py-6" *ngFor="let item of cart">
+                    <li class="flex py-6" *ngFor="let item of cart | async">
                       <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <img [src]="BASE_IMAGE_URL + item.product.imagePath" [alt]="item.product.title" class="h-full w-full object-cover object-center">
+                        <img [src]="BASE_IMAGE_URL + item.imagePath" [alt]="item.title" class="h-full w-full object-cover object-center">
                       </div>
-
                       <div class="ml-4 flex flex-1 flex-col">
                         <div>
                           <div class="flex justify-between text-base font-medium text-gray-900">
                             <h3>
-                              <a href="/product/{{item.product.id}}">{{item.product.title}}</a>
+                              <a href="/product/{{item.id}}">{{item.title}}</a>
                             </h3>
-                            <p class="ml-4">{{item.product.price|currency:"EUR"}}</p>
+                            <p class="ml-4">{{item.price | currency:"EUR"}}</p>
                           </div>
                         </div>
                         <div class="flex flex-1 items-end justify-between text-sm">
-                          <p class="text-gray-500">Qta {{item.quantity}}</p>
-
+<!--                          <p class="text-gray-500">Qta {{item.quantity}}</p>-->
                           <div class="flex">
-                            <button (click)="removeItem(item.product)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Rimuovi</button>
+                            <!-- <button (click)="removeItem(item.product)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Rimuovi</button> -->
                           </div>
                         </div>
                       </div>

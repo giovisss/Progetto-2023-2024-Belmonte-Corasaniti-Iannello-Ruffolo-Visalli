@@ -28,7 +28,7 @@ public class WishlistController {
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getWishlist(){
-        var out = wishlistService.getByUserUsername(UserContextHolder.getContext().getPreferredUsername());
+        var out = wishlistService.getByUserId(UserContextHolder.getContext().getId());
         return ResponseEntity.ok(new Gson().toJson(out));
     }
 
