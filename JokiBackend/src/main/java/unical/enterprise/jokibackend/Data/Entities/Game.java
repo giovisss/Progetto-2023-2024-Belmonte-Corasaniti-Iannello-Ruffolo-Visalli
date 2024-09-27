@@ -1,5 +1,8 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,6 +54,9 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private Admin admin;
 
     @Override

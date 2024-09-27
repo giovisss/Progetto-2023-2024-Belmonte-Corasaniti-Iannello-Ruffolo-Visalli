@@ -62,11 +62,11 @@ public class WishlistServiceImpl implements WishlistService {
         // if friend check for wishlist with 1 or 2 as visibility
         // otherwise just 2
         Optional<Collection<Wishlist>> found = wishlistDao.findWishlistByUserFriendship(userService.getUserByUsername(other).getId(),lower,upper);
-        Collection<WishlistDto> out = new ArrayList<>();
+        ArrayList<WishlistDto> out = new ArrayList<>();
 
         if (found.isPresent())
             for(Wishlist wishlist : found.get())
-                out.add(modelMapper.map(wishlist,WishlistDto.class));
+                out.add(modelMapper.map(wishlist, WishlistDto.class));
 
         return out;
     }
@@ -77,6 +77,9 @@ public class WishlistServiceImpl implements WishlistService {
                 modelMapper.map(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()), User.class),
                 wishlistName
         ).orElse(null);
+
+        if(wishlist == null) return null;
+
         return modelMapper.map(wishlist, WishlistDto.class);
     }
 
@@ -126,7 +129,7 @@ public class WishlistServiceImpl implements WishlistService {
             return false;
         }
         else {
-            wishlistDto.getGame().add(game);
+            wishlistDto.getGames().add(game);
             wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
             return true;
         }
@@ -143,7 +146,7 @@ public class WishlistServiceImpl implements WishlistService {
 
         WishlistDto wishlistDto = modelMapper.map(wishlist, WishlistDto.class);
 
-        wishlistDto.getGame().remove(game);
+        wishlistDto.getGames().remove(game);
 
         wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
     }

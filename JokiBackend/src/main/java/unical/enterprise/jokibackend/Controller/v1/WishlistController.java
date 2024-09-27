@@ -1,5 +1,7 @@
 package unical.enterprise.jokibackend.Controller.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -10,7 +12,6 @@ import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
-import unical.enterprise.jokibackend.Utility.CollectionToJson;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.util.Collection;
@@ -65,19 +66,18 @@ public class WishlistController {
     }
 
     @GetMapping(value = "/other/{username}", produces = "application/json")
-    public ResponseEntity<String> getOtherWishlistsByUsername(@PathVariable String username){
+    public ResponseEntity<String> getOtherWishlistsByUsername(@PathVariable String username) throws JsonProcessingException {
         Collection<WishlistDto> out=wishlistService.getOtherWishlists(username);
 
         if(out.isEmpty()) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok(CollectionToJson.covert(out));
+        else return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 
-    // TODO: testare dopo hateoas e vedere se va in overflow
     @GetMapping(value = "/other/{username}/{wishlistName}", produces = "application/json")
-    public ResponseEntity<String> getOtherWishlist(@PathVariable String username, @PathVariable String wishlistName){
+    public ResponseEntity<String> getOtherWishlist(@PathVariable String username, @PathVariable String wishlistName) throws JsonProcessingException {
         var out = wishlistService.getOtherWishlistByWishlistName(username, wishlistName);
 
         if(out == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok(new Gson().toJson(out));
+        else return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 }

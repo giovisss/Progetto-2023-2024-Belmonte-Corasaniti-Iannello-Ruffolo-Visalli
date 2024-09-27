@@ -1,5 +1,8 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,9 +40,6 @@ public class User {
     @Column(columnDefinition = "DATE")
     private Date birthdate;
 
-    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private Cart cart;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "libraries",
@@ -47,12 +47,17 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "game_id"),
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
     )
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private Collection<Game> games;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private Collection<Wishlist> wishlists;
 
-    //manytomany per fare gli amici
     @ManyToMany
     @JoinTable(
         name = "friends",
@@ -60,6 +65,9 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "friend_id"),
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "friend_id"})
     )
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private Collection<User> friends;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -69,6 +77,9 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "game_id"),
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "game_id"})
     )
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private Collection<Game> cartGames;
 
     @Override
@@ -80,12 +91,6 @@ public class User {
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("birthdate", birthdate)
-                // .append("games", games) // Evitiamo i cicli
-                // .append("friends", friends)
-                // .append("wishlists", wishlists)
                 .toString();
     }
-
-
-
 }
