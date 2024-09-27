@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 public interface WishlistDao extends JpaRepository<Wishlist, UUID> {
-   Optional<Wishlist> findWishlistByUserId(UUID id);
+   Optional<Collection<Wishlist>> findWishlistByUserId(UUID id);
 
    @Query(value = "select * from wishlists w where w.user_id = :user_id and w.visibility between :visibility and :visibility2",
            nativeQuery = true)

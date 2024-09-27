@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import unical.enterprise.jokibackend.Data.Entities.User;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -18,5 +17,5 @@ public class WishlistDto {
     private Integer visibility;
     private Collection<GameDto> games;
     @JsonIgnore
-    private User user;
+    private UserDto user;
 }
