@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {BehaviorSubject, map, Observable} from 'rxjs';
 import { game } from '../model/game';
 import { BASE_API_URL } from '../global';
+import {data} from "autoprefixer";
 
 @Injectable({
   providedIn: 'root'
@@ -25,27 +26,13 @@ export class CartService {
     return this.cartSubject.asObservable();
   }
 
-  addToCart(game: game): Observable<any> {
-    console.log(this.apiUrl + '/user/cart/' + game.id);
-    this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
-
-    });
-    return this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).pipe(
-      map(() => {
-        console.log(1);
-        const currentCart = this.cartSubject.value;
-        console.log(2);
-        currentCart.push(game);
-        console.log(3);
-        this.cartSubject.next(currentCart);
-        console.log(4);
-        this.updateTotal(currentCart);
-        console.log(5);
-        this.updateQuantity(currentCart);
-        console.log(6);
-      })
-    );
-  }
+  addToCart(game: game) {
+        this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
+            map(() => {
+              this.cartSubject.value.push(game);
+            })
+        });
+    }
 
   removeFromCart(game: game): Observable<any> {
     return this.httpClient.delete(this.apiUrl + '/user/cart/' + game.id).pipe(
