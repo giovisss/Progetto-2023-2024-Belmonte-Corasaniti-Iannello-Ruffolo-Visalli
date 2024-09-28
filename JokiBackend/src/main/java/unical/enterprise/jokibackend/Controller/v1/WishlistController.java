@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Controller.v1;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -8,28 +9,26 @@ import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.WishlistDto;
 import unical.enterprise.jokibackend.Data.Entities.Wishlist;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.WishlistService;
-import unical.enterprise.jokibackend.Utility.CollectionToJson;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/wishlist")
+@RequestMapping("/api/v1/wishlists")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class WishlistController {
     private final WishlistService wishlistService;
-    private final UserService userService;
     private final GameService gameService;
     private final ModelMapper modelMapper;
 
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> getWishlist(){
+
+    public ResponseEntity<String> getWishlists() throws JsonProcessingException {
         var out = wishlistService.getByUserId(UserContextHolder.getContext().getId());
-        return ResponseEntity.ok(new Gson().toJson(out));
+        return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 
     @PostMapping(value = "", produces = "application/json")
@@ -39,9 +38,9 @@ public class WishlistController {
     }
 
     @GetMapping(value = "/{wishlistName}", produces = "application/json")
-    public ResponseEntity<String> getWishlist(@PathVariable String wishlistName){
+    public ResponseEntity<String> getWishlist(@PathVariable String wishlistName) throws JsonProcessingException {
         var out = wishlistService.getByWishlistName(wishlistName);
-        return ResponseEntity.ok(new Gson().toJson(out));
+        return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 
     @DeleteMapping(value = "/{wishlistName}", produces = "application/json")
@@ -65,19 +64,18 @@ public class WishlistController {
     }
 
     @GetMapping(value = "/other/{username}", produces = "application/json")
-    public ResponseEntity<String> getOtherWishlistsByUsername(@PathVariable String username){
+    public ResponseEntity<String> getOtherWishlistsByUsername(@PathVariable String username) throws JsonProcessingException {
         Collection<WishlistDto> out=wishlistService.getOtherWishlists(username);
 
         if(out.isEmpty()) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok(CollectionToJson.covert(out));
+        else return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 
-    // TODO: testare dopo hateoas e vedere se va in overflow
     @GetMapping(value = "/other/{username}/{wishlistName}", produces = "application/json")
-    public ResponseEntity<String> getOtherWishlist(@PathVariable String username, @PathVariable String wishlistName){
+    public ResponseEntity<String> getOtherWishlist(@PathVariable String username, @PathVariable String wishlistName) throws JsonProcessingException {
         var out = wishlistService.getOtherWishlistByWishlistName(username, wishlistName);
 
         if(out == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok(new Gson().toJson(out));
+        else return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));
     }
 }

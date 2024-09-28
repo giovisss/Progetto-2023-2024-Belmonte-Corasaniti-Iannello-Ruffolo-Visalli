@@ -11,7 +11,6 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class GameDto {
     private UUID id;
     private String title;

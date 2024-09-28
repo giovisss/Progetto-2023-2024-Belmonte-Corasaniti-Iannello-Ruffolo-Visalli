@@ -62,6 +62,7 @@ public class AuditLogging {
         logger.info("**************************************************");
         logger.severe("AN EXCEPTION HAS BEEN THROWN");
         logger.severe("Cause : " + error);
+        logger.severe("Method : " + joinPoint.getSignature().getName());
         logger.info("**************************************************");
         logger.info("--------------------------------------------------");
         lock.unlock();

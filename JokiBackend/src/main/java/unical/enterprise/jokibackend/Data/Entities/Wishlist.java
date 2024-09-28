@@ -1,7 +1,13 @@
 package unical.enterprise.jokibackend.Data.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -26,11 +32,13 @@ public class Wishlist {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    @JsonBackReference
+    @JsonIgnore
     private User user;
 
     @Column(columnDefinition = "int default 0")
     private Integer visibility;
-
 
     @ManyToMany
     @JoinTable(
@@ -45,5 +53,4 @@ public class Wishlist {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-
 }
