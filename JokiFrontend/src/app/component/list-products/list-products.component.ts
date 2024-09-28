@@ -11,7 +11,7 @@ export class ListProductsComponent {
   protected products: any[] = [];
   constructor(private productsService: ProductsService) {
     this.productsService.getGamesList().subscribe((response: any) => {
-      this.products = response._embedded.gameModelList.map((gameModel: any) => gameModel.gameDto);
+      this.products = response._embedded.modelList.map((model: any) => model.model);
     });
   }
 

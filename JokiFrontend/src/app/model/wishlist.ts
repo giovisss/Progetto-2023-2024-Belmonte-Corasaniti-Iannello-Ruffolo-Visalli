@@ -1,4 +1,3 @@
-import {Product} from "./product";
 import {game} from "./game";
 
 export class Wishlist {

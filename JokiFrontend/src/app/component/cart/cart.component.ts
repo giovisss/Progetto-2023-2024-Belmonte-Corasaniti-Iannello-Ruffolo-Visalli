@@ -1,8 +1,6 @@
-import {Component, EventEmitter, input, Output} from '@angular/core';
+import {Component, EventEmitter, input, OnInit, Output} from '@angular/core';
 import {CartService} from "../../services/cart.service";
-import {Product} from "../../model/product";
 import {BASE_IMAGE_URL} from "../../global";
-import {UserService} from "../../services/user.service";
 import {Observable, Subscription} from "rxjs";
 import {game} from "../../model/game";
 
@@ -11,9 +9,25 @@ import {game} from "../../model/game";
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
   @Output() closeCart = new EventEmitter();
   @Output() cartUpdated = new EventEmitter();
+  cart: Observable<game[]> = new Observable<game[]>;
+  total: Observable<number> = new Observable<number>();
+
+  constructor(private cartService: CartService) {}
+
+  ngOnInit(): void {
+    this.cart = this.cartService.getCart();
+    this.total = this.cartService.getTotal();
+  }
+
+  removeItem(game: game): void {
+    this.cartService.removeFromCart(game).subscribe(() => {
+      this.cart = this.cartService.getCart();
+      this.total = this.cartService.getTotal();
+    });
+  }
 
   close() {
     this.closeCart.emit();
@@ -23,18 +37,15 @@ export class CartComponent {
     this.cartUpdated.emit();
   }
 
-  cart: Observable<game[]> = new Observable<game[]>;
-  total = 0;
+  protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
+
 
   // constructor(private cartService: CartService) {
   //   this.cart = this.cartService.getCart();
   //   this.total = this.cartService.getTotal();
   // }
 
-  constructor(private userService: UserService) {
-    this.cart = this.userService.getUserCart();
-    // this.total = this.userService.getTotal();
-  }
+
 
 
 
@@ -45,5 +56,4 @@ export class CartComponent {
   //   this.cartUpdate();
   // }
 
-    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

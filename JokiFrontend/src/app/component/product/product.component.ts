@@ -26,13 +26,14 @@ export class ProductComponent {
     // });
 
   productsService.getGame(id).subscribe((product: any) => {
-      this.product = product.gameDto;
+      this.product = product.model;
       console.log(this.product);
     });
   }
 
   addToCart() {
     this.cartService.addToCart(this.product);
+
   }
 
   OpenWishlistModal() {

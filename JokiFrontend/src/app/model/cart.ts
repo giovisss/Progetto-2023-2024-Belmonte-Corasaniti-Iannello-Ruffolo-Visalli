@@ -1,11 +1,12 @@
-import {Product} from "./product";
+
+import {game} from "./game";
 
 class CartItem {
-  product: Product;
+  game: game;
   quantity: number;
 
-  constructor(product: Product, quantity: number) {
-    this.product = product;
+  constructor(product: game, quantity: number) {
+    this.game = product;
     this.quantity = quantity;
   }
 }
