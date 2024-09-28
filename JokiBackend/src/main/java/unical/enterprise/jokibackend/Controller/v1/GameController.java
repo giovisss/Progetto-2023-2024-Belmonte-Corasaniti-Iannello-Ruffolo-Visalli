@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Assemblers.GameModelAssembler;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
-import unical.enterprise.jokibackend.Data.Models.GameModel;
+import unical.enterprise.jokibackend.Data.Assemblers.Model;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
 
 import java.util.Collection;
@@ -24,24 +24,26 @@ public class GameController {
     private final GameModelAssembler gameModelAssembler;
 
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<CollectionModel<GameModel>> getGamesList() {
+    public ResponseEntity<CollectionModel<Model<GameDto>>> getGamesList() {
         Collection<GameDto> games = gameService.findAll();
-        Collection<GameModel> gameModels = games.stream()
+        Collection<Model<GameDto>> gameModels = games.stream()
                 .map(gameModelAssembler::toModel)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(CollectionModel.of(gameModels));
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<EntityModel<GameModel>> getGameById(@PathVariable UUID id) {
+    public ResponseEntity<EntityModel<Model<GameDto>>> getGameById(@PathVariable UUID id) {
         GameDto game = gameService.getGameById(id);
         if (game != null) {
-            GameModel gameModel = gameModelAssembler.toModel(game);
+            Model<GameDto> gameModel = gameModelAssembler.toModel(game);
             return ResponseEntity.ok(EntityModel.of(gameModel));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 
 }

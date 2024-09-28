@@ -98,9 +98,10 @@ public class WishlistServiceImpl implements WishlistService {
         Collection<Wishlist> wishlists = wishlistDao.findWishlistByUserId(id).orElse(null);
 
         if(wishlists == null) return null;
-
+        
         return wishlists.stream().map(w -> modelMapper.map(w, WishlistDto.class)).toList();
     }
+
 
     @Override
     public boolean addGameToWishlist(GameDto game, String wishlistName) {

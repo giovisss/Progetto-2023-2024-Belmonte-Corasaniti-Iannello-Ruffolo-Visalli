@@ -25,6 +25,7 @@ public class WishlistController {
     private final ModelMapper modelMapper;
 
     @GetMapping(value = "", produces = "application/json")
+
     public ResponseEntity<String> getWishlists() throws JsonProcessingException {
         var out = wishlistService.getByUserId(UserContextHolder.getContext().getId());
         return ResponseEntity.ok(new ObjectMapper().writeValueAsString(out));

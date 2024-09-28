@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {Product} from "../model/product";
-
+import {UserService} from "./user.service";
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-
-  constructor() { }
+//forse la dobbiamo togliere e usARE SOLO USER SERVICE
+  constructor(userService: UserService) { }
 
   getCart() {
     return JSON.parse(localStorage.getItem('cart') || '[]');

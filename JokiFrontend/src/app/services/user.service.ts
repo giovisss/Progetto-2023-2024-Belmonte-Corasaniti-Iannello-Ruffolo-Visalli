@@ -59,4 +59,11 @@ export class UserService {
   getUserInfo(): Observable<any> {
     return this.httpClient.get<any>(this.apiUrl + '/info');
   }
+
+  getUserCart(): Observable<game[]> {
+    return this.httpClient.get<string>(this.apiUrl + '/user/cart')
+      .pipe(
+        map(response => response as unknown as game[])
+      );
+  }
 }
