@@ -16,4 +16,9 @@ public class UpdateUserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
+
+    // sempre in minuscolo
+    public void setUsername(String username) {
+        this.username = username != null ? username.toLowerCase() : null;
+    }
 }
