@@ -7,7 +7,7 @@ import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 
-public interface KeyCloakService {
+public interface KeycloakService {
     public User addUser(KeycloakUserDTO userDTO);
     public UserRepresentation getUser(String userName);
     public Boolean updateUser(String userId, UpdateUserDto userDTO);

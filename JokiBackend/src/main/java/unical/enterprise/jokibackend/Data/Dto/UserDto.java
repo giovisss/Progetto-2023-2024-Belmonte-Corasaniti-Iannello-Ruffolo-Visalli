@@ -17,8 +17,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
-//    private WishlistDto wishlist;
-//    private Collection<GameDto> games;
-//    private Collection<GameDto> cartGames;
+
+    // username sempre minuscolo
+    public void setUsername(String username) {
+        this.username = username.toLowerCase();
+    }
 }
-    // private Collection<CartDto> carts;

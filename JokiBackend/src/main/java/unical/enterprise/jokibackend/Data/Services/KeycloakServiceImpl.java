@@ -1,27 +1,29 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import java.util.*;
-
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Data.Dao.UserDao;
-import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.KeyCloakService;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Data.Dto.KeycloakUserDTO;
+import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
+import unical.enterprise.jokibackend.Exceptions.NotModifiedException;
+import unical.enterprise.jokibackend.Utility.KeycloakManager;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
-public class KeycloakServiceImpl implements KeyCloakService{
+public class KeycloakServiceImpl implements KeycloakService {
     private final UserDao userDao;
     private final ModelMapper modelMapper;
     private final UserService userService;
@@ -78,17 +80,33 @@ public class KeycloakServiceImpl implements KeyCloakService{
     public Boolean updateUser(String username, UpdateUserDto userDTO){
         if (!username.equals(userDTO.getUsername().toLowerCase())) return false;
 
+        UserDto old = userService.getUserByUsername(username);
         UserRepresentation user = new UserRepresentation();
+
+        if(
+                old.getEmail().equals(userDTO.getEmail()) ||
+                old.getFirstName().equals(userDTO.getFirstName()) ||
+                old.getLastName().equals(userDTO.getLastName()) ||
+                old.getBirthdate().equals(userDTO.getBirthdate())
+        ) throw new NotModifiedException("Field can not be the same as before");
 
         //TODO: fare in modo che si possa fare l'update su più campi alla volta
 //        user.setFirstName(userDTO.getFirstName());
 //        user.setLastName(userDTO.getLastName());
 //        user.setEmail(userDTO.getEmail());
 //        user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
-        if (userDTO.getUpdateType().equals("email")) user.setEmail(userDTO.getEmail());
-        if (userDTO.getUpdateType().equals("password")) user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
-        if (userDTO.getUpdateType().equals("firstName")) user.setFirstName(userDTO.getFirstName());
-        if (userDTO.getUpdateType().equals("lastName")) user.setLastName(userDTO.getLastName());
+        if (!userDTO.getUpdateType("email")) userDTO.setEmail(old.getEmail());
+        user.setEmail(userDTO.getEmail());
+
+        if (!userDTO.getUpdateType("firstName")) userDTO.setFirstName(old.getFirstName());
+        user.setFirstName(userDTO.getFirstName());
+
+        if (!userDTO.getUpdateType("lastName")) userDTO.setLastName(old.getLastName());
+        user.setLastName(userDTO.getLastName());
+
+        if (!userDTO.getUpdateType("birthdate")) userDTO.setBirthdate(old.getBirthdate());
+
+        if (userDTO.getUpdateType("password")) user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
 
         UsersResource usersResource = getInstance();
         usersResource.get(userService.getUserByUsername(username).getId().toString()).update(user);

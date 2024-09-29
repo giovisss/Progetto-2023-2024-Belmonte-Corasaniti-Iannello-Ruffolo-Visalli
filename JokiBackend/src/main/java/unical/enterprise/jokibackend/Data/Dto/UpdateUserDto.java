@@ -17,12 +17,18 @@ public class UpdateUserDto {
     private String lastName;
     private Date birthdate;
 
-    public String getUpdateType() {
-        if (email != null) return "email";
-        if (password != null) return "password";
-        if (firstName != null) return "firstName";
-        if (lastName != null) return "lastName";
-        if (birthdate != null) return "birthdate";
-        return null;
+    public boolean getUpdateType(String type) {
+        return switch (type) {
+            case "email" -> this.email != null;
+            case "password" -> this.password != null;
+            case "firstName" -> this.firstName != null;
+            case "lastName" -> this.lastName != null;
+            case "birthdate" -> this.birthdate != null;
+            default -> false;
+        };
+    }
+
+    public void setUsername(String username) {
+        this.username = username.toLowerCase();
     }
 }
