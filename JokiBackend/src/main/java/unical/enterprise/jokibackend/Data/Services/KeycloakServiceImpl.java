@@ -76,14 +76,19 @@ public class KeycloakServiceImpl implements KeyCloakService{
     @Override
     @Transactional
     public Boolean updateUser(String username, UpdateUserDto userDTO){
-        if (!username.equals(userDTO.getUsername())) return false;
+        if (!username.equals(userDTO.getUsername().toLowerCase())) return false;
 
         UserRepresentation user = new UserRepresentation();
 
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
+        //TODO: fare in modo che si possa fare l'update su più campi alla volta
+//        user.setFirstName(userDTO.getFirstName());
+//        user.setLastName(userDTO.getLastName());
+//        user.setEmail(userDTO.getEmail());
+//        user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
+        if (userDTO.getUpdateType().equals("email")) user.setEmail(userDTO.getEmail());
+        if (userDTO.getUpdateType().equals("password")) user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
+        if (userDTO.getUpdateType().equals("firstName")) user.setFirstName(userDTO.getFirstName());
+        if (userDTO.getUpdateType().equals("lastName")) user.setLastName(userDTO.getLastName());
 
         UsersResource usersResource = getInstance();
         usersResource.get(userService.getUserByUsername(username).getId().toString()).update(user);

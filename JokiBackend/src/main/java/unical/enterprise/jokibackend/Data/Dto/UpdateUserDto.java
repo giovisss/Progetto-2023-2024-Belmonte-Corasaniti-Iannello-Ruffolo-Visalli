@@ -16,4 +16,13 @@ public class UpdateUserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
+
+    public String getUpdateType() {
+        if (email != null) return "email";
+        if (password != null) return "password";
+        if (firstName != null) return "firstName";
+        if (lastName != null) return "lastName";
+        if (birthdate != null) return "birthdate";
+        return null;
+    }
 }
