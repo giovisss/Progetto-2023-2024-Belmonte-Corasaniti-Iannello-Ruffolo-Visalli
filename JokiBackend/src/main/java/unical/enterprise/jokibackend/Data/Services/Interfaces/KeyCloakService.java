@@ -8,11 +8,11 @@ import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 
 public interface KeycloakService {
-    public User addUser(KeycloakUserDTO userDTO);
-    public UserRepresentation getUser(String userName);
-    public Boolean updateUser(String userId, UpdateUserDto userDTO);
-    public void deleteUser(String username);
-    public void sendVerificationLink(String userId);
-    public void sendResetPassword(String userId);
-    public UsersResource getInstance();
+    User addUser(KeycloakUserDTO userDTO);
+    UserRepresentation getUser(String userName);
+    Boolean updateUser(String userId, UpdateUserDto userDTO);
+    void deleteUser(String username);
+    void sendVerificationLink(String userId);
+    void sendResetPassword(String userId);
+    UsersResource getInstance();
 }
