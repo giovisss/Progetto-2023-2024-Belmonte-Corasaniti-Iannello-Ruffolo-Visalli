@@ -1,26 +1,32 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {ProductsService} from "../../services/products.service";
-import {CartService} from "../../services/cart.service";
-import {WishlistService} from "../../services/wishlist.service";
-import {BASE_IMAGE_URL} from "../../global";
+import { ActivatedRoute } from "@angular/router";
+import { ProductsService } from "../../services/products.service";
+import { CartService } from "../../services/cart.service";
+import { WishlistService } from "../../services/wishlist.service";
+import { BASE_IMAGE_URL } from "../../global";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css'
+  styleUrls: ['./product.component.css']
 })
 export class ProductComponent {
   product: any;
   showWishlistModal: boolean = false;
   newWishlistName: string = '';
-  newWishlistVisibility: number = 1; // 0: privata, 1: pubblica, 2: solo amici  pubblica di default
+  newWishlistVisibility: number = 1; // 0: privata, 1: pubblica, 2: solo amici pubblica di default
   wishlists = this.wishlistService.getWishlists();
 
-  constructor(private route : ActivatedRoute, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService) {
+  constructor(
+    private route: ActivatedRoute,
+    private productsService: ProductsService,
+    private cartService: CartService,
+    private wishlistService: WishlistService
+  ) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
-    // productsService.getProduct(id).subscribe((product: any) => {
+
+      // productsService.getProduct(id).subscribe((product: any) => {
     //   this.product = product;
     //   console.log(this.product);
     // });
@@ -62,6 +68,5 @@ export class ProductComponent {
     this.closeWishlistModal();
   }
 
-
-    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
+  protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

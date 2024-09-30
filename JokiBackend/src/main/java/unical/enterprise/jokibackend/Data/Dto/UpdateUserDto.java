@@ -16,9 +16,19 @@ public class UpdateUserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
+  
+  public boolean getUpdateType(String type) {
+        return switch (type) {
+            case "email" -> this.email != null;
+            case "password" -> this.password != null;
+            case "firstName" -> this.firstName != null;
+            case "lastName" -> this.lastName != null;
+            case "birthdate" -> this.birthdate != null;
+            default -> false;
+        };
+    }
 
-    // sempre in minuscolo
     public void setUsername(String username) {
-        this.username = username != null ? username.toLowerCase() : null;
+        this.username = username.toLowerCase();
     }
 }

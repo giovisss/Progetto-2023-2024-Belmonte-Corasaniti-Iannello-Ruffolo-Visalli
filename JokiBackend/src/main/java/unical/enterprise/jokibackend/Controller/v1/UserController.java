@@ -2,13 +2,15 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
-import unical.enterprise.jokibackend.Data.Services.KeycloakServiceImpl;
-import unical.enterprise.jokibackend.Data.Services.UserServiceImpl;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
+import unical.enterprise.jokibackend.Exceptions.NotModifiedException;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import javax.ws.rs.Produces;
@@ -20,8 +22,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class UserController {
-    private final KeycloakServiceImpl keycloakService;
-    private final UserServiceImpl userService;
+    private final KeycloakService keycloakService;
+    private final UserService userService;
 
     @GetMapping("/user")
     @Produces("application/json")
@@ -33,8 +35,12 @@ public class UserController {
     @PutMapping("/user")
     @Produces("application/json")
     public ResponseEntity<String> updateCurrentUser(@RequestBody UpdateUserDto userDto) {
-        if(keycloakService.updateUser(UserContextHolder.getContext().getPreferredUsername(), userDto)) return ResponseEntity.ok("User updated");
-        else return ResponseEntity.notFound().build();
+        try {
+            if (keycloakService.updateUser(UserContextHolder.getContext().getPreferredUsername(), userDto)) return ResponseEntity.ok("User updated");
+            else return ResponseEntity.notFound().build();
+        } catch (NotModifiedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Field can not be the same as before");
+        }
     }
 
     @DeleteMapping("/user")
