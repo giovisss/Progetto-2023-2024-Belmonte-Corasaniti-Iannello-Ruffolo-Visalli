@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {CartService} from "../../services/cart.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -7,7 +8,7 @@ import {CartService} from "../../services/cart.service";
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  nProducts: number = 0;
+  nProducts: Observable<number> = new Observable<number>();
   showCart: boolean = false;
 
   constructor(private cartService: CartService) {

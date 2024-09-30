@@ -59,7 +59,7 @@
                         <div class="flex flex-1 items-end justify-between text-sm">
 <!--                          <p class="text-gray-500">Qta {{item.quantity}}</p>-->
                           <div class="flex">
-                            <!-- <button (click)="removeItem(item.product)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Rimuovi</button> -->
+                            <button (click)="removeItem(item)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Rimuovi</button>
                           </div>
                         </div>
                       </div>
@@ -73,7 +73,7 @@
             <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
               <div class="flex justify-between text-base font-medium text-gray-900">
                 <p>Subtotale</p>
-                <p>{{ total | currency:"EUR"}}</p>
+                <p>{{ (total | async) | currency: "EUR" }}</p>
               </div>
               <div class="mt-6">
                 <a [routerLink]="'/checkout'" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600

@@ -25,23 +25,21 @@ export class ProductComponent {
   ) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
-    this.productsService.getGame(id).subscribe(
-      (game: any) => {
-        if (game) {
-          this.product = game;
-          console.log('Loaded product:', this.product);
-        } else {
-          console.error('Game not found');
-        }
-      },
-      error => {
-        console.error('Error loading game:', error);
-      }
-    );
+
+      // productsService.getProduct(id).subscribe((product: any) => {
+    //   this.product = product;
+    //   console.log(this.product);
+    // });
+
+  productsService.getGame(id).subscribe((product: any) => {
+      this.product = product.model;
+      console.log(this.product);
+    });
   }
 
   addToCart() {
     this.cartService.addToCart(this.product);
+
   }
 
   OpenWishlistModal() {

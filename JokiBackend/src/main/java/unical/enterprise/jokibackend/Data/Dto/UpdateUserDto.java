@@ -16,8 +16,8 @@ public class UpdateUserDto {
     private String firstName;
     private String lastName;
     private Date birthdate;
-
-    public boolean getUpdateType(String type) {
+  
+  public boolean getUpdateType(String type) {
         return switch (type) {
             case "email" -> this.email != null;
             case "password" -> this.password != null;

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import {map, Observable, of} from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { game } from '../model/game';
 import { BASE_API_URL } from '../global';

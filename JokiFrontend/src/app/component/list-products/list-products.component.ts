@@ -8,14 +8,12 @@ import { game } from '../../model/game';
   templateUrl: './list-products.component.html',
   styleUrl: './list-products.component.css'
 })
-export class ListProductsComponent implements OnInit {
-  protected games: game[] = [];
-  protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
-
-  constructor(private productsService: ProductsService) {}
-
-  ngOnInit() {
-    this.loadGames();
+export class ListProductsComponent {
+  protected products: any[] = [];
+  constructor(private productsService: ProductsService) {
+    this.productsService.getGamesList().subscribe((response: any) => {
+      this.products = response._embedded.modelList.map((model: any) => model.model);
+    });
   }
 
   loadGames() {

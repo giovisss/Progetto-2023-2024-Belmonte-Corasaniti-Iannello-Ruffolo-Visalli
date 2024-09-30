@@ -1,68 +1,75 @@
 import { Injectable } from '@angular/core';
-import {Product} from "../model/product";
-import {UserService} from "./user.service";
+import { HttpClient } from '@angular/common/http';
+import {BehaviorSubject, map, Observable} from 'rxjs';
+import { game } from '../model/game';
+import { BASE_API_URL } from '../global';
+import {data} from "autoprefixer";
+
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-//forse la dobbiamo togliere e usARE SOLO USER SERVICE
-  constructor(userService: UserService) { }
 
-  getCart() {
-    return JSON.parse(localStorage.getItem('cart') || '[]');
+  private apiUrl = BASE_API_URL + '/users';
+  private cartSubject: BehaviorSubject<game[]> = new BehaviorSubject<game[]>([]);
+  private totalSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private quantitySubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  constructor(private httpClient: HttpClient) { }
+
+  getCart(): Observable<game[]> {
+    this.httpClient.get<game[]>(this.apiUrl + '/user/cart').subscribe(cart => {
+      this.cartSubject.next(cart);
+      this.updateTotal(cart);
+      this.updateQuantity(cart);
+    });
+    return this.cartSubject.asObservable();
   }
 
-  addToCart(product: Product) {
-    const cart = this.getCart();
-    const productInCart = cart.find((item: any) => item.product.id == product.id);
-    if (productInCart) {
-      productInCart.quantity++;
-    } else {
-      cart.push({product, quantity: 1});
+  addToCart(game: game) {
+        this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
+            map(() => {
+              this.cartSubject.value.push(game);
+            })
+        });
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
+
+  removeFromCart(game: game): Observable<any> {
+    return this.httpClient.delete(this.apiUrl + '/user/cart/' + game.id).pipe(
+      map(() => {
+        const currentCart = this.cartSubject.value.filter(item => item.id !== game.id);
+        this.cartSubject.next(currentCart);
+        this.updateTotal(currentCart);
+        this.updateQuantity(currentCart);
+      })
+    );
   }
 
-  removeFromCart(product: Product) {
-    const cart = this.getCart();
-    const productInCart = cart.find((item: any) => item.product.id == product.id);
-    if (productInCart) {
-      productInCart.quantity--;
-      if (productInCart.quantity === 0) {
-        cart.splice(cart.indexOf(productInCart), 1);
-      }
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
+  clearCart(): Observable<any> {
+    return this.httpClient.delete(this.apiUrl + '/user/cart').pipe(
+      map(() => {
+        this.cartSubject.next([]);
+        this.totalSubject.next(0);
+        this.quantitySubject.next(0);
+      })
+    );
   }
 
-  clearCart() {
-    localStorage.removeItem('cart');
+  getTotal(): Observable<number> {
+    return this.totalSubject.asObservable();
   }
 
-  getTotal() {
-    const cart = this.getCart();
-    return cart.reduce((total: number, item: any) => total + item.product.price * item.quantity, 0);
+  getQuantity(): Observable<number> {
+    return this.quantitySubject.asObservable();
   }
 
-  getQuantity() {
-    const cart = this.getCart();
-    return cart.reduce((total: number, item: any) => total + item.quantity, 0);
+  private updateTotal(cart: game[]): void {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    this.totalSubject.next(total);
   }
 
-  getCartItems() {
-    return this.getCart();
-  }
-
-  isInCart(product: any) {
-    const cart = this.getCart();
-    return cart.find((item: any) => item.product.id === product.id);
-  }
-
-  isCartEmpty() {
-    return this.getCart().length === 0;
-  }
-
-  checkout() {
-    this.clearCart();
+  private updateQuantity(cart: game[]): void {
+    const quantity = cart.length;
+    this.quantitySubject.next(quantity);
   }
 }
