@@ -1,6 +1,6 @@
 import { admin } from "./admin";
 
-export class game {
+export class Game {
   id: string;
   title: string;
   description: string;

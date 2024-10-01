@@ -2,7 +2,7 @@ import {Component, EventEmitter, input, OnInit, Output} from '@angular/core';
 import {CartService} from "../../services/cart.service";
 import {BASE_IMAGE_URL} from "../../global";
 import {Observable, Subscription} from "rxjs";
-import {game} from "../../model/game";
+import {Game} from "../../model/game";
 
 @Component({
   selector: 'app-cart',
@@ -12,7 +12,7 @@ import {game} from "../../model/game";
 export class CartComponent implements OnInit {
   @Output() closeCart = new EventEmitter();
   @Output() cartUpdated = new EventEmitter();
-  cart: Observable<game[]> = new Observable<game[]>;
+  cart: Observable<Game[]> = new Observable<Game[]>;
   total: Observable<number> = new Observable<number>();
 
   constructor(private cartService: CartService) {}
@@ -22,7 +22,7 @@ export class CartComponent implements OnInit {
     this.total = this.cartService.getTotal();
   }
 
-  removeItem(game: game): void {
+  removeItem(game: Game): void {
     this.cartService.removeFromCart(game).subscribe(() => {
       this.cart = this.cartService.getCart();
       this.total = this.cartService.getTotal();

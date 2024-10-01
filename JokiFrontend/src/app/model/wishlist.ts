@@ -1,11 +1,11 @@
-import {game} from "./game";
+import {Game} from "./game";
 
 export class Wishlist {
   name: string;
-  wishListProducts: game[] = [];
+  wishListProducts: Game[] = [];
   visibility: number = 0;
 
-  constructor(name: string, wishListProducts: game[], visibility: number) {
+  constructor(name: string, wishListProducts: Game[], visibility: number) {
     this.name = name;
     this.wishListProducts = wishListProducts;
     this.visibility = visibility;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {map, Observable, of} from "rxjs";
 import { HttpClient } from '@angular/common/http';
-import { game } from '../model/game';
+import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 
 @Injectable({
@@ -28,17 +28,17 @@ export class ProductsService {
   //   return of(this.products.find(product => product.id == id));
   // }
 
-  getGamesList(): Observable<game[]> {
+  getGamesList(): Observable<Game[]> {
     return this.httpClient.get<string>(this.apiUrl)
       .pipe(
-        map(response => response as unknown as game[])
+        map(response => response as unknown as Game[])
       );
   }
 
-  getGame(id: number): Observable<game|undefined> {
+  getGame(id: string): Observable<Game|undefined> {
     return this.httpClient.get<string>(`${this.apiUrl}/${id}`)
       .pipe(
-        map(response => response as unknown as game)
+        map(response => response as unknown as Game)
       );
   }
 

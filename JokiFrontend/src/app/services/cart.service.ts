@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {BehaviorSubject, map, Observable} from 'rxjs';
-import { game } from '../model/game';
+import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 import {data} from "autoprefixer";
 
@@ -11,14 +11,14 @@ import {data} from "autoprefixer";
 export class CartService {
 
   private apiUrl = BASE_API_URL + '/users';
-  private cartSubject: BehaviorSubject<game[]> = new BehaviorSubject<game[]>([]);
+  private cartSubject: BehaviorSubject<Game[]> = new BehaviorSubject<Game[]>([]);
   private totalSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   private quantitySubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(private httpClient: HttpClient) { }
 
-  getCart(): Observable<game[]> {
-    this.httpClient.get<game[]>(this.apiUrl + '/user/cart').subscribe(cart => {
+  getCart(): Observable<Game[]> {
+    this.httpClient.get<Game[]>(this.apiUrl + '/user/cart').subscribe(cart => {
       this.cartSubject.next(cart);
       this.updateTotal(cart);
       this.updateQuantity(cart);
@@ -26,7 +26,7 @@ export class CartService {
     return this.cartSubject.asObservable();
   }
 
-  addToCart(game: game) {
+  addToCart(game: Game) {
         this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
             map(() => {
               this.cartSubject.value.push(game);
@@ -34,7 +34,7 @@ export class CartService {
         });
     }
 
-  removeFromCart(game: game): Observable<any> {
+  removeFromCart(game: Game): Observable<any> {
     return this.httpClient.delete(this.apiUrl + '/user/cart/' + game.id).pipe(
       map(() => {
         const currentCart = this.cartSubject.value.filter(item => item.id !== game.id);
@@ -63,12 +63,12 @@ export class CartService {
     return this.quantitySubject.asObservable();
   }
 
-  private updateTotal(cart: game[]): void {
+  private updateTotal(cart: Game[]): void {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     this.totalSubject.next(total);
   }
 
-  private updateQuantity(cart: game[]): void {
+  private updateQuantity(cart: Game[]): void {
     const quantity = cart.length;
     this.quantitySubject.next(quantity);
   }

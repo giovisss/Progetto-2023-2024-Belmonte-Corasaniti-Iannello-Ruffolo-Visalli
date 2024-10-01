@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {CartService} from "../../services/cart.service";
 import {Observable} from "rxjs";
+import {AdminService} from "../../services/admin.service";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ export class HeaderComponent {
   nProducts: Observable<number> = new Observable<number>();
   showCart: boolean = false;
 
-  constructor(private cartService: CartService) {
+  constructor(private cartService: CartService, protected adminService: AdminService) {
     this.nProducts = this.cartService.getQuantity();
   }
 

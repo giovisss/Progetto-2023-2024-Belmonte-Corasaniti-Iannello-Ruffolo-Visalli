@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { AuthGuard } from '../guard/auth.guard';
-import { game } from '../model/game';
+import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 
 @Injectable({
@@ -49,10 +49,10 @@ export class UserService {
     // })
   }
 
-  getUserLibrary(): Observable<game[]> {
+  getUserLibrary(): Observable<Game[]> {
     return this.httpClient.get<string>(this.apiUrl + '/user/library')
       .pipe(
-        map(response => response as unknown as game[])
+        map(response => response as unknown as Game[])
       );
   }
 

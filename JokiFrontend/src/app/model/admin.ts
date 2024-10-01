@@ -1,12 +1,12 @@
-import { game } from './game';
+import { Game } from './game';
 
 export class admin {
   id: string;
   username: string;
   email: string;
-  games: game[];
+  games: Game[];
 
-  constructor(id: string, username: string, email: string, games: game[]) {
+  constructor(id: string, username: string, email: string, games: Game[]) {
     this.id = id;
     this.username = username;
     this.email = email;
