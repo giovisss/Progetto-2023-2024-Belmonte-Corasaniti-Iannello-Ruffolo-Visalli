@@ -35,6 +35,8 @@ public class ReviewController {
     @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity <ReviewDto> updateReview(@PathVariable("id") String id, @RequestBody ReviewDto reviewDto) {
         reviewDto.setUser(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()));
+        System.out.println("Stampo il reviewDto");
+        System.out.println(reviewDto.toString());
         reviewService.updateReview(UUID.fromString(id), reviewDto);
         return ResponseEntity.ok(reviewDto);
     }

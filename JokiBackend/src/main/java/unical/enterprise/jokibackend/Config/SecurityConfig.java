@@ -40,6 +40,7 @@ class SecurityConfig {
                         .requestMatchers(prefix+"/admin/**").hasRole("client_admin")
 //                        .requestMatchers(prefix+"/user/**").hasRole("client_user")
                         .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
+                        .requestMatchers(HttpMethod.GET, prefix+"/reviews/**").permitAll() // Permetti tutte le GET a /reviews/**
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
 //                        .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
