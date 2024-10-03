@@ -47,7 +47,7 @@ export class ProductComponent {
 
   addSuggestedReview() {
     const suggested = true;
-    const newReview = new Review(this.product.id, this.newSuggestedReviewText, suggested);
+    const newReview = new Review(this.product.id, this.newSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeSuggestedModal();
@@ -60,7 +60,7 @@ export class ProductComponent {
 
   addNotSuggestedReview() {
     const suggested = false;
-    const newReview = new Review(this.product.id, this.newNotSuggestedReviewText, suggested);
+    const newReview = new Review(this.product.id, this.newNotSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeNotSuggestedModal();

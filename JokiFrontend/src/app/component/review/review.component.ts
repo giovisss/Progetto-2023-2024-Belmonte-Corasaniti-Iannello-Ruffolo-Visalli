@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ReviewService} from "../../services/review.service";
 
 @Component({
   selector: 'app-review',
@@ -6,4 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './review.component.css'
 })
 export class ReviewComponent {
+  constructor(private reviewService: ReviewService) {
+  }
+
+  //Metodo per
+
 }

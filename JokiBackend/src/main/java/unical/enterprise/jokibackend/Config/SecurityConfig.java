@@ -3,6 +3,7 @@ package unical.enterprise.jokibackend.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +22,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import unical.enterprise.jokibackend.Component.JwtAuthConverter;
-import javax.ws.rs.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -38,10 +38,10 @@ class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(prefix+"/admin/**").hasRole("client_admin")
-//                        .requestMatchers(prefix+"/user/**").hasRole("client_user")
-                        .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/** */
-                        .requestMatchers(HttpMethod.GET, prefix+"/reviews/**").permitAll() // Permetti tutte le GET a /reviews/**
+                        .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/ */
+                        .requestMatchers(HttpMethod.GET, prefix+"/reviews/**").permitAll() // Permetti tutte le GET a /reviews/
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
+//                        .requestMatchers(prefix+"/**").hasRole("client_user") // Permetti tutte le GET a /reviews/**
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
 //                        .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
 //                        .anyRequest().permitAll()); // permetti tutte le richieste se autenticato

@@ -32,6 +32,7 @@ public class   ReviewController {
         return ResponseEntity.ok(reviewDto);
     }
 
+    //Non funziona, controllare. Errore mapping utente
     @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity <ReviewDto> updateReview(@PathVariable("id") String id, @RequestBody ReviewDto reviewDto) {
         reviewDto.setUser(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()));

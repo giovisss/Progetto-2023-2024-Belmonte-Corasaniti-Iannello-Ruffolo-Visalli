@@ -5,11 +5,21 @@ export class Review {
   private gameId: string;
   private review: string;
   private suggested: boolean;
+  private username: string | undefined;
 
-  constructor(gameId: string, review: string, suggested: boolean) {
+  constructor(gameId: string, review: string, suggested: boolean, username: string | undefined) {
     this.gameId = gameId;
     this.review = review;
     this.suggested = suggested;
+    this.username = username;
+  }
+
+  public getUsername(): string {
+    return <string>this.username;
+  }
+
+  public setUsername(username: string): void {
+    this.username = username;
   }
 
   public getGameId(): string {
