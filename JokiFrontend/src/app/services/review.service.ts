@@ -12,20 +12,6 @@ export class ReviewService{
 
   constructor(private httpClient: HttpClient) {}
 
-  // get reviews(): Review[] {
-  //   return this._reviews;
-  // }
-
-  // getReviews(): Observable<Review[]> {
-  //   return this.httpClient.get<Review[]>(this.apiUrl)
-  //     .pipe(
-  //       map((reviews: Review[]) => {
-  //         this._reviews = reviews;
-  //         return this._reviews;
-  //       })
-  //     );
-  // }
-
   getReview(id: string): Observable<Review> {
     return this.httpClient.get<Review>(`${this.apiUrl}/${id}`);
   }
