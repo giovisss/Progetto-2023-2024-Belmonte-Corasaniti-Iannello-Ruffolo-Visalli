@@ -1,6 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {of} from "rxjs";
+import {Injectable} from '@angular/core';
 import {KeycloakService} from "keycloak-angular";
 
 @Injectable({
@@ -14,7 +12,6 @@ export class AdminService {
     try {
       this.token = this.keycloakService.getKeycloakInstance().tokenParsed;
       this.isAdmin = this.token.resource_access.JokiBackend.roles.includes('client_admin');
-      console.log(this.isAdmin);
     } catch (e) {
       this.isAdmin = false;
     }

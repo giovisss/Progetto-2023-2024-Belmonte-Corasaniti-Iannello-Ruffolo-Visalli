@@ -1,7 +1,7 @@
 import { admin } from "./admin";
 
 export class Game {
-  id: string;
+  id: string | null;
   title: string;
   description: string;
   price: number;
@@ -11,10 +11,14 @@ export class Game {
   publisher: string;
   releaseDate: Date;
   stock: number;
-  admin: admin;
+  admin: admin | null;
+
+  url1: string;
+  url2: string;
+  url3: string;
 
   constructor(
-    id: string,
+    id: string | null,
     title: string,
     description: string,
     price: number,
@@ -24,7 +28,7 @@ export class Game {
     publisher: string,
     releaseDate: Date,
     stock: number,
-    admin: admin) {
+    admin: admin | null) {
 
     this.id = id;
     this.title = title;
@@ -37,5 +41,9 @@ export class Game {
     this.releaseDate = releaseDate;
     this.stock = stock;
     this.admin = admin;
+
+    this.url1 = this.imagePath.replace(".jpg", "_1.jpg");
+    this.url2 = this.imagePath.replace(".jpg", "_2.jpg");
+    this.url3 = this.imagePath.replace(".jpg", "_3.jpg");
   }
 }

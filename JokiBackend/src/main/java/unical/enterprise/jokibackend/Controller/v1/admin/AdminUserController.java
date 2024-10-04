@@ -32,12 +32,12 @@ public class AdminUserController {
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
         userService.deleteByUsername(username);
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.ok(new Gson().toJson("User deleted"));
     }
 
     @PutMapping("/{username}")
     public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
-        if(userService.updateUser(username, userDto)) return ResponseEntity.ok("User updated");
+        if(userService.updateUser(username, userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
         else return ResponseEntity.notFound().build();
     }
 
@@ -50,13 +50,13 @@ public class AdminUserController {
 
     @PostMapping("/{username}/library/{gameId}")
     public ResponseEntity<String> addGameToUserLibrary(@PathVariable String username, @PathVariable UUID gameId) {
-        if(userService.addGameToUserLibrary(username, gameId)) return ResponseEntity.ok("Game added to library");
+        if(userService.addGameToUserLibrary(username, gameId)) return ResponseEntity.ok(new Gson().toJson("Game added to library"));
         else return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{username}/library/{gameId}")
     public ResponseEntity<String> removeGameFromUserLibrary(@PathVariable String username, @PathVariable UUID gameId) {
-        if(userService.removeGameFromUserLibrary(username, gameId)) return ResponseEntity.ok("Game removed from library");
+        if(userService.removeGameFromUserLibrary(username, gameId)) return ResponseEntity.ok(new Gson().toJson("Game removed from library"));
         else return ResponseEntity.notFound().build();
     }
     // end libreria controller
@@ -71,18 +71,18 @@ public class AdminUserController {
     @DeleteMapping("/{username}/cart")
     public ResponseEntity<String> clearUserCart(@PathVariable String username) {
         userService.clearUserCart(username);
-        return ResponseEntity.ok("Cart cleared");
+        return ResponseEntity.ok(new Gson().toJson("Cart cleared"));
     }
 
     @DeleteMapping("/{username}/cart/{gameId}")
     public ResponseEntity<String> removeGameFromUserCart(@PathVariable String username, @PathVariable UUID gameId) {
-        if(userService.removeGameFromUserCart(username, gameId)) return ResponseEntity.ok("Game removed from cart");
+        if(userService.removeGameFromUserCart(username, gameId)) return ResponseEntity.ok(new Gson().toJson("Game removed from cart"));
         else return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/{username}/cart/{gameId}")
     public ResponseEntity<String> addGameToUserCart(@PathVariable String username, @PathVariable UUID gameId) {
-        if(userService.addGameToUserCart(username, gameId)) return ResponseEntity.ok("Game added to cart");
+        if(userService.addGameToUserCart(username, gameId)) return ResponseEntity.ok(new Gson().toJson("Game added to cart"));
         else return ResponseEntity.notFound().build();
     }
     // end cart controller

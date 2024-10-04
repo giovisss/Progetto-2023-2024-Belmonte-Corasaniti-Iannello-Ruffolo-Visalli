@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services.Interfaces;
 
+import org.springframework.web.multipart.MultipartFile;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 
 import java.util.Collection;
@@ -14,4 +15,6 @@ public interface GameService {
     GameDto save(GameDto gameDto);
     void delete(UUID id);
     GameDto update(UUID id, GameDto gameDto);
+    boolean updatePhoto(GameDto gameDto, MultipartFile photo, int index);
+    boolean deletePhoto(GameDto gameDto, int index);
 }

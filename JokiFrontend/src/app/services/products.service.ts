@@ -1,32 +1,34 @@
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {map, Observable, of} from "rxjs";
-import { HttpClient } from '@angular/common/http';
-import { Game } from '../model/game';
+import {map, Observable} from 'rxjs';
 import { BASE_API_URL } from '../global';
+import { Game } from '../model/game';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
+  private adminUrl = `${BASE_API_URL}/admin/games`;
+  private apiUrl = `${BASE_API_URL}/games`;
 
-  private apiUrl = BASE_API_URL + '/games';
+  constructor(private httpClient: HttpClient) {}
 
-  // products: Product[] = [
-  //   new Product(1, 'Product 1', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg', 100, 'Description 1'),
-  //   new Product(2, 'Product 2', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-02.jpg', 100, 'Description 2'),
-  //   new Product(3, 'Product 3', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-03.jpg', 100, 'Description 3'),
-  //   new Product(4, 'Product 4', 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-04.jpg', 100, 'Description 4'),
-  // ];
+  uploadPhoto(id: string, index: number, file: File): Observable<string> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
 
-  constructor(private httpClient: HttpClient) { }
+    return this.httpClient.put<string>(`${this.adminUrl}/${id}/${index}`, formData, {
+      headers: new HttpHeaders({
+        'Accept': 'application/json'
+      })
+    });
+  }
 
-  // getProductList(): Observable<Product[]> {
-  //   return of(this.products);
-  // }
-
-  // getProduct(id: number): Observable<Product|undefined> {
-  //   return of(this.products.find(product => product.id == id));
-  // }
+  deletePhoto(id: string, index: number): Observable<HttpResponse<string>> {
+    return this.httpClient.delete<string>(`${this.adminUrl}/${id}/${index}`, {
+      observe: 'response'
+    });
+  }
 
   getGamesList(): Observable<Game[]> {
     return this.httpClient.get<string>(this.apiUrl)
@@ -35,11 +37,23 @@ export class ProductsService {
       );
   }
 
-  getGame(id: string): Observable<Game|undefined> {
-    return this.httpClient.get<string>(`${this.apiUrl}/${id}`)
-      .pipe(
-        map(response => response as unknown as Game)
-      );
+  getGame(id: string): Observable<Game> {
+    return this.httpClient.get<any>(`${this.apiUrl}/${id}`, {
+      observe: 'response'
+    }).pipe(
+        map(response => response.body.model as Game)
+    )
   }
 
+  addGame(game: Game): Observable<Game> {
+    return this.httpClient.post<any>(this.adminUrl, game, {
+      observe: 'response'
+    }).pipe(
+        map(response => response.body as Game)
+    );
+  }
+
+  updateGame(game: Game): Observable<string> {
+    return this.httpClient.put<string>(`${this.adminUrl}/${game.id}`, game);
+  }
 }

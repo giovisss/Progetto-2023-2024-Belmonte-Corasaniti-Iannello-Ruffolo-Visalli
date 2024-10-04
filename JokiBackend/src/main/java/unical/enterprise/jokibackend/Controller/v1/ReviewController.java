@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Controller.v1;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class   ReviewController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity <String> deleteReview(@PathVariable("id") String id) {
         reviewService.deleteReviewById(UUID.fromString(id));
-        return ResponseEntity.ok("Review deleted");
+        return ResponseEntity.ok(new Gson().toJson("Review deleted"));
     }
 
     @GetMapping(value = "/average/{gameId}", produces = "application/json")

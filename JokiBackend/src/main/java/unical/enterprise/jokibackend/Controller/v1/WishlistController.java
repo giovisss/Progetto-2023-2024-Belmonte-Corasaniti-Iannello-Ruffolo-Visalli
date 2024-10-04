@@ -2,6 +2,7 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class WishlistController {
     @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<String> addWishlist(@RequestBody String wishlistName){
         wishlistService.addWishlist(wishlistName);
-        return ResponseEntity.ok("Wishlist added");
+        return ResponseEntity.ok(new Gson().toJson("Wishlist added"));
     }
 
     @GetMapping(value = "/{wishlistName}", produces = "application/json")
@@ -46,7 +47,7 @@ public class WishlistController {
     @DeleteMapping(value = "/{wishlistName}", produces = "application/json")
     public ResponseEntity<String> deleteWishlist(@PathVariable String wishlistName){
         wishlistService.delete(modelMapper.map(wishlistService.getByWishlistName(wishlistName), Wishlist.class));
-        return ResponseEntity.ok("Wishlist deleted");
+        return ResponseEntity.ok(new Gson().toJson("Wishlist deleted"));
     }
 
     @PostMapping(value = "/{wishlistName}/{gameId}", produces = "application/json")
@@ -60,7 +61,7 @@ public class WishlistController {
     @DeleteMapping(value = "/{wishlistName}/{gameId}", produces = "application/json")
     public ResponseEntity<String> removeGameFromWishlist(@PathVariable UUID gameId, @PathVariable String wishlistName){
         wishlistService.removeGameFromWishlist(gameService.getGameById(gameId), wishlistName);
-        return ResponseEntity.ok("Game removed from wishlist");
+        return ResponseEntity.ok(new Gson().toJson("Game removed from wishlist"));
     }
 
     @GetMapping(value = "/other/{username}", produces = "application/json")

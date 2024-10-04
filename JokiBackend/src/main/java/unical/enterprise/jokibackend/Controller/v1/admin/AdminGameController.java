@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
@@ -40,30 +41,55 @@ public class AdminGameController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<String> addGame(@RequestBody GameDto gameDto) {
-        gameDto.setAdmin(adminService.getByUsername(UserContextHolder.getContext().getPreferredUsername()));
-
-        if(gameService.save(gameDto) != null) {
-            return ResponseEntity.ok("Successfully added game");
+        GameDto result = gameService.save(gameDto);
+        if(result != null) {
+            return ResponseEntity.ok(new Gson().toJson(result));
         } else {
-            throw new RuntimeException("Game save failed");
+            throw new RuntimeException(new Gson().toJson("Game save failed"));
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateGame(@PathVariable UUID id, @RequestBody GameDto gameDto) {
         if(gameService.update(id, gameDto) != null) {
-            return ResponseEntity.ok("Successfully updated game");
+            return ResponseEntity.ok(new Gson().toJson("Successfully updated game"));
         } else {
             throw new RuntimeException("Game update failed");
         }
     }
 
+    @PutMapping("/{id}/{index}")
+    public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file, @PathVariable UUID id, @PathVariable int index) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty");
+        }
+
+        if(index < 0 || index > 3) {
+            throw new IllegalArgumentException("Index out of bounds");
+        }
+
+        return gameService.updatePhoto(gameService.getGameById(id), file, index)
+                ? ResponseEntity.ok(new Gson().toJson("Photo uploaded successfully"))
+                : ResponseEntity.badRequest().body(new Gson().toJson("Photo upload failed"));
+    }
+
+    @DeleteMapping("/{id}/{index}")
+    public ResponseEntity<String> deletePhoto(@PathVariable UUID id, @PathVariable int index) {
+        if(index < 0 || index > 3) {
+            throw new IllegalArgumentException("Index out of bounds");
+        }
+
+        return gameService.deletePhoto(gameService.getGameById(id), index)
+                ? ResponseEntity.ok(new Gson().toJson("Photo deleted successfully"))
+                : ResponseEntity.badRequest().body(new Gson().toJson("Photo deleted failed"));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteGame(@PathVariable UUID id) {
         gameService.delete(id);
-        return ResponseEntity.ok("Game deleted");
+        return ResponseEntity.ok(new Gson().toJson("Game deleted"));
     }
 
     @GetMapping(value = "/by-admin", produces = "application/json")

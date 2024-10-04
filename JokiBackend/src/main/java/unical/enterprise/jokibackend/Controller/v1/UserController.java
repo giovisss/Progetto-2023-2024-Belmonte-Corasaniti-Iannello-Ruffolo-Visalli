@@ -47,7 +47,7 @@ public class UserController {
     @Produces("application/json")
     public ResponseEntity<String> deleteCurrentUser() {
         keycloakService.deleteUser(UserContextHolder.getContext().getPreferredUsername());
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.ok(new Gson().toJson("User deleted"));
     }
 
     @GetMapping("/{username}")
