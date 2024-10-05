@@ -14,4 +14,5 @@ public interface ReviewService {
     public Double getAverageRating(UUID gameId);
     public Collection <ReviewDto> getReviewsByGameId(UUID gameId);
     public Collection <ReviewDto> getReviewsByUserId(UUID userId);
+    public ReviewDto getReviewByUserIdAndGameId(UUID userId, UUID gameId);
 }

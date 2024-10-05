@@ -3,6 +3,7 @@ package unical.enterprise.jokibackend.Controller.v1;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.ReviewDto;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.ReviewService;
@@ -62,5 +63,12 @@ public class   ReviewController {
     @GetMapping(value = "/user/{userId}", produces = "application/json")
     public ResponseEntity <Collection <ReviewDto>> getReviewsByUserId(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(UUID.fromString(userId)));
+    }
+
+    @GetMapping(value = "/user_review/{gameId}", produces = "application/json")
+    @PreAuthorize("hasRole('client_user')")
+    public ResponseEntity <ReviewDto> getReviewByUserIdAndGameId(@PathVariable("gameId") String gameId) {
+        UUID user = userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()).getId();
+        return ResponseEntity.ok(reviewService.getReviewByUserIdAndGameId(user, UUID.fromString(gameId)));
     }
 }

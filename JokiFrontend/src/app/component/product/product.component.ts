@@ -13,7 +13,11 @@ import {UserService} from "../../services/user.service";
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
+
 export class ProductComponent {
+  reviewExists: boolean = false;
+  userReview: Review | null = null;
+
   product: any;
   reviews: Review[] = [];
   showWishlistModal: boolean = false;
@@ -36,8 +40,21 @@ export class ProductComponent {
 
   reviewService.getReviewsByGameId(id).subscribe((reviews: any) => {
       this.reviews = reviews;
-      console.log(this.reviews);
+      // console.log(this.reviews);
     });
+  
+    reviewService.getUserReview(id).subscribe((response) => {
+        if (response) {
+          this.reviewExists = true;
+          this.userReview = response;
+        } else {
+          console.log('Recensione non trovata.');
+        }
+      },
+      (error) => {
+        console.error('Errore durante l\'invio della recensione:', error);
+      }
+    );
   }
 
   addToCart() {
@@ -112,7 +129,6 @@ export class ProductComponent {
     console.log(this.wishlists);
     this.closeWishlistModal();
   }
-
 
     protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 }

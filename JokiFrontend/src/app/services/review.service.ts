@@ -39,4 +39,12 @@ export class ReviewService{
   getReviewsByUserId(userId: string): Observable<Review[]> {
     return this.httpClient.get<Review[]>(`${this.apiUrl}/user/${userId}`);
   }
+
+  getReviews(): Observable<Review[]> {
+    return this.httpClient.get<Review[]>(this.apiUrl);
+  }
+
+  getUserReview(gameId: string): Observable<Review> {
+    return this.httpClient.get<Review>(`${this.apiUrl}/user_review/${gameId}`);
+  }
 }

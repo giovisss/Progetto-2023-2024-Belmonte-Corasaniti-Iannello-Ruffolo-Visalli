@@ -19,4 +19,7 @@ public interface ReviewDao extends JpaRepository<Review, UUID> {
 
     @Query(value = "SELECT * FROM reviews WHERE user_id = :userId", nativeQuery = true)
     Collection <Review> getReviewsByUserId(@Param("userId") UUID userId);
+
+    @Query(value = "SELECT * FROM reviews WHERE user_id = :userId AND game_id = :gameId", nativeQuery = true)
+    Review getReviewByUserIdAndGameId(@Param("userId") UUID userId, @Param("gameId") UUID gameId);
 }

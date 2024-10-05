@@ -2,10 +2,10 @@ import {User} from "./user";
 import {Game} from "./game";
 
 export class Review {
-  private gameId: string;
-  private review: string;
-  private suggested: boolean;
-  private username: string | undefined;
+  gameId: string;
+  review: string;
+  suggested: boolean;
+  username: string | undefined;
 
   constructor(gameId: string, review: string, suggested: boolean, username: string | undefined) {
     this.gameId = gameId;

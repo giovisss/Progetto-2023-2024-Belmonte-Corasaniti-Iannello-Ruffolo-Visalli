@@ -38,10 +38,9 @@ export class ProductsService {
   }
 
   getGame(id: string): Observable<Game> {
-    return this.httpClient.get<any>(`${this.apiUrl}/${id}`, {
-      observe: 'response'
-    }).pipe(
-        map(response => response.body.model as Game)
+    return this.httpClient.get<any>(`${this.apiUrl}/${id}`)
+    .pipe(
+        map(response => response as Game)
     )
   }
 

@@ -31,17 +31,17 @@
           </div>
           <div class="flex justify-center items-center">
             <button (click)="toggleProductDetails(product)" aria-label="show menu"  class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-2.5 px-2 bg-gray-800 dark:bg-white dark:text-gray-800 text-white hover:text-gray-400 hover:bg-gray-200">
-              <svg  *ngIf="!showProductDetails[product.id]" id="chevronDown" class="fill-stroke" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg  *ngIf="product.id !== null && !showProductDetails[product.id]" id="chevronDown" class="fill-stroke" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              <svg *ngIf="showProductDetails[product.id]" id="chevronUp" class="fill-stroke" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg *ngIf="product.id !== null && showProductDetails[product.id]" id="chevronUp" class="fill-stroke" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 5L5 1L1 5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
         </div>
 <!--       -->
-        <div  *ngIf="showProductDetails[product.id]" class="flex flex-col jusitfy-start items-start mt-12">
+        <div  *ngIf="product.id !== null && showProductDetails[product.id]" class="flex flex-col jusitfy-start items-start mt-12">
           <div>
             <p class="tracking-tight text-xs leading-3 text-gray-800 ">Dettagli Prodotto:</p>
           </div>

@@ -79,4 +79,13 @@ public class ReviewServiceImpl implements ReviewService {
         Collection<Review> reviews = reviewDao.findAll();
         return modelMapper.map(reviews, Collection.class);
     }
+
+    @Override
+    public ReviewDto getReviewByUserIdAndGameId(UUID userId, UUID gameId) {
+        Review review = reviewDao.getReviewByUserIdAndGameId(userId, gameId);
+        if (review == null) {
+            return null;
+        }
+        return modelMapper.map(review, ReviewDto.class);
+    }
 }
