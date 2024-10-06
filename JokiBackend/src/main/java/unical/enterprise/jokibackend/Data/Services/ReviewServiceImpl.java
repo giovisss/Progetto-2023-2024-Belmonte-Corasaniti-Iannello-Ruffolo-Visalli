@@ -1,5 +1,6 @@
 package unical.enterprise.jokibackend.Data.Services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -63,9 +64,27 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Collection <ReviewDto> getReviewsByGameId(UUID gameId) {
-        Collection <Review> reviews = reviewDao.getReviewsByGameId(gameId);
-        return modelMapper.map(reviews, Collection.class);
+    @Transactional
+    public Collection<ReviewDto> getReviewsByGameId(UUID gameId) {
+        Collection<Object[]> reviewsData = reviewDao.getReviewsByGameId(gameId);
+        Collection<ReviewDto> reviewDtos = new ArrayList<>();
+    
+        for (Object[] reviewData : reviewsData) {
+            UUID reviewId = (UUID) reviewData[0];
+            String reviewText = (String) reviewData[1];
+            Boolean suggested = (Boolean) reviewData[2];
+            String username = (String) reviewData[3];
+    
+            // Mappa manualmente il DTO
+            ReviewDto reviewDto = new ReviewDto();
+            reviewDto.setId(reviewId);
+            reviewDto.setReview(reviewText);
+            reviewDto.setSuggested(suggested);
+            reviewDto.setUsername(username);
+            reviewDtos.add(reviewDto);
+        }
+    
+        return reviewDtos;
     }
 
     @Override

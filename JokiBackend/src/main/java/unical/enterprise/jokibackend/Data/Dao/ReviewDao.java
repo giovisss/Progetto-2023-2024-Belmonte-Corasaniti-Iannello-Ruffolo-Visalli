@@ -14,8 +14,8 @@ public interface ReviewDao extends JpaRepository<Review, UUID> {
     @Query(value = "SELECT AVG(CASE WHEN suggested = true THEN 1 ELSE 0 END) FROM reviews WHERE game_id = :gameId", nativeQuery = true)
     Double getAverageRating(@Param("gameId") UUID gameId);
 
-    @Query(value = "SELECT * FROM reviews WHERE game_id = :gameId", nativeQuery = true)
-    Collection <Review> getReviewsByGameId(@Param("gameId") UUID gameId);
+    @Query(value = "SELECT r.id, r.review, r.suggested, u.username FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.game_id = :gameId", nativeQuery = true)
+    Collection<Object[]> getReviewsByGameId(@Param("gameId") UUID gameId);
 
     @Query(value = "SELECT * FROM reviews WHERE user_id = :userId", nativeQuery = true)
     Collection <Review> getReviewsByUserId(@Param("userId") UUID userId);

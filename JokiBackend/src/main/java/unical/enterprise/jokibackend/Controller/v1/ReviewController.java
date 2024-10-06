@@ -56,9 +56,9 @@ public class   ReviewController {
     }
 
     @GetMapping(value = "/game/{gameId}", produces = "application/json")
-    public ResponseEntity <Collection <ReviewDto>> getReviewsByGameId(@PathVariable("gameId") String gameId) {
+    public ResponseEntity<Collection<ReviewDto>> getReviewsByGameId(@PathVariable("gameId") String gameId) {
         return ResponseEntity.ok(reviewService.getReviewsByGameId(UUID.fromString(gameId)));
-    }
+    }    
 
     @GetMapping(value = "/user/{userId}", produces = "application/json")
     public ResponseEntity <Collection <ReviewDto>> getReviewsByUserId(@PathVariable("userId") String userId) {
