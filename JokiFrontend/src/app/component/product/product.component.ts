@@ -19,7 +19,7 @@ export class ProductComponent {
   reviewExists: boolean = false;
   userReview: Review | null = null;
 
-  product: any;
+  product: Game | null = null;
   reviews: Review[] = [];
   showWishlistModal: boolean = false;
   showSuggestedModal: boolean = false;
@@ -30,16 +30,20 @@ export class ProductComponent {
   newNotSuggestedReviewText: string = '';
   wishlists = this.wishlistService.getWishlists();
 
+  photo1: boolean = true;
+  photo2: boolean = true;
+  photo3: boolean = true;
+
   constructor(private route : ActivatedRoute, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService, private reviewService: ReviewService, private userService: UserService) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
 
-  productsService.getGame(id).subscribe((product: Game) => {
+    productsService.getGame(id).subscribe((product: Game) => {
       this.product = product;
       console.log(this.product);
     });
 
-  reviewService.getReviewsByGameId(id).subscribe((reviews: any) => {
+    reviewService.getReviewsByGameId(id).subscribe((reviews: any) => {
       this.reviews = reviews;
       // console.log(this.reviews);
     });
@@ -59,13 +63,13 @@ export class ProductComponent {
   }
 
   addToCart() {
-    this.cartService.addToCart(this.product);
+    this.cartService.addToCart(this.product!);
 
   }
 
   addSuggestedReview() {
     const suggested = true;
-    const newReview = new Review(this.product.id, this.newSuggestedReviewText, suggested, this.userService.getUser()?.username);
+    const newReview = new Review(this.product!.id!, this.newSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeSuggestedModal();
@@ -78,7 +82,7 @@ export class ProductComponent {
 
   addNotSuggestedReview() {
     const suggested = false;
-    const newReview = new Review(this.product.id, this.newNotSuggestedReviewText, suggested, this.userService.getUser()?.username);
+    const newReview = new Review(this.product!.id!, this.newNotSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeNotSuggestedModal();

@@ -19,8 +19,14 @@
 
     <!-- Image gallery -->
     <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-      <div class="hidden overflow-hidden rounded-lg lg:block">
-        <img [src]="BASE_IMAGE_URL + product.imagePath" [alt]="product.title" class="h-full w-full object-cover object-center">
+      <div class="hidden overflow-hidden rounded-lg lg:block" *ngIf="this.photo1">
+        <img [src]="BASE_IMAGE_URL + product.url1" (error)="this.photo1=false" class="h-full w-full object-scale-down object-center">
+      </div>
+      <div class="hidden overflow-hidden rounded-lg lg:block" *ngIf="this.photo2">
+        <img [src]="BASE_IMAGE_URL + product.url2" (error)="this.photo2=false" class="h-full w-full object-scale-down object-center">
+      </div>
+      <div class="hidden overflow-hidden rounded-lg lg:block" *ngIf="this.photo3">
+        <img [src]="BASE_IMAGE_URL + product.url3" (error)="this.photo3=false" class="h-full w-full object-scale-down object-center">
       </div>
     </div>
 
