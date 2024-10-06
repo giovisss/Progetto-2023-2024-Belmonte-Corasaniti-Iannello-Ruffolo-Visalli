@@ -103,7 +103,17 @@ public class GameServiceImpl implements GameService{
 
     @Override
    @Transactional
-   public void delete(UUID id) {
-       gameDao.deleteById(id);
-   }
+   public boolean delete(UUID id) {
+        Game game = gameDao.findById(id).orElse(null);
+
+        if (game == null) return false;
+
+        GameDto gameDto = modelMapper.map(game, GameDto.class);
+        for (int i = 1; i <= 3; i++) {
+            deletePhoto(gameDto, i);
+        }
+
+        gameDao.deleteById(id);
+        return true;
+    }
 }

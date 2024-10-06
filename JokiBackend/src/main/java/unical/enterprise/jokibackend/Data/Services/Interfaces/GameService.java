@@ -13,7 +13,7 @@ public interface GameService {
     // public GameDto getGameByGenre(String genre);
     Collection<GameDto> findAll();
     GameDto save(GameDto gameDto);
-    void delete(UUID id);
+    boolean delete(UUID id);
     GameDto update(UUID id, GameDto gameDto);
     boolean updatePhoto(GameDto gameDto, MultipartFile photo, int index);
     boolean deletePhoto(GameDto gameDto, int index);

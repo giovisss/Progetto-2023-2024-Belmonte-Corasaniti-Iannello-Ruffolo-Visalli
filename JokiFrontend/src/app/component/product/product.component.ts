@@ -7,6 +7,7 @@ import {BASE_IMAGE_URL} from "../../global";
 import {ReviewService} from "../../services/review.service";
 import {Review} from "../../model/review";
 import {UserService} from "../../services/user.service";
+import {Game} from "../../model/game";
 
 @Component({
   selector: 'app-product',
@@ -33,8 +34,8 @@ export class ProductComponent {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
 
-  productsService.getGame(id).subscribe((product: any) => {
-      this.product = product.model;
+  productsService.getGame(id).subscribe((product: Game) => {
+      this.product = product;
       console.log(this.product);
     });
 

@@ -13,13 +13,17 @@ import { Location } from '@angular/common';
   providers: [DatePipe]
 })
 export class EditGameComponent implements OnInit, OnChanges {
+  protected readonly Game = Game;
   protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
+
   protected selectedGame: Game | null = null;
   protected games: Game[] = [];
   protected searchedGames: Game[] = [];
   protected tempGame: Partial<Game> = {}; // Temporary object
+
   isEditing: boolean = true;
   formattedReleaseDate: string | null = '';
+
   url: string = 'assets/upload.jpg';
   url1: string = this.url;
   url2: string = this.url;
@@ -29,20 +33,9 @@ export class EditGameComponent implements OnInit, OnChanges {
   photo3: File | null = null;
 
   constructor(private productsService: ProductsService, private datePipe: DatePipe, private location: Location) {
-    this.productsService.getGamesList().subscribe((response: any) => {
-      this.games = response._embedded.modelList.map((model: any) => model.model);
-      this.createGame();
+    this.productsService.getGamesList().subscribe((response: Game[]) => {
+      this.games = response;
     });
-  }
-
-  createGame() {
-    let old = this.games;
-    this.games = [];
-
-    for (let tmp of old) {
-      let game = new Game(tmp.id, tmp.title, tmp.description, tmp.price, tmp.imagePath, tmp.genre, tmp.developer, tmp.publisher, tmp.releaseDate, tmp.stock, tmp.admin);
-      this.games.push(game);
-    }
   }
 
   ngOnInit() {
@@ -105,16 +98,24 @@ export class EditGameComponent implements OnInit, OnChanges {
 
   protected saveChanges() {
     if (this.isEditing) {
-      this.productsService.updateGame(this.tempGame as Game).subscribe((response: string) => {
-        this.updatePhoto();
+      this.productsService.updateGame(this.tempGame as Game).subscribe((response: HttpResponse<string>) => {
+        if(response.ok) {
+          this.updatePhoto();
+        } else { alert('Failed to update game'); }
       });
     } else {
       if (this.selectedGame) {
         Object.assign(this.selectedGame, this.tempGame); // Apply changes to selectedGame
         this.productsService.addGame(this.selectedGame).subscribe((response: Game) => {
-          if (response == null) return;
+          if (response == null) {
+            alert('Failed to add game');
+            return
+          }
           this.productsService.getGame(response.id!).subscribe((game: Game) => {
-            if(game==null) return;
+            if(game==null) {
+                alert('Failed to load back game, reload the page');
+                return
+            }
 
             this.games.push(game);
             this.selectedGame = game;
@@ -135,21 +136,24 @@ export class EditGameComponent implements OnInit, OnChanges {
 
     if (this.photo1) {
       wait++;
-      this.productsService.uploadPhoto(this.selectedGame.id as string, 1, this.photo1).subscribe((response: string) => {
+      this.productsService.uploadPhoto(this.selectedGame.id as string, 1, this.photo1).subscribe((response: HttpResponse<string>) => {
+        if (!response.ok) alert('Failed to upload photo n.1');
         wait--;
       });
     }
 
     if (this.photo2) {
       wait++;
-      this.productsService.uploadPhoto(this.selectedGame.id as string, 2, this.photo2).subscribe((response: string) => {
+      this.productsService.uploadPhoto(this.selectedGame.id as string, 2, this.photo2).subscribe((response: HttpResponse<string>) => {
+        if (!response.ok) alert('Failed to upload photo n.2');
         wait--;
       });
     }
 
     if (this.photo3) {
       wait++;
-      this.productsService.uploadPhoto(this.selectedGame.id as string, 3, this.photo3).subscribe((response: string) => {
+      this.productsService.uploadPhoto(this.selectedGame.id as string, 3, this.photo3).subscribe((response: HttpResponse<string>) => {
+        if (!response.ok) alert('Failed to upload photo n.3');
         wait--;
       });
     }
@@ -169,26 +173,46 @@ export class EditGameComponent implements OnInit, OnChanges {
   }
 
   deletePhoto(index: number) {
-    this.productsService.deletePhoto(this.selectedGame?.id as string, index).subscribe((response: HttpResponse<string>) => {
-      if(response.ok) {
-        switch (index) {
-          case 1:
-            this.url1 = this.url;
-            this.photo1 = null;
-            break;
-          case 2:
-            this.url2 = this.url;
-            this.photo2 = null;
-            break;
-          case 3:
-            this.url3 = this.url;
-            this.photo3 = null;
-            break;
-          default:
-            break;
-        }
+    if(!this.isEditing) {
+      switch (index) {
+        case 1:
+          this.url1 = this.url;
+          this.photo1 = null;
+          break;
+        case 2:
+          this.url2 = this.url;
+          this.photo2 = null;
+          break;
+        case 3:
+          this.url3 = this.url;
+          this.photo3 = null;
+          break;
+        default:
+          break;
       }
-    });
+    }
+    else {
+      this.productsService.deletePhoto(this.selectedGame?.id as string, index).subscribe((response: HttpResponse<string>) => {
+        if (response.ok) {
+          switch (index) {
+            case 1:
+              this.url1 = this.url;
+              this.photo1 = null;
+              break;
+            case 2:
+              this.url2 = this.url;
+              this.photo2 = null;
+              break;
+            case 3:
+              this.url3 = this.url;
+              this.photo3 = null;
+              break;
+            default:
+              break;
+          }
+        } else { alert('Failed to delete photo'); }
+      });
+    }
   }
 
   resetForm() {
@@ -228,5 +252,15 @@ export class EditGameComponent implements OnInit, OnChanges {
     }
   }
 
-  protected readonly Game = Game;
+  deleteGame() {
+    if (this.selectedGame) {
+      this.productsService.deleteGame(this.selectedGame.id as string).subscribe((response: HttpResponse<string>) => {
+        if(response.ok) {
+          this.resetForm();
+          this.reloadPage();
+        } else { alert('Failed to delete game'); }
+      });
+    }
+  }
+
 }

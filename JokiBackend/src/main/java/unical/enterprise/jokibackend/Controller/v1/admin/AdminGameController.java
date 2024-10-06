@@ -88,8 +88,9 @@ public class AdminGameController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteGame(@PathVariable UUID id) {
-        gameService.delete(id);
-        return ResponseEntity.ok(new Gson().toJson("Game deleted"));
+        return gameService.delete(id)
+                ? ResponseEntity.ok(new Gson().toJson("Game deleted successfully"))
+                : ResponseEntity.badRequest().body(new Gson().toJson("Game delete failed"));
     }
 
     @GetMapping(value = "/by-admin", produces = "application/json")

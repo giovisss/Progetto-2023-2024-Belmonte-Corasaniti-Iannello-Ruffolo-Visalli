@@ -13,14 +13,15 @@ export class ProductsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  uploadPhoto(id: string, index: number, file: File): Observable<string> {
+  uploadPhoto(id: string, index: number, file: File): Observable<HttpResponse<string>> {
     const formData: FormData = new FormData();
     formData.append('file', file);
 
     return this.httpClient.put<string>(`${this.adminUrl}/${id}/${index}`, formData, {
       headers: new HttpHeaders({
         'Accept': 'application/json'
-      })
+      }),
+        observe: 'response'
     });
   }
 
@@ -31,28 +32,44 @@ export class ProductsService {
   }
 
   getGamesList(): Observable<Game[]> {
-    return this.httpClient.get<string>(this.apiUrl)
-      .pipe(
-        map(response => response as unknown as Game[])
-      );
+    return this.httpClient.get<any>(this.apiUrl).pipe(
+      map(response => {
+        let out = [];
+        for (let game of response._embedded.modelList.map((model: any) => model.model)) {
+          out.push(new Game(game.id, game.title, game.description, game.price, game.imagePath, game.genre, game.developer, game.publisher, game.releaseDate, game.stock, game.admin));
+        }
+        return out;
+      })
+    );
   }
 
   getGame(id: string): Observable<Game> {
     return this.httpClient.get<any>(`${this.apiUrl}/${id}`)
     .pipe(
-        map(response => response as Game)
+        map(response => {
+            let game = response.model;
+            return new Game(game.id, game.title, game.description, game.price, game.imagePath, game.genre, game.developer, game.publisher, game.releaseDate, game.stock, game.admin);
+        })
     )
   }
 
   addGame(game: Game): Observable<Game> {
-    return this.httpClient.post<any>(this.adminUrl, game, {
-      observe: 'response'
-    }).pipe(
-        map(response => response.body as Game)
+    return this.httpClient.post<Game>(this.adminUrl, game).pipe(
+        map(game => {
+            return new Game(game.id, game.title, game.description, game.price, game.imagePath, game.genre, game.developer, game.publisher, game.releaseDate, game.stock, game.admin);
+        })
     );
   }
 
-  updateGame(game: Game): Observable<string> {
-    return this.httpClient.put<string>(`${this.adminUrl}/${game.id}`, game);
+  updateGame(game: Game): Observable<HttpResponse<string>> {
+    return this.httpClient.put<string>(`${this.adminUrl}/${game.id}`, game, {
+        observe: 'response'
+    });
   }
+
+    deleteGame(id: string): Observable<HttpResponse<string>> {
+        return this.httpClient.delete<string>(`${this.adminUrl}/${id}`, {
+            observe: 'response'
+        });
+    }
 }
