@@ -45,9 +45,9 @@ export class ProductComponent {
 
     reviewService.getReviewsByGameId(id).subscribe((reviews: any) => {
       this.reviews = reviews;
-      // console.log(this.reviews);
+      console.log(this.reviews);
     });
-  
+
     reviewService.getUserReview(id).subscribe((response) => {
         if (response) {
           this.reviewExists = true;
