@@ -47,4 +47,8 @@ export class ReviewService{
   getUserReview(gameId: string): Observable<Review> {
     return this.httpClient.get<Review>(`${this.apiUrl}/user_review/${gameId}`);
   }
+
+  getAvgReviews(id: string): Observable<number> {
+    return this.httpClient.get<number>(`${this.apiUrl}/average/${id}`);
+  }
 }
