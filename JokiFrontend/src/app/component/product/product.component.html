@@ -93,26 +93,21 @@
         <div>
           <h3 class="sr-only">Description</h3>
 
-          <div class="space-y-10">
+          <div>
+            <!-- Descrizione del prodotto -->
             <p class="text-base text-gray-900">{{product.description}}</p>
-            <h3 class="text-lg font-medium text-gray-900">Cosa dicono gli utenti:</h3>
-            <dl class="mt-6 space"></dl>
-          </div>
-            <div *ngFor="let review of reviews" class="container flex flex-col w-full max-w-lg p-6 mx-auto divide-y rounded-md dark:divide-gray-300 dark:bg-gray-50 dark:text-gray-800">
-              <div class="card bg-base-100 w-96 shadow-xl mt-10">
-                <div class="card-body">
-                  <h2 class="card-title">{{review?.username}}</h2>
-                  <p>{{ review?.review }}</p>
-                  <div class="card-actions justify-end">
-                    <p class="mt-1 text-sm text-gray-500" [ngClass]="{'text-green-500' : review?.suggested, 'text-red-500' : !review?.suggested}">
-                      {{ review?.suggested ? 'Consigliato' : 'Non consigliato' }}
-                    </p>
-                  </div>
-                </div>
-              </div>
+
+            <!-- Spazio tra descrizione e link -->
+            <a (click)="openModal()" class="mt-6 block text-blue-500 underline">Cosa dicono gli utenti?</a>
+            <div *ngIf="reviewsAvg > 0; else noVote">
+              <p class="mt-2 text-sm text-gray-500">Il {{ reviewsAvg }}% di utenti consiglia questo gioco</p>
             </div>
+            <ng-template #noVote>
+              <p class="mt-2 text-sm text-gray-500">Lo {{ reviewsAvg }}% di utenti consiglia questo gioco</p>
+            </ng-template>
           </div>
         </div>
+      </div>
     </div>
   </div>
 
@@ -221,4 +216,22 @@
     </div>
   </div>
 </div>
+
+<!--  reviews modal-->
+  <div *ngIf="isReviewsModalOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
+      <span class="absolute top-2 right-4 text-gray-500 cursor-pointer text-2xl" (click)="closeModal()">&times;</span>
+      <h2 class="text-2xl font-semibold mb-4">Recensioni degli utenti</h2>
+
+      <div *ngFor="let review of reviews" class="bg-white border rounded-lg p-4 mb-4 shadow-md">
+        <h3 class="text-xl font-semibold">{{ review?.username }}</h3>
+        <p class="mt-2">{{ review?.review }}</p>
+        <div class="mt-4 text-right">
+          <p class="text-sm" [ngClass]="{'text-green-500': review?.suggested, 'text-red-500': !review?.suggested}">
+            {{ review?.suggested ? 'Consigliato' : 'Non consigliato' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

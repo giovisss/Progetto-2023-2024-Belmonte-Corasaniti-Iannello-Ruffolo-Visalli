@@ -67,9 +67,11 @@ export class ProductsService {
     });
   }
 
-    deleteGame(id: string): Observable<HttpResponse<string>> {
-        return this.httpClient.delete<string>(`${this.adminUrl}/${id}`, {
-            observe: 'response'
-        });
-    }
+  deleteGame(id: string): Observable<HttpResponse<string>> {
+      return this.httpClient.delete<string>(`${this.adminUrl}/${id}`, {
+          observe: 'response'
+      });
+  }
+
+
 }

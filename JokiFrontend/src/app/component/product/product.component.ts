@@ -18,12 +18,14 @@ import {Game} from "../../model/game";
 export class ProductComponent {
   reviewExists: boolean = false;
   userReview: Review | null = null;
+  reviewsAvg: number = 0;
 
   product: Game | null = null;
   reviews: Review[] = [];
   showWishlistModal: boolean = false;
   showSuggestedModal: boolean = false;
   showNotSuggestedModal: boolean = false;
+  isReviewsModalOpen: boolean = false;
   newWishlistName: string = '';
   newWishlistVisibility: number = 1; // 0: privata, 1: pubblica, 2: solo amici  pubblica di default
   newSuggestedReviewText: string = '';
@@ -55,6 +57,14 @@ export class ProductComponent {
         } else {
           console.log('Recensione non trovata.');
         }
+      },
+      (error) => {
+        console.error('Errore durante l\'invio della recensione:', error);
+      }
+    );
+
+    reviewService.getAvgReviews(id).subscribe((response) => {
+        this.reviewsAvg = response * 100;
       },
       (error) => {
         console.error('Errore durante l\'invio della recensione:', error);
@@ -136,4 +146,12 @@ export class ProductComponent {
   }
 
     protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
+
+  openModal() {
+    this.isReviewsModalOpen = true;
+  }
+
+  closeModal() {
+    this.isReviewsModalOpen = false;
+  }
 }
