@@ -17,4 +17,6 @@ public interface WishlistService {
     boolean addGameToWishlist(GameDto game, String wishlistName);
     void removeGameFromWishlist(GameDto game, String wishlistName);
     void addWishlist(String wishlistName);
+
+    void deleteByGameId(UUID id);
 }

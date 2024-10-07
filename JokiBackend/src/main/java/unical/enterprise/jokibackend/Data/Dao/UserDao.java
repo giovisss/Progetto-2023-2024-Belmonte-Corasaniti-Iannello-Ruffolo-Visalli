@@ -75,4 +75,9 @@ public interface UserDao extends JpaRepository<User, UUID> {
                OR (user_id = :secondo AND friend_id = :primo)""",
         nativeQuery = true)
     int checkFriendship(@Param("primo") UUID primo, @Param("secondo") UUID secondo);
+
+    //delete game from libraries
+    @Modifying
+    @Query(value = "DELETE FROM libraries WHERE game_id = :id", nativeQuery = true)
+    void deleteGameFromUsers(@Param("id") UUID id);
 }

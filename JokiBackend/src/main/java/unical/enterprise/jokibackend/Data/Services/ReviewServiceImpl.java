@@ -1,19 +1,18 @@
 package unical.enterprise.jokibackend.Data.Services;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.ReviewDao;
 import unical.enterprise.jokibackend.Data.Dto.ReviewDto;
 import unical.enterprise.jokibackend.Data.Entities.Review;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.ReviewService;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -106,5 +105,10 @@ public class ReviewServiceImpl implements ReviewService {
             return null;
         }
         return modelMapper.map(review, ReviewDto.class);
+    }
+
+    @Override
+    public void deleteByGameId(UUID id) {
+        reviewDao.deleteReviewsByGameId(id);
     }
 }

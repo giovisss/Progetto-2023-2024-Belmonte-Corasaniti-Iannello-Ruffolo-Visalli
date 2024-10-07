@@ -144,4 +144,9 @@ public class WishlistServiceImpl implements WishlistService {
 
         wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
     }
+
+    @Override
+    public void deleteByGameId(UUID id) {
+        wishlistDao.deleteGameFromWishlists(id);
+    }
 }

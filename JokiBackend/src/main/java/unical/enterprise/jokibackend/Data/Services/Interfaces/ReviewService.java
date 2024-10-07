@@ -15,4 +15,6 @@ public interface ReviewService {
     public Collection <ReviewDto> getReviewsByGameId(UUID gameId);
     public Collection <ReviewDto> getReviewsByUserId(UUID userId);
     public ReviewDto getReviewByUserIdAndGameId(UUID userId, UUID gameId);
+
+    void deleteByGameId(UUID id);
 }

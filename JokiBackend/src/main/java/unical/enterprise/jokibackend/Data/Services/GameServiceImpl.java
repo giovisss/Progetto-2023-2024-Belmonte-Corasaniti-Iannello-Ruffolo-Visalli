@@ -8,8 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import unical.enterprise.jokibackend.Data.Dao.GameDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Entities.Game;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.GameService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.*;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import java.io.IOException;
@@ -26,6 +25,10 @@ public class GameServiceImpl implements GameService{
     private final ModelMapper modelMapper;
 
     private final String folder = "src/main/resources/static/images/";
+
+    private final WishlistService wishlistService;
+    private final UserService userService;
+    private final ReviewService reviewService;
 
    @Override
    public GameDto getGameById(UUID id) {
@@ -106,12 +109,17 @@ public class GameServiceImpl implements GameService{
    public boolean delete(UUID id) {
         Game game = gameDao.findById(id).orElse(null);
 
+        wishlistService.deleteByGameId(id);
+        reviewService.deleteByGameId(id);
+        userService.deleteGameFromUsers(id);
+
         if (game == null) return false;
 
         GameDto gameDto = modelMapper.map(game, GameDto.class);
         for (int i = 1; i <= 3; i++) {
             deletePhoto(gameDto, i);
         }
+
 
         gameDao.deleteById(id);
         return true;

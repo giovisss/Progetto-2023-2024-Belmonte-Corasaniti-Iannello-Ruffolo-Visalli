@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Data.Dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,11 @@ public interface WishlistDao extends JpaRepository<Wishlist, UUID> {
            nativeQuery = true)
    Optional<Collection<Wishlist>> findWishlistByUserFriendship(@Param("user_id") UUID user_id, @Param("visibility") Integer visibility, @Param("visibility2") Integer visibility2);
    Optional<Wishlist> findWishlistByUserAndWishlistName(User user, String wishlistName);
+
+   // remove game from all wishlists
+    @Modifying
+    @Query(value = "DELETE FROM wishlist_games WHERE game_id = :gameId", nativeQuery = true)
+    void deleteGameFromWishlists(@Param("gameId") UUID gameId);
 
 //   Optional<Wishlist> findWishlistByWishlistName(String name);
 //    Optional<Wishlist> findWishlistByGameId(UUID id);

@@ -43,4 +43,6 @@ public interface UserService {
     void clearUserCart(String username);
 
     boolean checkIfFriend(String other);
+
+    void deleteGameFromUsers(UUID id);
 }

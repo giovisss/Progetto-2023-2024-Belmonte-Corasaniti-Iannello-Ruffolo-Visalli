@@ -173,4 +173,9 @@ public class UserServiceImpl implements UserService {
         int response=userDao.checkFriendship(user, oth);
         return response == 2;
     }
+
+    @Override
+    public void deleteGameFromUsers(UUID id) {
+        userDao.deleteGameFromUsers(id);
+    }
 }

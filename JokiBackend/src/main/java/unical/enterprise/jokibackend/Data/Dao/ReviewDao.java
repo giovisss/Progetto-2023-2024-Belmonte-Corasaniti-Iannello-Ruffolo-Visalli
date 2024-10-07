@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Data.Dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,8 @@ public interface ReviewDao extends JpaRepository<Review, UUID> {
 
     @Query(value = "SELECT * FROM reviews WHERE user_id = :userId AND game_id = :gameId", nativeQuery = true)
     Review getReviewByUserIdAndGameId(@Param("userId") UUID userId, @Param("gameId") UUID gameId);
+
+    @Modifying
+    @Query(value = "DELETE FROM reviews WHERE game_id = :gameId", nativeQuery = true)
+    void deleteReviewsByGameId(@Param("gameId") UUID gameId);
 }
