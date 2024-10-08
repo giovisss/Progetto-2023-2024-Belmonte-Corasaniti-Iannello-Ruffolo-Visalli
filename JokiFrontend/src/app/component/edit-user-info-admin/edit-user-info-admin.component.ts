@@ -80,7 +80,7 @@ export class EditUserInfoAdminComponent implements OnInit, OnChanges {
 
   protected saveChanges() {
 
-      this.userService.updateUser(this.tempUser as User).subscribe((response: HttpResponse<string>) => {
+      this.userService.updateUserByAdmin(this.tempUser as User).subscribe((response: HttpResponse<string>) => {
         if(!response.ok) {
           alert('Failed to update user'); }
         else{this.reloadPage()}

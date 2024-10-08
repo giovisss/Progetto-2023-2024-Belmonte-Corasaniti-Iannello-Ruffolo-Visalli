@@ -18,7 +18,7 @@ import { LibraryComponent } from './component/library/library.component';
 import { AboutComponent } from './component/about/about.component';
 import { WishlistsComponent } from './component/wishlists/wishlists.component';
 import { WishlistProductsComponent } from './component/wishlist-products/wishlist-products.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { UserInfoComponent } from './component/user-info/user-info.component';
 import { EditGameComponent } from './component/edit-game/edit-game.component';
 import { ReviewComponent } from './component/review/review.component';
@@ -52,7 +52,8 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     AppRoutingModule,
     KeycloakAngularModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

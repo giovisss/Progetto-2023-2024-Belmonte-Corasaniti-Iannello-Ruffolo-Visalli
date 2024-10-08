@@ -36,7 +36,7 @@ public class UserController {
     @Produces("application/json")
     public ResponseEntity<String> updateCurrentUser(@RequestBody UpdateUserDto userDto) {
         try {
-            if (keycloakService.updateUser(UserContextHolder.getContext().getPreferredUsername(), userDto)) return ResponseEntity.ok("User updated");
+            if (keycloakService.updateUser(UserContextHolder.getContext().getPreferredUsername(), userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
             else return ResponseEntity.notFound().build();
         } catch (NotModifiedException e) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Field can not be the same as before");

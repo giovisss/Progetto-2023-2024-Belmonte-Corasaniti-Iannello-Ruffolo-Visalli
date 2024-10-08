@@ -15,15 +15,15 @@ import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'product/:id', component: ProductComponent },
-  { path: 'wishlists/:name', component: WishlistProductsComponent },
+  { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   // { path: 'api/admin/personal', component: LoginComponent },
   // { path: 'api/user/personal', component: LoginComponent },
-  { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
-  { path: 'user-info', component: UserInfoComponent},
-  { path: 'library', component: LibraryComponent},
-  { path: 'wishlists', component: WishlistsComponent},
+  { path: 'login', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
+  { path: 'library', component: LibraryComponent, canActivate: [AuthGuard]},
+  { path: 'wishlists', component: WishlistsComponent, canActivate: [AuthGuard]},
   { path: 'about', component: AboutComponent},
-  { path: 'editGames', component: EditGameComponent },
+  { path: 'editGames', component: EditGameComponent, canActivate: [AuthGuard]},
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'home' }
 ];

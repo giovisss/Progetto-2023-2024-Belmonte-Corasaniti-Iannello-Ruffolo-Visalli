@@ -13,7 +13,7 @@
         </div>
         <div class="px-6 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-10">
           <dt class="text-sm font-medium leading-6 text-gray-900">Nome Completo</dt>
-          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ user?.firstName }}{{ user?.lastName }}</dd>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ user?.firstName }} {{ user?.lastName }}</dd>
         </div>
         <div class="px-6 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-10">
           <dt class="text-sm font-medium leading-6 text-gray-900">Indirizzo email</dt>
@@ -25,7 +25,7 @@
         </div>
         <div class="border-b border-gray-900/10 pb-12">
           <br>
-          <form>
+          <form [formGroup]="userForm" (ngSubmit)="onSave()">
             <h2 class="text-base font-semibold leading-7 text-gray-900">Modifica le informazioni personali</h2>
             <p class="mt-1 text-sm leading-6 text-gray-600">Riempi i campi con i dati modificati e clicca sul pulsante "Salva".</p>
 
@@ -33,21 +33,21 @@
               <div class="sm:col-span-3">
                 <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Nome</label>
                 <div class="mt-2">
-                  <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input formControlName= "firstName" type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
               </div>
 
               <div class="sm:col-span-3">
                 <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Cognome</label>
                 <div class="mt-2">
-                  <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input formControlName= "lastName" type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
               </div>
 
               <div class="sm:col-span-4">
                 <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Indirizzo email</label>
                 <div class="mt-2">
-                  <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input formControlName= "email" id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
               </div>
 
@@ -95,12 +95,12 @@
               <div class="sm:col-span-4">
                 <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Modifica Password</label>
                 <div class="mt-2">
-                  <input id="password" name="password" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input formControlName= "password" id="password" name="password" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
                 <br>
                 <label for="repeatpassword" class="block text-sm font-medium leading-6 text-gray-900">Riscrivi la password</label>
                 <div class="mt-2">
-                  <input id="repeatpassword" name="repeatpassword" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                  <input formControlName= "repeatpassword" id="repeatpassword" name="repeatpassword" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                 </div>
               </div>
             </div>

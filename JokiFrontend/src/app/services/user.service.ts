@@ -5,17 +5,26 @@ import { AuthGuard } from '../guard/auth.guard';
 import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 import { User } from '../model/user';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  token: any;
+  isUser: boolean = false;
   private apiUrl = BASE_API_URL + '/users';
   private adminApiUrl = BASE_API_URL + '/admin/users';
   private _user: User | null = null;
 
-  constructor(private httpClient: HttpClient, private auth: AuthGuard) { }
+  constructor(private httpClient: HttpClient, private auth: AuthGuard, private keycloakService: KeycloakService) {
+    try {
+      this.token = this.keycloakService.getKeycloakInstance().tokenParsed;
+      this.isUser = this.token.resource_access.JokiBackend.roles.includes('client_user');
+    } catch (e) {
+      this.isUser = false;
+    }
+  }
 
   keycloakAuth() {
     // Make HTTP request with authorization token
@@ -90,6 +99,10 @@ export class UserService {
     );
   }
 
+  updateUser(userData: any): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}/user`, userData);
+  }
+
   getUserInfo(): Observable<any> {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
@@ -98,7 +111,7 @@ export class UserService {
     return this.httpClient.get<User[]>(this.adminApiUrl);
   }
 
-  updateUser(userData: User): Observable<HttpResponse<string>> {
+  updateUserByAdmin(userData: User): Observable<HttpResponse<string>> {
     return this.httpClient.put<string>(this.adminApiUrl + "/" + userData.username, userData, { observe: 'response' });
   }
 
