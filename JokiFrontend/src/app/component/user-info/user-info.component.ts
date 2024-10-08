@@ -6,7 +6,7 @@ import { User } from '../../model/user';
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
-  //styleUrl: './user-info.component.css'
+  //styleUrl: './edit-user-info-admin.component.css'
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {

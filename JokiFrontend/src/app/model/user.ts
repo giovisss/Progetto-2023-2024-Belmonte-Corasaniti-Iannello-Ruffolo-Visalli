@@ -45,6 +45,28 @@ export class User {
     return this._formattedBirthdate;
   }
 
+  set username(username: string) {
+    this._username = username;
+  }
+
+  set firstName(firstName: string) {
+    this._firstName = firstName;
+  }
+
+  set lastName(lastName: string) {
+    this._lastName = lastName;
+  }
+
+  set email(email: string) {
+    this._email = email;
+  }
+
+  set birthdate(birthdate: Date) {
+    this._birthdate = birthdate;
+    this._formattedBirthdate = this._formatBirthdate();
+  }
+
+
   private _formatBirthdate(): string {
     if (!this._birthdate || !(this._birthdate instanceof Date)) {
       return 'Data non valida';
@@ -54,4 +76,6 @@ export class User {
     const year = this._birthdate.getFullYear();
     return `${day} - ${month} - ${year}`;
   }
+
+
 }

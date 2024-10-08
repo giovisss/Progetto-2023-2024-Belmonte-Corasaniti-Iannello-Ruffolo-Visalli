@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { AuthGuard } from '../guard/auth.guard';
 import { Game } from '../model/game';
@@ -12,6 +12,7 @@ import { User } from '../model/user';
 export class UserService {
 
   private apiUrl = BASE_API_URL + '/users';
+  private adminApiUrl = BASE_API_URL + '/admin/users';
   private _user: User | null = null;
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard) { }
@@ -92,4 +93,17 @@ export class UserService {
   getUserInfo(): Observable<any> {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
+
+  getUserList(): Observable<User[]> {
+    return this.httpClient.get<User[]>(this.adminApiUrl);
+  }
+
+  updateUser(userData: User): Observable<HttpResponse<string>> {
+    return this.httpClient.put<string>(this.adminApiUrl + "/" + userData.username, userData, { observe: 'response' });
+  }
+
+  deleteUser(username: string): Observable<HttpResponse<string>> {
+    return this.httpClient.delete<string>(this.adminApiUrl + "/" + username, { observe: 'response' });
+  }
+
 }
