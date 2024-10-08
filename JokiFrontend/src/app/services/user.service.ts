@@ -77,10 +77,16 @@ export class UserService {
   }
 
   getUserLibrary(): Observable<Game[]> {
-    return this.httpClient.get<string>(this.apiUrl + '/user/library')
-      .pipe(
-        map(response => response as unknown as Game[])
-      );
+    return this.httpClient.get<Game[]>(this.apiUrl + '/user/library').pipe(
+        map(response => {
+          console.log(response);
+          let out = [];
+          for (let game of response) {
+            out.push(new Game(game.id, game.title, game.description, game.price, game.imagePath, game.genre, game.developer, game.publisher, game.releaseDate, game.stock, game.admin));
+          }
+          return out;
+        })
+    );
   }
 
   getUserInfo(): Observable<any> {

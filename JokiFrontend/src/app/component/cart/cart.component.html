@@ -45,7 +45,7 @@
                   <ul role="list" class="-my-6 divide-y divide-gray-200">
                     <li class="flex py-6" *ngFor="let item of cart | async">
                       <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                        <img [src]="BASE_IMAGE_URL + item.imagePath" [alt]="item.title" class="h-full w-full object-cover object-center">
+                        <img [src]="BASE_IMAGE_URL + item.url1" [alt]="item.title" class="h-full w-full object-cover object-center">
                       </div>
                       <div class="ml-4 flex flex-1 flex-col">
                         <div>

@@ -19,7 +19,11 @@ export class CartService {
 
   getCart(): Observable<Game[]> {
     this.httpClient.get<Game[]>(this.apiUrl + '/user/cart').subscribe(cart => {
-      this.cartSubject.next(cart);
+        let out = [];
+        for (let game of cart) {
+            out.push(new Game(game.id, game.title, game.description, game.price, game.imagePath, game.genre, game.developer, game.publisher, game.releaseDate, game.stock, game.admin));
+        }
+      this.cartSubject.next(out);
       this.updateTotal(cart);
       this.updateQuantity(cart);
     });
