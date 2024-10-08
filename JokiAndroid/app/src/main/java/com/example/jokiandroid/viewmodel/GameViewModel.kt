@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jokiandroid.model.Game
+import com.example.jokiandroid.service.ApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ class GameViewModel : ViewModel() {
                 val response = RetrofitInstance.createApi().getGames()
                 if (response.isSuccessful) {
                     val collectionModel = response.body()
-                    val games = collectionModel?._embedded?.gameModelList?.map { it.gameDto } ?: emptyList()
+                    val games = collectionModel?._embedded?.modelList?.map { it.model } ?: emptyList()
                     _games.value = games
                 } else {
                     _error.value = "Errore durante il caricamento dei giochi: ${response.code()}"
@@ -62,10 +63,11 @@ class GameViewModel : ViewModel() {
     fun fetchGameById(gameId: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.createApi().getGameById(gameId)
+                val token = TokenManager.getToken()
+                val response = RetrofitInstance.createApi(token?: "").getGameById(gameId)
                 if (response.isSuccessful) {
                     val entityModel = response.body()
-                    _gameDetails.value = entityModel?.gameDto
+                    _gameDetails.value = entityModel?.model
                 } else {
                     _error.value = "Errore durante il caricamento del gioco: ${response.code()}"
                     _gameDetails.value = null

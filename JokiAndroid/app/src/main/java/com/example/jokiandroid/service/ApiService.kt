@@ -16,7 +16,7 @@ interface ApiService {
     suspend fun getGamesByUser(): Response<List<Game>>
 
     data class CollectionModel(val _embedded: Embedded)
-    data class Embedded(val gameModelList: List<GameModel>)
-    data class GameModel(val gameDto: Game)
-    data class EntityModel(val gameDto: Game)
+    data class Embedded(val modelList: List<GameModel>)
+    data class GameModel(val model: Game)
+    data class EntityModel(val model: Game)
 }
