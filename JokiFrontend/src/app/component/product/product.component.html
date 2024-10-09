@@ -40,6 +40,7 @@
       <div class="mt-4 lg:row-span-3 lg:mt-0">
         <h2 class="sr-only">Product information</h2>
         <p class="text-3xl tracking-tight text-gray-900">{{product.price|currency:"EUR"}}</p>
+        <p>Quantità in stock: {{ product.stock }}</p>
 
 
         <form class="mt-10">
@@ -92,11 +93,9 @@
         <!-- Description and details -->
         <div>
           <h3 class="sr-only">Description</h3>
-
           <div>
             <!-- Descrizione del prodotto -->
             <p class="text-base text-gray-900">{{product.description}}</p>
-
             <!-- Spazio tra descrizione e link -->
             <a (click)="openModal()" class="mt-6 block text-blue-500 underline">Cosa dicono gli utenti?</a>
             <div *ngIf="reviewsAvg > 0; else noVote">

@@ -11,6 +11,7 @@ import {WishlistProductsComponent} from "./component/wishlist-products/wishlist-
 import {AuthGuard} from "./guard/auth.guard";
 import {EditGameComponent} from "./component/edit-game/edit-game.component";
 import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-user-info-admin.component";
+import { CheckoutComponent } from './component/checkout/checkout.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent},
   { path: 'editGames', component: EditGameComponent, canActivate: [AuthGuard]},
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
+  { path: 'checkout', component: CheckoutComponent },
   { path: '**', redirectTo: 'home' }
 ];
 

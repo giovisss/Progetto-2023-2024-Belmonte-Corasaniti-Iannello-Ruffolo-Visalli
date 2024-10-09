@@ -15,6 +15,7 @@ import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHol
 
 import javax.ws.rs.Produces;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -68,15 +69,15 @@ public class UserController {
         return ResponseEntity.ok(new Gson().toJson(out));
     }
 
-    // TODO: correggere logica pagamento
-    @PostMapping(value = "/user/library/{gameId}", produces = "application/json")
-    public ResponseEntity<String> addGameToLibrary(@PathVariable UUID gameId) {
-        boolean added = userService.addGameToUserLibrary(UserContextHolder.getContext().getPreferredUsername(), gameId);
-        if (added) {
-            return ResponseEntity.ok("{\"message\": \"Game added to library successfully\", \"gameId\": \"" + gameId + "\"}");
-        } else {
-            return ResponseEntity.badRequest().body("{\"mesage\": \"Failed to add game to library\"}");
+    @PostMapping(value = "/user/library", produces = "application/json")
+    public ResponseEntity<String> addGameToLibrary(@RequestBody List<UUID> gameId) {
+        for (UUID id : gameId) {
+            boolean added = userService.addGameToUserLibrary(UserContextHolder.getContext().getPreferredUsername(), id);
+            if (!added) {
+                return ResponseEntity.badRequest().body("{\"message\": \"Failed to add game to library\", \"gameId\": \"" + id + "\"}");
+            }
         }
+        return ResponseEntity.ok("{\"message\": \"Game added to library successfully\", \"gameId\": \"" + gameId + "\"}");
     }
     // Fine controller libreria
 

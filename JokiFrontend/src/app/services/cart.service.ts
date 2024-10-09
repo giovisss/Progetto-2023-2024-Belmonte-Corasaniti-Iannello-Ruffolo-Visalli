@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {BehaviorSubject, map, Observable} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, of, switchMap, take, tap} from 'rxjs';
 import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 import {data} from "autoprefixer";
@@ -31,12 +31,13 @@ export class CartService {
   }
 
   addToCart(game: Game) {
-        this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
-            map(() => {
-              this.cartSubject.value.push(game);
-            })
-        });
-    }
+    this.httpClient.post(this.apiUrl + '/user/cart/' + game.id, game).subscribe(() => {
+        const currentCart = this.cartSubject.value;
+        this.cartSubject.next([...currentCart, game]);
+        this.updateTotal(this.cartSubject.value);
+        this.updateQuantity(this.cartSubject.value);
+    });
+  }
 
   removeFromCart(game: Game): Observable<any> {
     return this.httpClient.delete(this.apiUrl + '/user/cart/' + game.id).pipe(
@@ -76,4 +77,27 @@ export class CartService {
     const quantity = cart.length;
     this.quantitySubject.next(quantity);
   }
+
+  checkout(): Observable<any> {
+    return this.cartSubject.pipe(
+        take(1),
+        map(cart => {
+            const gameIds = cart.map(game => game.id);
+            console.log('Game IDs:', gameIds);
+            return gameIds;
+        }),
+        switchMap(gameIds => {
+            return this.httpClient.post(this.apiUrl + '/user/library', gameIds).pipe(
+                tap(() => {
+                    this.clearCart().subscribe();
+                }),
+                catchError(err => {
+                    console.error('Errore durante il checkout:', err);
+                    return of(null);
+                })
+            );
+        })
+    );
+  }
+
 }

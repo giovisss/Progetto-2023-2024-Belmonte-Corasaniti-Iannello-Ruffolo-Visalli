@@ -11,6 +11,7 @@ import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
@@ -113,13 +114,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean addGameToUserLibrary(String username, UUID gameId) {
-        if (!gameDao.existsById(gameId)) {
-            throw new EntityNotFoundException("Game not found");
+        Game game = gameDao.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Game not found"));
+
+        if (userDao.findGamesByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                .stream().anyMatch(existingGame -> existingGame.getId().equals(gameId))) {
+            return false;
         }
+
+        if (game.getStock() <= 0) {
+            throw new IllegalStateException("No stock available for this game");
+        }
+
         int updatedRows = userDao.addGameToLibrary(username, gameId);
-        return updatedRows > 0;
-    }
+        if (updatedRows > 0) {
+            game.setStock(game.getStock() - 1);
+            gameDao.save(game);
+            return true;
+        }
     
+        return false;
+    }
+
     @Override
     @Transactional
     public boolean removeGameFromUserLibrary(String username, UUID gameId) {
@@ -143,6 +159,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean addGameToUserCart(String username, UUID gameId) {
+        if (userDao.findGamesByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"))
+                .stream().anyMatch(existingGame -> existingGame.getId().equals(gameId))) {
+            throw new IllegalStateException("Game already in library");
+        }
         if (!gameDao.existsById(gameId)) {
             throw new EntityNotFoundException("Game not found");
         }
@@ -158,6 +178,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void clearUserCart(String username) {
         userDao.clearUserCart(username);
     }

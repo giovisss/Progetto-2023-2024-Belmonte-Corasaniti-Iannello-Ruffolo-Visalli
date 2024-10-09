@@ -23,6 +23,7 @@ import { UserInfoComponent } from './component/user-info/user-info.component';
 import { EditGameComponent } from './component/edit-game/edit-game.component';
 import { ReviewComponent } from './component/review/review.component';
 import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-user-info-admin.component";
+import { CheckoutComponent } from './component/checkout/checkout.component';
 
 function initializeKeycloak(keycloak: KeycloakInitService) {
   return () => keycloak.init();
@@ -45,7 +46,8 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     UserInfoComponent,
     EditGameComponent,
     ReviewComponent,
-    EditUserInfoAdminComponent
+    EditUserInfoAdminComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

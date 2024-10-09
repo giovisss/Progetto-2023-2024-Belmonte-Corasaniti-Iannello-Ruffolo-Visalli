@@ -1,13 +1,14 @@
-import {Component, EventEmitter, input, OnInit, Output} from '@angular/core';
-import {CartService} from "../../services/cart.service";
-import {BASE_IMAGE_URL} from "../../global";
-import {Observable, Subscription} from "rxjs";
-import {Game} from "../../model/game";
+import { CartService } from "../../services/cart.service";
+import { Game } from "../../model/game";
+import { Router } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Observable } from "rxjs";
+import { BASE_IMAGE_URL } from "../../global";
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
   @Output() closeCart = new EventEmitter();
@@ -15,7 +16,7 @@ export class CartComponent implements OnInit {
   cart: Observable<Game[]> = new Observable<Game[]>;
   total: Observable<number> = new Observable<number>();
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit(): void {
     this.cart = this.cartService.getCart();
@@ -39,21 +40,15 @@ export class CartComponent implements OnInit {
 
   protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 
-
-  // constructor(private cartService: CartService) {
-  //   this.cart = this.cartService.getCart();
-  //   this.total = this.cartService.getTotal();
-  // }
-
-
-
-
-
-  // removeItem(product: Product) {
-  //   this.userService.removeFromCart(product);
-  //   this.cart = this.userService.getCart();
-  //   this.total = this.userService.getTotal();
-  //   this.cartUpdate();
-  // }
-
+  checkout() {
+    this.cartService.checkout().subscribe({
+        next: () => {
+            this.close();
+            this.router.navigate(['/checkout']);
+        },
+        error: (err) => {
+            console.error('Errore durante il checkout', err);
+        }
+    });
+  }
 }
