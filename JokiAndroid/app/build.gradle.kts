@@ -69,15 +69,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.appauth)// boh
-    // Retrofit
+    implementation(libs.appauth)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
-    // Coroutine Call Adapter (per usare le coroutine con Retrofit)
+    // Coroutine Call Adapter (for using coroutines with Retrofit)
     implementation(libs.retrofit2.kotlin.coroutines.adapter)
 
-    // Gson (per la serializzazione/deserializzazione JSON)
+    // Gson (for JSON serialization/deserialization)
     implementation(libs.gson)
 
     implementation(libs.androidx.navigation.compose.v253)
@@ -86,7 +85,8 @@ dependencies {
 
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
+    implementation(libs.jwtdecode)
 }

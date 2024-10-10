@@ -23,11 +23,13 @@ import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
+import com.example.jokiandroid.viewmodel.CurrentUserViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
     private lateinit var gameViewModel: GameViewModel
+    private lateinit var currentUserViewModel: CurrentUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -38,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         // Inizializziamo sempre il GameViewModel
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+        currentUserViewModel = ViewModelProvider(this)[CurrentUserViewModel::class.java]
 
 //        if (TokenManager.getToken() == null) {
 //            authManager.startAuthorization(this)
