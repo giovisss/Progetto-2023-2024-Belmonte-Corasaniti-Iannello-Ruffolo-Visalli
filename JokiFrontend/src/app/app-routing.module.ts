@@ -27,6 +27,7 @@ const routes: Routes = [
   { path: 'editGames', component: EditGameComponent, canActivate: [AuthGuard]},
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
   { path: 'checkout', component: CheckoutComponent },
+  { path: 'about', component: AboutComponent },
   { path: '**', redirectTo: 'home' }
 ];
 
