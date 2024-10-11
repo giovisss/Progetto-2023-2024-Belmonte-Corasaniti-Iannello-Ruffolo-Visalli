@@ -8,5 +8,9 @@ data class Game(
     var imagePath: String = "",
     var stock: Int,
     var genre: String,
-    var developer: String
+    var developer: String,
+
+    var url1: String,
+    var url2: String,
+    var url3: String
 )

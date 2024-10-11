@@ -1,6 +1,8 @@
 package com.example.jokiandroid.activity
 
+import CartActivity
 import GameViewModel
+import TokenManager
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -136,7 +138,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { navController.navigate("cart")}) {
+                        IconButton(onClick = { navigateToCart(navController, CartViewModel(TokenManager.getToken()?:"")) }) {
                             Icon(
                                 imageVector = Icons.Filled.ShoppingCart,
                                 contentDescription = "Cart"
@@ -164,7 +166,6 @@ fun selectPage(page:String, coroutineScope:CoroutineScope, drawerState: DrawerSt
 
 @Composable
 fun SetGameListContent(gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
-    Log.e("SetGameListContent", "SetGameListContent")
     SideBarActivity.setContent {
         GameListPage(gameViewModel = gameViewModel, cartViewModel = cartViewModel, navController = navController)
     }
@@ -197,4 +198,16 @@ fun SetSingleWishlistContent() {
     SideBarActivity.setContent {
         SingleWishlistActivity()
     }
+}
+
+@Composable
+fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
+    SideBarActivity.setContent {
+        CartActivity(navController, cartViewModel)
+    }
+}
+
+fun navigateToCart(navController: NavController, cartViewModel: CartViewModel) {
+    cartViewModel.loadCart() // Carica i dati del carrello
+    navController.navigate("cart")
 }

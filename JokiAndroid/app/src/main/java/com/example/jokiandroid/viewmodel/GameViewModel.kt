@@ -46,7 +46,7 @@ class GameViewModel : ViewModel() {
     private fun fetchGames() {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.createApi().getGames()
+                val response = RetrofitInstance.createApi(ApiService::class.java).getGames()
                 if (response.isSuccessful) {
                     val collectionModel = response.body()
                     val games = collectionModel?._embedded?.modelList?.map { it.model } ?: emptyList()
@@ -64,7 +64,7 @@ class GameViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val token = TokenManager.getToken()
-                val response = RetrofitInstance.createApi(token?: "").getGameById(gameId)
+                val response = RetrofitInstance.createApi(ApiService::class.java,token).getGameById(gameId)
                 if (response.isSuccessful) {
                     val entityModel = response.body()
                     _gameDetails.value = entityModel?.model
@@ -86,7 +86,7 @@ class GameViewModel : ViewModel() {
             try {
                 val token = TokenManager.getToken()
                 if (token != null) {
-                    _libraryGames.value = RetrofitInstance.createApi(token).getGamesByUser()
+                    _libraryGames.value = RetrofitInstance.createApi(ApiService::class.java,token).getGamesByUser()
                 } else {
                     _error.value = "Effettua il login per visualizzare i giochi"
                 }

@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jokiandroid.auth.AuthManager
+import com.example.jokiandroid.repository.CartRepository
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
@@ -29,6 +30,7 @@ import com.example.jokiandroid.viewmodel.WishlistViewModel
 class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
     private lateinit var gameViewModel: GameViewModel
+    private lateinit var cartRepository: CartRepository
     private lateinit var currentUserViewModel: CurrentUserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,9 @@ class MainActivity : ComponentActivity() {
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         currentUserViewModel = ViewModelProvider(this)[CurrentUserViewModel::class.java]
 
+        // Inizializziamo il CartRepository
+        cartRepository = CartRepository(TokenManager.getToken() ?: "")
+
 //        if (TokenManager.getToken() == null) {
 //            authManager.startAuthorization(this)
 //        } else {
@@ -54,7 +59,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JokiAndroidTheme {
                 Surface {
-                    MainScreen(authManager, gameViewModel)
+                    MainScreen(authManager, gameViewModel, cartRepository)
                 }
             }
         }
@@ -95,9 +100,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel) {
+fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository) {
     val navController = rememberNavController()
-    val cartViewModel = remember { CartViewModel() }
+    val cartViewModel = remember { CartViewModel(TokenManager.getToken() ?: "") }
     val wishlistViewModel = remember { WishlistViewModel() }
 
     BasicUI(navController = navController, authManager = authManager)
@@ -110,7 +115,7 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel) {
             val wishlistName = backStackEntry.arguments?.getString("wishlistName")
             wishlistName?.let { SetSingleWishlistContent() }
         }
-        composable("cart") { CartActivity(navController, cartViewModel) }
+        composable("cart") { SetCartContent(navController, cartViewModel) }
         composable("login") { SetLoginContent(navController) }
         composable("game_detail/{gameId}") { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId")

@@ -1,18 +1,15 @@
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.jokiandroid.R
 import com.example.jokiandroid.utility.IPManager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +33,7 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -50,10 +47,10 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
             ) {
                 item {
                     AsyncImage(
-                        model = "http://${IPManager.BACKEND_IP}/images/${game?.imagePath}",
+                        model = "http://${IPManager.BACKEND_IP}/images/${game?.url1}",
                         contentDescription = game?.title,
-                        error = painterResource(id = R.drawable.games_image),
-                        placeholder = painterResource(id = R.drawable.games_image),
+                        //error = painterResource(id = R.drawable.games_image),
+                        //placeholder = painterResource(id = R.drawable.games_image),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)

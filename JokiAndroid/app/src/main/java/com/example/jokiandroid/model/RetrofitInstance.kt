@@ -1,15 +1,14 @@
-import com.example.jokiandroid.service.ApiService
 import com.example.jokiandroid.utility.IPManager
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitInstance {
     private val BACKEND_IP = IPManager.BACKEND_IP
     private val BASE_URL = "http://${BACKEND_IP}/"
 
-    fun createApi(token: String? = null): ApiService {
+    fun <T> createApi(service: Class<T>, token: String? = null): T {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -17,7 +16,7 @@ object RetrofitInstance {
         val okHttpClientBuilder = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
 
-        okHttpClientBuilder.addInterceptor { chain ->
+        okHttpClientBuilder.addInterceptor { chain ->0
             val request = chain.request().newBuilder()
             if (!token.isNullOrEmpty()) {
                 request.addHeader("Authorization", "Bearer $token")
@@ -33,6 +32,6 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        return retrofit.create(ApiService::class.java)
+        return retrofit.create(service)
     }
 }

@@ -41,7 +41,7 @@ fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, nav
                 itemsIndexed(games) { index: Int, game: Game ->
                     GameItem(
                         item = game,
-                        onAddToCart = { cartViewModel.addGame(it) },
+//                        onAddToCart = { cartViewModel.addGame(it) },
                         onGameClick = { navController.navigate("game_detail/${game.id}") }
                     )
                 }

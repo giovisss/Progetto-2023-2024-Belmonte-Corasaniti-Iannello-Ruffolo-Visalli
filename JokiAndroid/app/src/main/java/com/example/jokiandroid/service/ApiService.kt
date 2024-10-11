@@ -15,6 +15,9 @@ interface ApiService {
     @GET("api/v1/users/user/library")
     suspend fun getGamesByUser(): Response<List<Game>>
 
+    @GET("api/v1/users/user/cart")
+    suspend fun getUserCart(): Response<String>
+
     data class CollectionModel(val _embedded: Embedded)
     data class Embedded(val modelList: List<GameModel>)
     data class GameModel(val model: Game)
