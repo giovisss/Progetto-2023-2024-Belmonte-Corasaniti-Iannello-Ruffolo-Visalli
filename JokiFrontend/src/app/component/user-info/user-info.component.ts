@@ -22,15 +22,15 @@ export class UserInfoComponent implements OnInit {
   constructor(private keycloakService: KeycloakService, private userService: UserService, private fb: FormBuilder) { }
 
     ngOnInit(): void {
-      // Inizializza il form con i campi e i validatori
+      // Inizializza il form senza contrassegnare i campi come obbligatori
       this.userForm = this.fb.group({
-        username: [null],
-        firstName: [null, Validators.maxLength(50)],
-        lastName: [null, Validators.maxLength(50)],
-        email: [null, [Validators.email]],
-        password: [null, [Validators.required, this.passwordStrengthValidator]],
-        repeatpassword: [null, [Validators.required]]
-      }, { validator: this.passwordsMatchValidator });
+        username: [this.user?.username, Validators.required], // Obbligatorio
+        firstName: [null, Validators.maxLength(50)], // Non è obbligatorio
+        lastName: [null, Validators.maxLength(50)], // Non è obbligatorio
+        email: [null, [Validators.email]], // Non è obbligatorio, ma deve essere un'email valida
+        password: [null, this.passwordStrengthValidator], // Non è obbligatorio, ma deve rispettare la validazione della forza
+        repeatpassword: [null] // Non è obbligatorio
+      }, { validators: this.passwordsMatchValidator });
 
       // Recupera le informazioni dell'utente dal backend
       this.userService.getUserInfo().subscribe(
@@ -40,9 +40,12 @@ export class UserInfoComponent implements OnInit {
           this.user = this.userService.getUser();
 
           // Aggiorna i valori del form con i dati dell'utente
-          this.userForm.patchValue({
-            username: this.user?.username,
-          });
+//           this.userForm.patchValue({
+//             username: this.user?.username,
+//              firstName: this.user?.firstName,
+//             lastName: this.user?.lastName,
+//             email: this.user?.email
+//           });
         },
         error => {
           console.error('Error fetching user data:', error);
@@ -63,7 +66,10 @@ export class UserInfoComponent implements OnInit {
       // - Almeno una lettera maiuscola
       // - Almeno una lettera minuscola
       // - Almeno un simbolo
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{16,}$/;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{5,}$/;
+
+      //Per reimpostare la password semplice a 5 caratteri
+      //const passwordRegex = /^.{5,}$/;
 
       const valid = passwordRegex.test(password);
 
@@ -93,19 +99,27 @@ export class UserInfoComponent implements OnInit {
   }
 
   onSave() {
-    if (this.userForm.valid) {
-      const formData = this.userForm.value;
-      // Invia i dati al backend
-      this.userService.updateUser(formData).subscribe(
+    const formData = this.userForm.value as { [key: string]: any };
+
+    const updatedData = Object.keys(formData).reduce((acc: { [key: string]: any }, key: string) => {
+      if (formData[key] !== null && formData[key] !== '') {
+        acc[key] = formData[key];
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(updatedData).length > 0) {
+      console.log('Updated Form Data:', updatedData);
+      this.userService.updateUser(updatedData).subscribe(
         (response) => {
-          console.log('Utente aggiornato con successo', response);
+          console.log('User updated successfully', response);
         },
         (error) => {
-          console.error('Errore durante l\'aggiornamento dell\'utente', error);
+          console.error('Error updating user', error);
         }
       );
     } else {
-      console.error('Il form non è valido');
+      console.log('No fields to update');
     }
   }
 }
