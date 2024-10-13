@@ -50,7 +50,13 @@ class GameViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val collectionModel = response.body()
                     val games = collectionModel?._embedded?.modelList?.map { it.model } ?: emptyList()
-                    _games.value = games
+
+                    val out = mutableListOf<Game>()
+                    for (game in games) {
+                        out.add(Game(game))
+                    }
+
+                    _games.value = out
                 } else {
                     _error.value = "Errore durante il caricamento dei giochi: ${response.code()}"
                 }
@@ -67,7 +73,7 @@ class GameViewModel : ViewModel() {
                 val response = RetrofitInstance.createApi(ApiService::class.java,token).getGameById(gameId)
                 if (response.isSuccessful) {
                     val entityModel = response.body()
-                    _gameDetails.value = entityModel?.model
+                    _gameDetails.value = entityModel?.model?.let { Game(it) }
                 } else {
                     _error.value = "Errore durante il caricamento del gioco: ${response.code()}"
                     _gameDetails.value = null

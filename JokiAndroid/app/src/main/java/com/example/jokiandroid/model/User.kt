@@ -1,7 +1,5 @@
 package com.example.jokiandroid.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.jokiandroid.utility.Date
 import com.example.jokiandroid.viewmodel.CurrentUserViewModel
 import java.util.UUID
@@ -46,7 +44,7 @@ class User {
     }
 
     override fun toString(): String {
-        if (CurrentUserViewModel.isAdmin.value == true) return "User(id=$id, username='$username', email='$email')"
+        if (CurrentUserViewModel.isAdmin.value == true) return "Admin(id=$id, username='$username', email='$email')"
 
         return "User(id=$id, firstName='$firstName', lastName='$lastName', username='$username', email='$email', birthDate=$birthdate, formattedBirthDate=$formattedBirthDate)"
     }

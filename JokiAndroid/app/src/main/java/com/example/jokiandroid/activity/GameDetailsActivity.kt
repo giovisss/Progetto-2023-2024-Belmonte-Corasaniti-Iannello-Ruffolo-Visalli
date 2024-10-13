@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -47,7 +48,7 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
             ) {
                 item {
                     AsyncImage(
-                        model = "http://${IPManager.BACKEND_IP}/images/${game?.url1}",
+                        model = "${IPManager.BACKEND_IMAGES}/${game?.url1}",
                         contentDescription = game?.title,
                         //error = painterResource(id = R.drawable.games_image),
                         //placeholder = painterResource(id = R.drawable.games_image),
