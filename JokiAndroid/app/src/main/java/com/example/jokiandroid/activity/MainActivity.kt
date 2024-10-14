@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JokiAndroidTheme {
                 Surface {
-                    MainScreen(authManager, gameViewModel, cartRepository)
+                    MainScreen(authManager, gameViewModel, cartRepository, currentUserViewModel)
                 }
             }
         }
@@ -100,12 +100,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository) {
+fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, currentUserViewModel: CurrentUserViewModel) {
     val navController = rememberNavController()
     val cartViewModel = remember { CartViewModel(TokenManager.getToken() ?: "") }
     val wishlistViewModel = remember { WishlistViewModel() }
 
-    BasicUI(navController = navController, authManager = authManager)
+    BasicUI(navController = navController, authManager = authManager, currentUserViewModel = currentUserViewModel)
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { SetGameListContent(gameViewModel, cartViewModel, navController) }
@@ -117,6 +117,13 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepos
         }
         composable("cart") { SetCartContent(navController, cartViewModel) }
         composable("login") { SetLoginContent(navController) }
+        composable("edit_games") { SetEditGameContent(navController, gameViewModel) }
+
+        composable("edit_games/{gameId}") { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId")
+            gameId?.let { EditGamesActivity(gameId = it, gameViewModel = gameViewModel, navController = navController) }
+        }
+
         composable("game_detail/{gameId}") { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId")
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }

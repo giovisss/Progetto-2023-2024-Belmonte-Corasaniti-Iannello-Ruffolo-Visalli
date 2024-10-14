@@ -43,6 +43,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
+import com.example.jokiandroid.viewmodel.CurrentUserViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,13 +59,14 @@ object SideBarActivity {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicUI(navController: NavController, authManager: AuthManager) {
+fun BasicUI(navController: NavController, authManager: AuthManager, currentUserViewModel: CurrentUserViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(DrawerValue.Closed) //crea e ricorda lo stato del drawer
     val coroutineScope = rememberCoroutineScope() //coroutine ( eseguire operazioni asincrone), questo crea un coroutineScope che è un contesto di esecuzione delle coroutine
     val localContext = LocalContext.current
     val composable by SideBarActivity.composable.observeAsState()
     val selectedItem = remember { mutableStateOf("home") } // Stato per l'elemento selezionato
+    val isAdmin by currentUserViewModel.isAdmin.observeAsState()
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -88,26 +90,36 @@ fun BasicUI(navController: NavController, authManager: AuthManager) {
                     selected = selectedItem.value == "home",
                     onClick = { selectPage("home", coroutineScope, drawerState, navController, selectedItem) }
                 )
-                NavigationDrawerItem(
-                    label = { Text(text = "La tua Libreria") },
-                    selected = selectedItem.value == "libreria",
-                    onClick = { selectPage("libreria", coroutineScope, drawerState, navController, selectedItem) }
-                )
-                NavigationDrawerItem(
-                    label = { Text(text = "Le tue wishlists") },
-                    selected = selectedItem.value == "Impostazioni",
-                    onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
-                )
-                NavigationDrawerItem(
-                    label = { Text(text = "Impostazioni") },
-                    selected = selectedItem.value == "Impostazioni",
-                    onClick = { /*TODO*/ }
-                )
-                NavigationDrawerItem(
-                    label = { Text(text = "About") },
-                    selected = selectedItem.value == "about",
-                    onClick = { /*TODO*/ }
-                )
+
+                if(isAdmin == true) {
+                    NavigationDrawerItem(
+                        label = { Text(text = "Gestione Giochi") },
+                        selected = selectedItem.value == "edit_games",
+                        onClick = { selectPage("edit_games", coroutineScope, drawerState, navController, selectedItem) }
+                    )
+                }
+                else {
+                    NavigationDrawerItem(
+                        label = { Text(text = "La tua Libreria") },
+                        selected = selectedItem.value == "libreria",
+                        onClick = { selectPage("libreria", coroutineScope, drawerState, navController, selectedItem) }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text(text = "Le tue wishlists") },
+                        selected = selectedItem.value == "Impostazioni",
+                        onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text(text = "Impostazioni") },
+                        selected = selectedItem.value == "Impostazioni",
+                        onClick = { /*TODO*/ }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text(text = "About") },
+                        selected = selectedItem.value == "about",
+                        onClick = { /*TODO*/ }
+                    )
+                }
             }
         }
     ) {
@@ -204,6 +216,13 @@ fun SetSingleWishlistContent() {
 fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
     SideBarActivity.setContent {
         CartActivity(navController, cartViewModel)
+    }
+}
+
+@Composable
+fun SetEditGameContent(navController: NavController, gameViewModel: GameViewModel, gameId: String = "") {
+    SideBarActivity.setContent {
+        EditGamesActivity(navController, gameViewModel, gameId)
     }
 }
 

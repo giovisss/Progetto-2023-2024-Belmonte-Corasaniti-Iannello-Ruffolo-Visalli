@@ -89,4 +89,5 @@ dependencies {
     implementation(libs.converter.gson)
 
     implementation(libs.jwtdecode)
+    implementation (libs.coil.compose.v210)
 }
