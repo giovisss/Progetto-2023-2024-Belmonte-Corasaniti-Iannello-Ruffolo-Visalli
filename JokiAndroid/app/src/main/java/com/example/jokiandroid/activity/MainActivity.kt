@@ -117,7 +117,13 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepos
         }
         composable("cart") { SetCartContent(navController, cartViewModel) }
         composable("login") { SetLoginContent(navController) }
-        composable("editGames") { SetEditGameContent(navController) }
+        composable("edit_games") { SetEditGameContent(navController, gameViewModel) }
+
+        composable("edit_games/{gameId}") { backStackEntry ->
+            val gameId = backStackEntry.arguments?.getString("gameId")
+            gameId?.let { EditGamesActivity(gameId = it, gameViewModel = gameViewModel, navController = navController) }
+        }
+
         composable("game_detail/{gameId}") { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId")
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }

@@ -94,8 +94,8 @@ fun BasicUI(navController: NavController, authManager: AuthManager, currentUserV
                 if(isAdmin == true) {
                     NavigationDrawerItem(
                         label = { Text(text = "Gestione Giochi") },
-                        selected = selectedItem.value == "editGames",
-                        onClick = { selectPage("editGames", coroutineScope, drawerState, navController, selectedItem) }
+                        selected = selectedItem.value == "edit_games",
+                        onClick = { selectPage("edit_games", coroutineScope, drawerState, navController, selectedItem) }
                     )
                 }
                 else {
@@ -220,9 +220,9 @@ fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
 }
 
 @Composable
-fun SetEditGameContent(navController: NavController) {
+fun SetEditGameContent(navController: NavController, gameViewModel: GameViewModel, gameId: String = "") {
     SideBarActivity.setContent {
-        EditGamesActivity(navController)
+        EditGamesActivity(navController, gameViewModel, gameId)
     }
 }
 
