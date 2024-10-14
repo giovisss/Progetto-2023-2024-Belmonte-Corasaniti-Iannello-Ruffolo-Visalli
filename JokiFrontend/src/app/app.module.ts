@@ -29,7 +29,6 @@ import { EditGameComponent } from './component/edit-game/edit-game.component';
 import { ReviewComponent } from './component/review/review.component';
 import { EditUserInfoAdminComponent } from "./component/edit-user-info-admin/edit-user-info-admin.component";
 import { CheckoutComponent } from './component/checkout/checkout.component';
-import { ChatComponent } from './component/chat/chat.component';
 
 // Funzione per l'inizializzazione di Keycloak
 function initializeKeycloak(keycloak: KeycloakInitService) {
@@ -54,8 +53,7 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     EditGameComponent,
     ReviewComponent,
     EditUserInfoAdminComponent,
-    CheckoutComponent,
-    ChatComponent
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-
 export class MessageService {
   private stompClient!: Client;
   private messagesSubject = new BehaviorSubject<{ type: string, content: string }[]>([]);
@@ -14,7 +13,7 @@ export class MessageService {
 
   constructor(private keycloakService: KeycloakService) {}
 
-  connect() {
+  connect(userId: string, adminId: string) {
     this.keycloakService.getToken().then(token => {
       this.stompClient = new Client({
         brokerURL: 'ws://localhost:8081/ws',
@@ -31,7 +30,9 @@ export class MessageService {
 
       this.stompClient.onConnect = (frame) => {
         console.log('Connected: ' + frame);
-        this.stompClient.subscribe('/topic/ping', (message: Message) => {
+        // Sottoscrivi al topic specifico per la chat
+        // da chi ricevo
+        this.stompClient.subscribe(`/topic/chat/${userId}_${adminId}`, (message: Message) => {
           console.log('Received: ' + message.body);
           this.messagesSubject.next([...this.messagesSubject.getValue(), { type: 'received', content: message.body }]);
         });
@@ -54,12 +55,12 @@ export class MessageService {
     }
   }
 
-  sendMessage(message: string) {
+  sendMessage(userId: string, adminId: string, message: string) {
     if (message.trim()) {
       this.keycloakService.getToken().then(token => {
         this.stompClient.publish({
-          destination: '/app/ping',
-          body: message,
+          destination: `/app/chat/${userId}/${adminId}`, // dove invio
+          body: JSON.stringify({ content: message }),
           headers: {
             Authorization: `Bearer ${token}`
           }

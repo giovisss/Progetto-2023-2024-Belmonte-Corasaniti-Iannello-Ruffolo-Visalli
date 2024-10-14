@@ -12,7 +12,6 @@ import {AuthGuard} from "./guard/auth.guard";
 import {EditGameComponent} from "./component/edit-game/edit-game.component";
 import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-user-info-admin.component";
 import { CheckoutComponent } from './component/checkout/checkout.component';
-import { ChatComponent } from './component/chat/chat.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,7 +19,7 @@ const routes: Routes = [
   { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   // { path: 'api/admin/personal', component: LoginComponent },
   // { path: 'api/user/personal', component: LoginComponent },
-  { path: 'login', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
   { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
   { path: 'library', component: LibraryComponent, canActivate: [AuthGuard]},
   { path: 'wishlists', component: WishlistsComponent, canActivate: [AuthGuard]},
@@ -29,7 +28,6 @@ const routes: Routes = [
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'chat', component: ChatComponent },
   { path: '**', redirectTo: 'home' }
 ];
 

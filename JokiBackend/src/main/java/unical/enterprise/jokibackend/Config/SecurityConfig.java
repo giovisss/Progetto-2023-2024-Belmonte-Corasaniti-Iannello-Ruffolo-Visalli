@@ -41,7 +41,11 @@ class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/ */
                         .requestMatchers(HttpMethod.GET, prefix+"/reviews/**").permitAll() // Permetti tutte le GET a /reviews/
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
-                        .requestMatchers( "/ws").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, prefix+"/chat/admin/**").hasRole("client_admin")       
+                        .requestMatchers(HttpMethod.GET, prefix+"/chat/admin").hasRole("client_user")
+                        .requestMatchers("/ws/**").permitAll() // Permetti l'accesso al WebSocket
+
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
                         // .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
         http

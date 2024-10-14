@@ -1,13 +1,26 @@
-import { Component } from '@angular/core';
-import {UserService} from "../../services/user.service";
+import { Component, OnDestroy } from '@angular/core';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  constructor(private userService:UserService) {}
+export class LoginComponent implements OnDestroy {
 
+  constructor(private adminService: AdminService) {}
+
+  ngOnDestroy() {
+    if (this.adminService.isAdmin) {
+      this.adminService.addAdminToList().subscribe(
+        response => {
+          console.log('Admin aggiunto con successo:', response);
+        },
+        error => {
+          console.error('Errore durante l\'aggiunta dell\'admin:', error);
+        }
+      );
+    }
+  }
 
 }

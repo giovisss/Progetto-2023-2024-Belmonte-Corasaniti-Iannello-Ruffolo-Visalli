@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MessageService } from './services/message.service';
+import { KeycloakService } from 'keycloak-angular';
+import { AdminService } from './services/admin.service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +12,8 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'JokiFrontend';
   public message: string = '';
   public messages: { type: string, content: string }[] = [];
+  public userId: string = 'user123';
+  public adminId: string = 'admin123';
 
   constructor(private messageService: MessageService) {}
 
@@ -20,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     // Connetti il servizio
-    this.messageService.connect();
+    this.messageService.connect(this.userId, this.adminId); // Passa gli ID utente e admin
   }
 
   ngOnDestroy() {
@@ -30,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (this.message.trim()) {
-      this.messageService.sendMessage(this.message); // Invia il messaggio tramite il servizio
+      this.messageService.sendMessage(this.userId, this.adminId, this.message); // Invia il messaggio tramite il servizio
       this.message = ''; // Resetta il campo input dopo l'invio
     }
   }
