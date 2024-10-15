@@ -1,21 +1,27 @@
 package com.example.jokiandroid.model
 
+import java.util.Date
+
 class Game {
     var id: String
     var title: String
-    var price: Double
     var description: String
+    var price: Double
     var imagePath: String
-    var stock: Int
     var genre: String
     var developer: String
+    var publisher: String
+    var releaseDate: Date
+    var stock: Int
+    var admin : Admin
+
 
     var url1: String
     var url2: String
     var url3: String
 
     constructor(){
-        this.id = "0"
+        this.id = "id"
         this.title = "title"
         this.price = 0.0
         this.description = "description"
@@ -23,6 +29,9 @@ class Game {
         this.stock = 0
         this.genre = "genre"
         this.developer = "developer"
+        this.publisher = "publisher"
+        this.releaseDate = Date()
+        this.admin = Admin("id", "username", "email")
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")
@@ -37,12 +46,15 @@ class Game {
         this.stock = game.stock
         this.genre = game.genre
         this.developer = game.developer
+        this.publisher = game.publisher
+        this.releaseDate = game.releaseDate
+        this.admin = game.admin
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")
     }
 
-    constructor(id: String, title: String, price: Double, description: String, imagePath: String, stock: Int, genre: String, developer: String) {
+    constructor(id: String, title: String, price: Double, description: String, imagePath: String, stock: Int, genre: String, developer: String, publisher: String, releaseDate: Date, admin: Admin) {
         this.id = id
         this.title = title
         this.price = price
@@ -51,6 +63,9 @@ class Game {
         this.stock = stock
         this.genre = genre
         this.developer = developer
+        this.publisher = publisher
+        this.releaseDate = releaseDate
+        this.admin = admin
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")

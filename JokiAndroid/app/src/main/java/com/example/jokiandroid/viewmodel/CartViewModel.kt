@@ -25,18 +25,19 @@ class CartViewModel(token: String) : ViewModel() {
     val isLoading: LiveData<Boolean> get() = _isLoading
     val error: LiveData<String?> get() = _error
 
-    fun loadCart() {
+    fun loadCart(){
         viewModelScope.launch {
             _isLoading.value = true
-            Log.d("CartViewModel", "getCart() called")
             try {
-                _cartItems.value = cartRepository.getUserCart()
-                _error.value = null
+                val cartItems = cartRepository.getUserCart()
+                Log.d("CartViewModel", "Received cart items: $cartItems")
+                _cartItems.value = cartItems
+                Log.d("CartViewModel", "Updated _cartItems: ${_cartItems.value}")
             } catch (e: Exception) {
-                _error.value = "Failed to load cart: ${e.message}"
-            } finally {
-                _isLoading.value = false
+                Log.e("CartViewModel", "Error loading cart", e)
+                _error.value = e.message
             }
+            _isLoading.value = false
         }
     }
 
