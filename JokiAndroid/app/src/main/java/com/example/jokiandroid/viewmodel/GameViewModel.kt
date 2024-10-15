@@ -61,6 +61,7 @@ class GameViewModel : ViewModel() {
                     _error.value = "Errore durante il caricamento dei giochi: ${response.code()}"
                 }
             } catch (e: Exception) {
+                Log.e("fetchGames", "Error: ${e.message}")
                 _error.value = "Errore durante il caricamento dei giochi: ${e.message}"
             }
         }
@@ -107,6 +108,23 @@ class GameViewModel : ViewModel() {
 //                _error.value = "Errore durante il caricamento dei giochi dell'utente"
 //            }
             _isLoading.value = false
+        }
+    }
+
+    fun updateGame(game: Game) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.createApi(ApiService::class.java,TokenManager.getToken()).updateGame(game.id, game)
+                if (response.isSuccessful) {
+                    _error.value = "Gioco aggiornato con successo"
+                    fetchGames()
+                } else {
+                    _error.value = "Errore durante l'aggiornamento del gioco: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                Log.e("GameViewModel", "Error updating game", e)
+                _error.value = "Errore durante l'aggiornamento del gioco: ${e.message}"
+            }
         }
     }
 

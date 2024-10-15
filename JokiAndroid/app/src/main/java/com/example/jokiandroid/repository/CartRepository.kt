@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class CartRepository(private val token: String) {
-    private val api: ApiService = RetrofitInstance.createApi(ApiService::class.java,token)
+    private val api: ApiService = RetrofitInstance.createApi(ApiService::class.java, token)
     private val gson = Gson()
 
     suspend fun getUserCart(): List<Game> {
@@ -31,18 +31,18 @@ class CartRepository(private val token: String) {
                         val type = object : TypeToken<List<GameResponse>>() {}.type
                         val gameResponses: List<GameResponse> = gson.fromJson(jsonString, type)
 
-                        gameResponses.map { gameResponse ->
+                        val games = gameResponses.map { gameResponse ->
                             Game(
                                 id = gameResponse.id,
                                 title = gameResponse.title,
-                                description = gameResponse.description,
                                 price = gameResponse.price,
+                                description = gameResponse.description,
                                 imagePath = gameResponse.imagePath,
+                                stock = gameResponse.stock,
                                 genre = gameResponse.genre,
                                 developer = gameResponse.developer,
                                 publisher = gameResponse.publisher,
-                                releaseDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(gameResponse.releaseDate),
-                                stock = gameResponse.stock,
+                                releaseDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(gameResponse.releaseDate).toString(),
                                 admin = Admin(
                                     id = gameResponse.admin.id,
                                     username = gameResponse.admin.username,
@@ -50,6 +50,7 @@ class CartRepository(private val token: String) {
                                 )
                             )
                         }
+                        games
                     } catch (e: Exception) {
                         Log.e("CartRepository", "Error parsing JSON", e)
                         emptyList()

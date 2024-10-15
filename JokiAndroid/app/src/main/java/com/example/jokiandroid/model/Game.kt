@@ -1,27 +1,27 @@
 package com.example.jokiandroid.model
 
-import java.util.Date
+import com.example.jokiandroid.utility.Date
 
 class Game {
     var id: String
     var title: String
-    var description: String
     var price: Double
+    var description: String
     var imagePath: String
+    var stock: Int
     var genre: String
     var developer: String
     var publisher: String
-    var releaseDate: Date
-    var stock: Int
-    var admin : Admin
-
+    var admin: Admin
+    var releaseDate: String
+    var formattedReleaseDate: Date
 
     var url1: String
     var url2: String
     var url3: String
 
     constructor(){
-        this.id = "id"
+        this.id = "0"
         this.title = "title"
         this.price = 0.0
         this.description = "description"
@@ -30,8 +30,10 @@ class Game {
         this.genre = "genre"
         this.developer = "developer"
         this.publisher = "publisher"
-        this.releaseDate = Date()
-        this.admin = Admin("id", "username", "email")
+        this.admin = Admin("0", "admin", "admin")
+        this.releaseDate = "Jan 1, 1000, 12:00:00 AM"
+        this.formattedReleaseDate = Date()
+
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")
@@ -47,14 +49,16 @@ class Game {
         this.genre = game.genre
         this.developer = game.developer
         this.publisher = game.publisher
-        this.releaseDate = game.releaseDate
         this.admin = game.admin
+        this.releaseDate = game.releaseDate
+        this.formattedReleaseDate = Date(this.releaseDate)
+
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")
     }
 
-    constructor(id: String, title: String, price: Double, description: String, imagePath: String, stock: Int, genre: String, developer: String, publisher: String, releaseDate: Date, admin: Admin) {
+    constructor(id: String, title: String, price: Double, description: String, imagePath: String, stock: Int, genre: String, developer: String, publisher: String, releaseDate: String, admin: Admin = Admin("0", "admin", "admin")) {
         this.id = id
         this.title = title
         this.price = price
@@ -64,14 +68,16 @@ class Game {
         this.genre = genre
         this.developer = developer
         this.publisher = publisher
-        this.releaseDate = releaseDate
         this.admin = admin
+        this.releaseDate = releaseDate
+        this.formattedReleaseDate = Date(this.releaseDate)
+
         this.url1 = imagePath.replace(".jpg", "_1.jpg")
         this.url2 = imagePath.replace(".jpg", "_2.jpg")
         this.url3 = imagePath.replace(".jpg", "_3.jpg")
     }
 
     override fun toString(): String {
-        return "Game(id=$id, title='$title', price=$price, description='$description', imagePath='$imagePath', stock=$stock, genre='$genre', developer='$developer', url1='$url1', url2='$url2', url3='$url3')"
+        return "Game(id=$id, title='$title', price=$price, description='$description', imagePath='$imagePath', stock=$stock, genre='$genre', developer='$developer', publisher='$publisher', admin=$admin, releaseDate=$formattedReleaseDate)"
     }
 }
