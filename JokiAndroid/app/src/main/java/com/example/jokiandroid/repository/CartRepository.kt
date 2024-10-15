@@ -5,13 +5,10 @@ import com.example.jokiandroid.model.Admin
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.service.ApiService
 import com.google.gson.Gson
-import com.google.gson.annotations.JsonAdapter
-import com.google.gson.internal.bind.DateTypeAdapter
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class CartRepository(private val token: String) {
     private val api: ApiService = RetrofitInstance.createApi(ApiService::class.java, token)
@@ -24,7 +21,7 @@ class CartRepository(private val token: String) {
             if (response.isSuccessful) {
                 val responseBody: List<Game>? = response.body()
                 if (responseBody != null) {
-                    val jsonString = responseBody.toString()
+                    val jsonString = gson.toJson(responseBody)
                     Log.d("CartRepository", "Response body: $jsonString")
 
                     try {
@@ -42,7 +39,7 @@ class CartRepository(private val token: String) {
                                 genre = gameResponse.genre,
                                 developer = gameResponse.developer,
                                 publisher = gameResponse.publisher,
-                                releaseDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(gameResponse.releaseDate).toString(),
+                                releaseDate = gameResponse.releaseDate,
                                 admin = Admin(
                                     id = gameResponse.admin.id,
                                     username = gameResponse.admin.username,
@@ -51,7 +48,7 @@ class CartRepository(private val token: String) {
                             )
                         }
                         games
-                    } catch (e: Exception) {
+                    } catch (e: JsonSyntaxException) {
                         Log.e("CartRepository", "Error parsing JSON", e)
                         emptyList()
                     }
@@ -76,7 +73,6 @@ data class GameResponse(
     val genre: String,
     val developer: String,
     val publisher: String,
-    @JsonAdapter(DateTypeAdapter::class)
     val releaseDate: String,
     val stock: Int,
     val admin: AdminResponse
