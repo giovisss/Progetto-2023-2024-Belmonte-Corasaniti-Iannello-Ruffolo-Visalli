@@ -31,17 +31,22 @@ public class ChatController {
         return "Pong: " + message;
     }
 
-    @MessageMapping("/chat/{userId}/{adminId}") 
-    @SendTo("/topic/chat/{userId}_{adminId}")
-    public Map<String, Object> sendMessage(Map<String, Object> message, @DestinationVariable String userId, @DestinationVariable String adminId) {
+    // Invia un messaggio da un utente ad un admin
+    @MessageMapping("/chat/user-to-admin/{userId}/{adminId}") // ricevo da
+    @SendTo("/topic/chat/{adminId}_{userId}") // rispondo a
+    public Map<String, Object> sendMessageToAdmin(Map<String, Object> message, @DestinationVariable String userId, @DestinationVariable String adminId) {
         message.put("timestamp", LocalDateTime.now().toString()); // Aggiungi timestamp
-    
-        // Rimuove l'admin dalla lista una volta che la connessione è stabilita
-        UUID adminUUID = UUID.fromString(adminId);
-        adminIds.remove(adminUUID);
-    
         return message;
     }
+
+    // Invia un messaggio da un admin ad un utente
+    @MessageMapping("/chat/admin-to-user/{userId}/{adminId}") // ricevo da
+    @SendTo("/topic/chat/{userId}_{adminId}") // rispondo a
+    public Map<String, Object> sendMessageToUser(Map<String, Object> message, @DestinationVariable String userId, @DestinationVariable String adminId) {
+        message.put("timestamp", LocalDateTime.now().toString()); // Aggiungi timestamp
+        return message;
+    }
+
 
     // Aggiunge un admin alla lista di quelli disponibili
     @PostMapping("/chat/admin")
