@@ -1,5 +1,6 @@
 package com.example.jokiandroid.viewmodel
 
+import TokenManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,11 +11,11 @@ import com.example.jokiandroid.repository.CartRepository
 import kotlinx.coroutines.launch
 
 //classe per gestire lo stato del carrello aggiungendo e rimuovendo giochi
-class CartViewModel(token: String) : ViewModel() {
+class CartViewModel() : ViewModel() {
 
-    private val cartRepository = CartRepository(token)
+    private val cartRepository = CartRepository()
 
-    private val _cartItems = MutableLiveData<List<Game>>(emptyList())
+    private val _cartItems = MutableLiveData<List<Game>>()
     private val _totalPrice = MutableLiveData<Double>(0.0)
     private val _isLoading = MutableLiveData(false)
     private val _error = MutableLiveData<String?>()
@@ -29,10 +30,16 @@ class CartViewModel(token: String) : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val cartItems = cartRepository.getUserCart()
-                Log.d("CartViewModel", "Received cart items: $cartItems")
-                _cartItems.value = cartItems
-                Log.d("CartViewModel", "Updated _cartItems: ${_cartItems.value}")
+                val cartobj = cartRepository.getUserCart()
+                val out = mutableListOf<Game>()
+                for (game in cartobj) {
+                    Log.d("CartViewModel", "Received cart game: $game")
+                    out.add(Game(game))
+                }
+
+                Log.d("CartViewModel", "Received cart items: $out")
+                _cartItems.value = out
+                Log.d("CartViewModel", "Updated static cartItems: ${cartItems.value?.size}")
             } catch (e: Exception) {
                 Log.e("CartViewModel", "Error loading cart", e)
                 _error.value = e.message

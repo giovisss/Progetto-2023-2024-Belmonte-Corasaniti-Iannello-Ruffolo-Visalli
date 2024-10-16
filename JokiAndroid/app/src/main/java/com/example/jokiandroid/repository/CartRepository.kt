@@ -1,5 +1,6 @@
 package com.example.jokiandroid.repository
 
+import TokenManager
 import android.util.Log
 import com.example.jokiandroid.model.Admin
 import com.example.jokiandroid.model.Game
@@ -10,13 +11,12 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CartRepository(private val token: String) {
-    private val api: ApiService = RetrofitInstance.createApi(ApiService::class.java, token)
+class CartRepository() {
     private val gson = Gson()
 
     suspend fun getUserCart(): List<Game> {
         return withContext(Dispatchers.IO) {
-            val response = api.getUserCart()
+            val response = RetrofitInstance.createApi(ApiService::class.java, TokenManager.getToken()).getUserCart()
             Log.d("CartRepository", "Response code: ${response.code()}")
             if (response.isSuccessful) {
                 val responseBody: List<Game>? = response.body()

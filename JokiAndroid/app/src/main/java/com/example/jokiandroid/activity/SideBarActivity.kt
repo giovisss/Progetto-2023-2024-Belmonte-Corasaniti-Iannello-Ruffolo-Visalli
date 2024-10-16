@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
@@ -67,6 +68,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager, currentUserV
     val composable by SideBarActivity.composable.observeAsState()
     val selectedItem = remember { mutableStateOf("home") } // Stato per l'elemento selezionato
     val isAdmin by currentUserViewModel.isAdmin.observeAsState()
+    val cartViewModel = CartViewModel()
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -150,7 +152,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager, currentUserV
                         }
                     },
                     actions = {
-                        IconButton(onClick = { navigateToCart(navController, CartViewModel(TokenManager.getToken()?:"")) }) {
+                        IconButton(onClick = { navigateToCart(navController, cartViewModel) }) {
                             Icon(
                                 imageVector = Icons.Filled.ShoppingCart,
                                 contentDescription = "Cart"
@@ -215,7 +217,7 @@ fun SetSingleWishlistContent() {
 @Composable
 fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
     SideBarActivity.setContent {
-        CartActivity(navController, cartViewModel)
+        CartActivity(navController, cartViewModel, true)
     }
 }
 
@@ -227,6 +229,7 @@ fun SetEditGameContent(navController: NavController, gameViewModel: GameViewMode
 }
 
 fun navigateToCart(navController: NavController, cartViewModel: CartViewModel) {
-    cartViewModel.loadCart() // Carica i dati del carrello
     navController.navigate("cart")
+    cartViewModel.loadCart() // Carica i dati del carrello
+
 }

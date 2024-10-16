@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         currentUserViewModel = ViewModelProvider(this)[CurrentUserViewModel::class.java]
 
         // Inizializziamo il CartRepository
-        cartRepository = CartRepository(TokenManager.getToken() ?: "")
+        cartRepository = CartRepository()
 
 //        if (TokenManager.getToken() == null) {
 //            authManager.startAuthorization(this)
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, currentUserViewModel: CurrentUserViewModel) {
     val navController = rememberNavController()
-    val cartViewModel = remember { CartViewModel(TokenManager.getToken() ?: "") }
+    val cartViewModel = remember { CartViewModel() }
     val wishlistViewModel = remember { WishlistViewModel() }
 
     BasicUI(navController = navController, authManager = authManager, currentUserViewModel = currentUserViewModel)
@@ -128,5 +128,6 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepos
             val gameId = backStackEntry.arguments?.getString("gameId")
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }
         }
+
     }
 }
