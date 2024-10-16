@@ -1,0 +1,14 @@
+<div>
+    <h2>User Chat</h2>
+    <div id="chat-box" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; margin-bottom: 10px; padding: 10px;">
+      <div *ngFor="let msg of messages">
+        <p><strong>Admin:</strong> {{ msg.content }} <em>({{ msg.timestamp }})</em></p>
+      </div>
+      <div *ngIf="message">
+        <p><strong>Utente:</strong> {{ message }} <em>(tuo messaggio)</em></p>
+      </div>
+    </div>
+    <input [(ngModel)]="message" placeholder="Scrivi un messaggio..." />
+    <button (click)="sendMessage()">Invia</button>
+  </div>
+  

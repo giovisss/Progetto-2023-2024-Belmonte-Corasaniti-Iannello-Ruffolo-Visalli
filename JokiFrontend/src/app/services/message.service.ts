@@ -1,75 +1,79 @@
 import { Injectable } from '@angular/core';
-import { Client, Message } from '@stomp/stompjs';
-import { KeycloakService } from 'keycloak-angular';
+import { Client } from '@stomp/stompjs';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  private stompClient!: Client;
-  private messagesSubject = new BehaviorSubject<{ type: string, content: string }[]>([]);
-  public messages$ = this.messagesSubject.asObservable();
+  private userClient!: Client;
+  private adminClient!: Client;
+  private userMessages = new BehaviorSubject<{ content: string, timestamp: string }[]>([]);
+  private adminMessages = new BehaviorSubject<{ content: string, timestamp: string }[]>([]);
 
-  constructor(private keycloakService: KeycloakService) {}
+  private userId = 'ab049c2a-d9f1-44c7-a64c-579d8a72f434';
+  private adminId = '4bba16da-998d-4582-b1bb-3ee3b62602db';
 
-  connect(userId: string, adminId: string) {
-    this.keycloakService.getToken().then(token => {
-      this.stompClient = new Client({
-        brokerURL: 'ws://localhost:8081/ws',
-        connectHeaders: {
-          Authorization: `Bearer ${token}`
-        },
-        debug: (str) => {
-          console.log(str);
-        },
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-      });
+  constructor() {
+    this.initializeUserClient();
+    this.initializeAdminClient();
+  }
 
-      this.stompClient.onConnect = (frame) => {
-        console.log('Connected: ' + frame);
-        // Sottoscrivi al topic specifico per la chat
-        // da chi ricevo
-        this.stompClient.subscribe(`/topic/chat/${userId}_${adminId}`, (message: Message) => {
-          console.log('Received: ' + message.body);
-          this.messagesSubject.next([...this.messagesSubject.getValue(), { type: 'received', content: message.body }]);
+  private initializeUserClient() {
+    this.userClient = new Client({
+      brokerURL: 'ws://localhost:8081/ws',
+      onConnect: () => {
+        console.log('User connected');
+        this.userClient.subscribe(`/topic/chat/${this.userId}_${this.adminId}`, message => {
+          const messageContent = JSON.parse(message.body);
+          this.userMessages.next([...this.userMessages.getValue(), messageContent]);
         });
-      };
-
-      this.stompClient.onStompError = (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
-      };
-
-      this.stompClient.activate();
-    }).catch(err => {
-      console.error('Error fetching token', err);
+      },
     });
+    this.userClient.activate();
   }
 
-  disconnect() {
-    if (this.stompClient) {
-      this.stompClient.deactivate();
-    }
-  }
-
-  sendMessage(userId: string, adminId: string, message: string) {
-    if (message.trim()) {
-      this.keycloakService.getToken().then(token => {
-        this.stompClient.publish({
-          destination: `/app/chat/${userId}/${adminId}`, // dove invio
-          body: JSON.stringify({ content: message }),
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+  private initializeAdminClient() {
+    this.adminClient = new Client({
+      brokerURL: 'ws://localhost:8081/ws',
+      onConnect: () => {
+        console.log('Admin connected');
+        this.adminClient.subscribe(`/topic/chat/${this.adminId}_${this.userId}`, message => {
+          const messageContent = JSON.parse(message.body);
+          this.adminMessages.next([...this.adminMessages.getValue(), messageContent]);
         });
-        console.log('Sent message: ' + message);
-        this.messagesSubject.next([...this.messagesSubject.getValue(), { type: 'sent', content: message }]);
-      }).catch(err => {
-        console.error('Error fetching token for message', err);
+      },
+    });
+    this.adminClient.activate();
+  }
+
+  UserSendsToAdmin(message: string) {
+    if (this.userClient.connected) {
+      this.userClient.publish({
+        destination: `/app/chat/user-to-admin/${this.userId}/${this.adminId}`,
+        body: JSON.stringify({ content: message })
       });
+    } else {
+      console.error('User client not connected');
     }
+  }
+
+  AdminSendsToUser(message: string) {
+    if (this.adminClient.connected) {
+      this.adminClient.publish({
+        destination: `/app/chat/admin-to-user/${this.userId}/${this.adminId}`,
+        body: JSON.stringify({ content: message })
+      });
+    } else {
+      console.error('Admin client not connected');
+    }
+  }
+
+  getUserMessages() {
+    return this.userMessages.asObservable();
+  }
+
+  getAdminMessages() {
+    return this.adminMessages.asObservable();
   }
 }

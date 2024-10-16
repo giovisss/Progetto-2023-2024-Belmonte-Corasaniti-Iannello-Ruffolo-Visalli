@@ -12,6 +12,8 @@ import {AuthGuard} from "./guard/auth.guard";
 import {EditGameComponent} from "./component/edit-game/edit-game.component";
 import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-user-info-admin.component";
 import { CheckoutComponent } from './component/checkout/checkout.component';
+import { UserChatComponent } from './component/user-chat/user-chat.component';
+import { AdminChatComponent } from './component/admin-chat/admin-chat.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,7 +30,9 @@ const routes: Routes = [
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'about', component: AboutComponent },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'home' },
+  { path: 'userchat', component: UserChatComponent },
+  { path: 'adminchat', component: AdminChatComponent }
 ];
 
 @NgModule({
