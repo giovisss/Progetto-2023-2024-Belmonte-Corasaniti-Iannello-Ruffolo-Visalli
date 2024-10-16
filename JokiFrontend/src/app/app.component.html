@@ -1,39 +1,38 @@
-<mat-sidenav-container class="sidenav-container">
-  <!-- Barra laterale (sidenav) -->
-  <mat-sidenav #sidenav mode="side" class="chat-sidenav" [opened]="false">
-    <div class="chat-container">
-      <h2 class="chat-title">WebSocket Chat</h2>
-      
-      <div class="message-container">
-        <!-- Cicla su tutti i messaggi e mostrali -->
-        <div *ngFor="let msg of messages" 
-             [ngClass]="{'sent-message': msg.type === 'sent', 'received-message': msg.type === 'received'}">
-          <strong *ngIf="msg.type === 'sent'">Tu: </strong>
-          <strong *ngIf="msg.type === 'received'">Server: </strong>
-          {{ msg.content }}
-        </div>
-      </div>      
-      
-      <div class="input-container">
-        <input
-          type="text"
-          placeholder="Scrivi un messaggio..."
-          [(ngModel)]="message"
-          (keydown.enter)="sendMessage()"
-        />
-        <button (click)="sendMessage()">Invia</button>
-      </div>
-    </div>
-  </mat-sidenav>
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+  <link rel="canonical" href="https://https://demo.themesberg.com/landwind/" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joki - Commerce</title>
 
-  <!-- Contenuto principale della pagina -->
-  <mat-sidenav-content>
-    <app-header></app-header>
-    <router-outlet></router-outlet>
-    <app-footer></app-footer>
-    <!-- Bottone per aprire la chat -->
-    <button mat-button (click)="sidenav.toggle()" class="chat-toggle-button">
-      {{ sidenav.opened ? 'Chiudi Chat' : 'Apri Chat' }}
-    </button>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  <!-- Meta SEO -->
+  <meta name="title" content="Landwind - Tailwind CSS Landing Page">
+  <meta name="description" content="Get started with a free and open-source landing page built with Tailwind CSS and the Flowbite component library.">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  <meta name="author" content="Themesberg">
+
+  <!-- Social media share -->
+  <meta property="og:title" content="Joki Commerce">
+  <meta property="og:site_name" content=Themesberg>
+  <meta property="og:url" content="http://localhost">
+  <meta property="og:description" content="Get started with a free and open-source landing page for Tailwind CSS built with the Flowbite component library featuring dark mode, hero sections, pricing cards, and more.">
+  <meta property="og:type" content="">
+  <meta property="og:image" content="">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@themesberg" />
+  <meta name="twitter:creator" content="@themesberg" />
+
+  <!-- Favicon -->
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+<app-header></app-header>
+<router-outlet />
+<app-footer></app-footer>
+</body>
+</html>
