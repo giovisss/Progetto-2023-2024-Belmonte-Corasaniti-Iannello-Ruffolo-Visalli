@@ -2,6 +2,8 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -68,12 +70,15 @@ public class ChatController {
 
     // Restituisce l'ID del primo admin disponibile
     @GetMapping("/chat/admin")
-    public ResponseEntity<String> getAvailableAdmin() {
+    public ResponseEntity<Map<String, String>> getAvailableAdmin() {
         if (adminIds.isEmpty()) {
-            return ResponseEntity.status(404).body("Nessun admin disponibile al momento.");
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "Nessun admin disponibile al momento."));
         }
         UUID firstAdminId = adminIds.get(0); // Prende il primo admin dalla lista
         adminIds.remove(0); // Rimuove l'admin dalla lista per evitare che venga selezionato da più utenti
-        return ResponseEntity.ok(firstAdminId.toString());
+        // Crea una mappa per la risposta JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("adminId", firstAdminId.toString());
+        return ResponseEntity.ok(response);
     }
 }

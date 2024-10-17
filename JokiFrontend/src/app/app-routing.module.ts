@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   // { path: 'api/admin/personal', component: LoginComponent },
   // { path: 'api/user/personal', component: LoginComponent },
-  { path: 'login', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
   { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
   { path: 'library', component: LibraryComponent, canActivate: [AuthGuard]},
   { path: 'wishlists', component: WishlistsComponent, canActivate: [AuthGuard]},
