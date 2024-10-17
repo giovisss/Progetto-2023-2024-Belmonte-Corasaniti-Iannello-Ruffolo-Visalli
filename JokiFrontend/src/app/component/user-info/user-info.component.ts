@@ -3,6 +3,8 @@ import { KeycloakService } from 'keycloak-angular';
 import { UserService } from '../../services/user.service';
 import { User } from '../../model/user';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-info',
@@ -15,22 +17,26 @@ export class UserInfoComponent implements OnInit {
   user: User | null = null;
   formattedBirthdate: string | null = null;
   userForm!: FormGroup;
+  resetPasswordForm!: FormGroup;
   showEditForm = false;
   showPassword: boolean = false;
   showRepeatPassword: boolean = false;
+  isSaving = false;
+  message = '';
 
-  constructor(private keycloakService: KeycloakService, private userService: UserService, private fb: FormBuilder) { }
+  constructor(private keycloakService: KeycloakService, private userService: UserService, private fb: FormBuilder, private router: Router) { }
 
     ngOnInit(): void {
       // Inizializza il form senza contrassegnare i campi come obbligatori
       this.userForm = this.fb.group({
-        username: [this.user?.username, Validators.required], // Obbligatorio
+        username: [null], // Obbligatorio
         firstName: [null, Validators.maxLength(50)], // Non è obbligatorio
         lastName: [null, Validators.maxLength(50)], // Non è obbligatorio
-        email: [null, [Validators.email]], // Non è obbligatorio, ma deve essere un'email valida
-        password: [null, this.passwordStrengthValidator], // Non è obbligatorio, ma deve rispettare la validazione della forza
-        repeatpassword: [null] // Non è obbligatorio
-      }, { validators: this.passwordsMatchValidator });
+        email: [null, [Validators.email]] // Non è obbligatorio, ma deve essere un'email valida
+//         password: [null, this.passwordStrengthValidator], // Non è obbligatorio, ma deve rispettare la validazione della forza
+//         repeatpassword: [null] // Non è obbligatorio
+//       }, { validators: this.passwordsMatchValidator });
+      });
 
       // Recupera le informazioni dell'utente dal backend
       this.userService.getUserInfo().subscribe(
@@ -40,12 +46,12 @@ export class UserInfoComponent implements OnInit {
           this.user = this.userService.getUser();
 
           // Aggiorna i valori del form con i dati dell'utente
-//           this.userForm.patchValue({
-//             username: this.user?.username,
-//              firstName: this.user?.firstName,
+          this.userForm.patchValue({
+            username: this.user?.username,
+//             firstName: this.user?.firstName,
 //             lastName: this.user?.lastName,
 //             email: this.user?.email
-//           });
+          });
         },
         error => {
           console.error('Error fetching user data:', error);
@@ -53,52 +59,75 @@ export class UserInfoComponent implements OnInit {
       );
     }
 
-    // Funzione di validazione per la forza della password
-    passwordStrengthValidator(control: AbstractControl) {
-      const password = control.value;
+//     // Funzione di validazione per la forza della password
+//     passwordStrengthValidator(control: AbstractControl) {
+//       const password = control.value;
+//
+//       if (!password) {
+//         return null; // Non fare nulla se il campo è vuoto
+//       }
+//
+//       // La regex richiede:
+//       // - Almeno 16 caratteri
+//       // - Almeno una lettera maiuscola
+//       // - Almeno una lettera minuscola
+//       // - Almeno un simbolo
+//       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{5,}$/;
+//
+//       //Per reimpostare la password semplice a 5 caratteri
+//       //const passwordRegex = /^.{5,}$/;
+//
+//       const valid = passwordRegex.test(password);
+//
+//       return valid ? null : { weakPassword: true };
+//     }
+//
+//   passwordsMatchValidator(control: AbstractControl) {
+//     const password = control.get('password')?.value;
+//     const repeatPassword = control.get('repeatpassword')?.value;
+//
+//     if (password && repeatPassword && password !== repeatPassword) {
+//       control.get('repeatpassword')?.setErrors({ mismatch: true });
+//     } else {
+//       control.get('repeatpassword')?.setErrors({ mismatch: false });
+//     }
+//     return null;
+//   }
 
-      if (!password) {
-        return null; // Non fare nulla se il campo è vuoto
+//   // Funzione per alternare la visibilità della password
+//   togglePasswordVisibility() {
+//     this.showPassword = !this.showPassword;
+//   }
+//
+//   // Funzione per alternare la visibilità della password ripetuta
+//   toggleRepeatPasswordVisibility() {
+//     this.showRepeatPassword = !this.showRepeatPassword;
+//   }
+
+  // Funzione per resettare la password
+  onResetPassword() {
+    this.message = '';
+
+    this.userService.resetPassword().subscribe(
+      (response) => {
+
+        //TODO: Bisogna ricaricare la pagina a mano per fare in modo che funzioni
+        this.keycloakService.logout();
+        window.location.reload(); // Ricarica la pagina per visualizzare i nuovi dati
+        // Reindirizza l'utente alla pagina di login
+        this.router.navigate(['/user-info']);  // O reindirizza dove necessario
+
+        this.message = response.body || 'Reset password richiesto. Effettua nuovamente il login per aggiornare la password.';
+      },
+      (error) => {
+        this.message = 'Si è verificato un errore. Riprova più tardi.';
+        console.error('Errore durante la richiesta di reset password:', error);
       }
-
-      // La regex richiede:
-      // - Almeno 16 caratteri
-      // - Almeno una lettera maiuscola
-      // - Almeno una lettera minuscola
-      // - Almeno un simbolo
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{5,}$/;
-
-      //Per reimpostare la password semplice a 5 caratteri
-      //const passwordRegex = /^.{5,}$/;
-
-      const valid = passwordRegex.test(password);
-
-      return valid ? null : { weakPassword: true };
-    }
-
-  passwordsMatchValidator(control: AbstractControl) {
-    const password = control.get('password')?.value;
-    const repeatPassword = control.get('repeatpassword')?.value;
-
-    if (password && repeatPassword && password !== repeatPassword) {
-      control.get('repeatpassword')?.setErrors({ mismatch: true });
-    } else {
-      control.get('repeatpassword')?.setErrors({ mismatch: false });
-    }
-    return null;
-  }
-
-  // Funzione per alternare la visibilità della password
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
-  // Funzione per alternare la visibilità della password ripetuta
-  toggleRepeatPasswordVisibility() {
-    this.showRepeatPassword = !this.showRepeatPassword;
+    );
   }
 
   onSave() {
+    this.isSaving = true;
     const formData = this.userForm.value as { [key: string]: any };
 
     const updatedData = Object.keys(formData).reduce((acc: { [key: string]: any }, key: string) => {
@@ -113,6 +142,7 @@ export class UserInfoComponent implements OnInit {
       this.userService.updateUser(updatedData).subscribe(
         (response) => {
           console.log('User updated successfully', response);
+          window.location.reload(); // Ricarica la pagina per visualizzare i nuovi dati
         },
         (error) => {
           console.error('Error updating user', error);

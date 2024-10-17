@@ -2,9 +2,14 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.boot.actuate.web.exchanges.HttpExchange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
@@ -14,9 +19,8 @@ import unical.enterprise.jokibackend.Exceptions.NotModifiedException;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import javax.ws.rs.Produces;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.security.Principal;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -43,6 +47,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Field can not be the same as before");
         }
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(Principal principal) {
+        String username = principal.getName();
+
+        try {
+            // Ottieni l'utente da Keycloak tramite username
+            UserRepresentation user = keycloakService.getUser(username);
+
+            // Chiama il servizio per forzare il reset della password
+            keycloakService.sendResetPassword(user.getId());
+
+            return ResponseEntity.ok().body("Password reset richiesto. Effettua nuovamente il login per aggiornare la password.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Errore durante il reset della password.");
+        }
+    }
+
 
     @DeleteMapping("/user")
     @Produces("application/json")

@@ -15,6 +15,7 @@ export class UserService {
   isUser: boolean = false;
   private apiUrl = BASE_API_URL + '/users';
   private adminApiUrl = BASE_API_URL + '/admin/users';
+  //private userApiUrl = '/api/v1/users'
   private _user: User | null = null;
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard, private keycloakService: KeycloakService) {
@@ -49,7 +50,7 @@ export class UserService {
     //   responseType: 'text'
     // }).subscribe(response => {
     //   try {
-    //     const jsonResponse = JSON.parse(response);
+    //     const jsonResponse = JSON.parse(response);Quando viene premuto sul bottone "resetta password" il programma chiama lo script che setta il "Required user actions Update Password" di keycloak su TRUE e l'utente viene reindirizzato su una nuova pagina per la modifica della password
     //     console.log(jsonResponse);
     //   } catch (e) {
     //     console.log(response);
@@ -59,6 +60,10 @@ export class UserService {
     // this.auth.keycloak.getToken().then(token => {
     //   console.log(token);
     // })
+  }
+
+  resetPassword(): Observable<any> {
+    return this.httpClient.post(this.apiUrl + `/reset-password`, {});
   }
 
   setUser(userData: any): void {

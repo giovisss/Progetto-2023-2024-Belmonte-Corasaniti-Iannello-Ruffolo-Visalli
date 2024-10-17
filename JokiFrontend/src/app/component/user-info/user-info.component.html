@@ -34,11 +34,16 @@
 
     <!-- Form Pop-up -->
     <dialog id="my_modal_3" class="modal">
-      <div class="modal-box flex w-full flex-col border-opacity-50">
+      <div class="modal-box flex w-full flex-col border-opacity-50" [ngClass]="isSaving ? 'opacity-50 transition-opacity' : 'opacity-100 transition-opacity'">
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <form [formGroup]="userForm" (ngSubmit)="onSave()">
+          <!-- Spinner -->
+          <div *ngIf="isSaving" class="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-gray-100">
+            <span class="loading loading-spinner text-primary loading-lg"></span>
+          </div>
+          <!-- Fine Spinner -->
           <h2 class="text-base font-semibold leading-7 text-gray-900">Modifica le informazioni personali</h2>
           <p class="mt-1 text-sm leading-6 text-gray-600">Riempi i campi con i dati modificati e clicca sul pulsante "Salva".</p>
 
@@ -66,14 +71,17 @@
                 <input formControlName="email" id="email" name="email" type="email" autocomplete="email" placeholder="{{user?.email}}" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               </div>
             </div>
+            <div class="mt-2 flex items-center justify-center gap-x-2">
+              <button type="submit" class="w-full max-w-md rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Salva</button>
+            </div>
 
             <div class="divider divider-primary my-0"></div>
             <!--Password-->
-            <div>
+            <!--<div>
               <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Modifica Password</label>
               <div class="mt-2 relative">
                 <input [type]="showPassword ? 'text' : 'password'" formControlName= "password" id="password" name="password" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                <!-- Pulsante per mostrare/nascondere la password -->
+                &lt;!&ndash; Pulsante per mostrare/nascondere la password &ndash;&gt;
                 <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400" (click)="togglePasswordVisibility()">
                   <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/>
                   </svg>
@@ -82,7 +90,7 @@
                 </button>
               </div>
               <br>
-              <!-- Messaggio di errore se la password non è abbastanza forte -->
+              &lt;!&ndash; Messaggio di errore se la password non è abbastanza forte &ndash;&gt;
               <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.dirty" class="text-red-600 text-sm">
                 <div role="alert" class="alert alert-error">
                   <svg
@@ -103,7 +111,7 @@
               <label for="repeatpassword" class="block text-sm font-medium leading-6 text-gray-900">Riscrivi la password</label>
               <div class="mt-2 relative">
                 <input [type]="showRepeatPassword ? 'text' : 'password'"formControlName= "repeatpassword" id="repeatpassword" name="repeatpassword" type="password" autocomplete="password" class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                <!-- Pulsante per mostrare/nascondere la password ripetuta -->
+                &lt;!&ndash; Pulsante per mostrare/nascondere la password ripetuta &ndash;&gt;
                 <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400" (click)="toggleRepeatPasswordVisibility()">
                   <svg *ngIf="!showRepeatPassword" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/>
                   </svg>
@@ -112,7 +120,7 @@
                 </button>
               </div>
               <br>
-              <!-- Messaggio di errore se le password non corrispondono -->
+              &lt;!&ndash; Messaggio di errore se le password non corrispondono &ndash;&gt;
               <div *ngIf="userForm.get('repeatpassword')?.hasError('mismatch') && userForm.get('repeatpassword')?.dirty" class="text-red-600 text-sm">
                 <div role="alert" class="alert alert-error">
                   <svg
@@ -129,13 +137,20 @@
                   <span>Le password non corrispondono</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="mt-6 flex items-center justify-end gap-x-6">
-            <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Salva</button>
+            </div>-->
           </div>
         </form>
+        <h2 class="mt-6 text-base font-semibold leading-7 text-gray-900">Modifica la password</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">Clicca sul pulsante per resettare la password e inserirne una nuova.</p>
+        <div class="mt-6 flex items-center justify-center gap-x-6">
+          <button
+            type="button"
+            (click)="onResetPassword()"
+            class="w-full max-w-md rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Resetta la password
+          </button>
+          <p *ngIf="message">{{ message }}</p>
+        </div>
       </div>
     </dialog>
     <!-- Fine Form Pop-up -->

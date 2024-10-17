@@ -4,6 +4,10 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.UserRepresentation;
 
 public class KeycloakManager {
 
@@ -13,27 +17,34 @@ public class KeycloakManager {
     public final static String realm = "JokiRealm";
     final static String clientId = "JokiBackend";
     final static String clientSecret = "BAAHnEU37J7LX0Do6sRcsDN9IZNVs20g";
-//    final static String userName = "admin";
-//    final static String password = "admin";
 
-    public KeycloakManager() {
-    }
-
-    public static Keycloak getInstance(){
-        if(keycloak == null){
+    public static Keycloak getInstance() {
+        if (keycloak == null) {
             keycloak = KeycloakBuilder.builder()
                     .serverUrl(serverUrl)
                     .realm(realm)
                     .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-//                    .username(userName)
-//                    .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
-                    .resteasyClient(
-                            new ResteasyClientBuilder().connectionPoolSize(10).build()
-                        ).build();
+                    .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
+                    .build();
         }
         return keycloak;
+    }
+
+    // Metodo per ottenere il Realm Resource
+    public static RealmResource getRealmResource() {
+        return getInstance().realm(realm);
+    }
+
+    // Metodo per ottenere la risorsa utenti
+    public static UsersResource getUsersResource() {
+        return getRealmResource().users();
+    }
+
+    // Metodo per ottenere una risorsa utente specifica
+    public static UserResource getUserResource(String userId) {
+        return getUsersResource().get(userId);
     }
 
     public static String getUserToken(String username, String password){
