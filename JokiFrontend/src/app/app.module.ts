@@ -47,7 +47,7 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     EditGameComponent,
     ReviewComponent,
     EditUserInfoAdminComponent,
-    CheckoutComponent
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
