@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
@@ -74,6 +73,7 @@ public class ChatController {
             return ResponseEntity.status(404).body("Nessun admin disponibile al momento.");
         }
         UUID firstAdminId = adminIds.get(0); // Prende il primo admin dalla lista
+        adminIds.remove(0); // Rimuove l'admin dalla lista per evitare che venga selezionato da più utenti
         return ResponseEntity.ok(firstAdminId.toString());
     }
 }
