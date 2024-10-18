@@ -22,6 +22,7 @@ export class UserInfoComponent implements OnInit {
   showPassword: boolean = false;
   showRepeatPassword: boolean = false;
   isSaving = false;
+  isResettingPassword = false;
   message = '';
 
   constructor(private keycloakService: KeycloakService, private userService: UserService, private fb: FormBuilder, private router: Router) { }
@@ -106,18 +107,15 @@ export class UserInfoComponent implements OnInit {
 
   // Funzione per resettare la password
   onResetPassword() {
+    this.isResettingPassword = true;
     this.message = '';
 
     this.userService.resetPassword().subscribe(
       (response) => {
-
-        //TODO: Bisogna ricaricare la pagina a mano per fare in modo che funzioni
-        this.keycloakService.logout();
+        console.log('User updated successfully', response);
         window.location.reload(); // Ricarica la pagina per visualizzare i nuovi dati
         // Reindirizza l'utente alla pagina di login
         this.router.navigate(['/user-info']);  // O reindirizza dove necessario
-
-        this.message = response.body || 'Reset password richiesto. Effettua nuovamente il login per aggiornare la password.';
       },
       (error) => {
         this.message = 'Si è verificato un errore. Riprova più tardi.';

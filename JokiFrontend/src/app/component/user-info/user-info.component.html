@@ -34,16 +34,17 @@
 
     <!-- Form Pop-up -->
     <dialog id="my_modal_3" class="modal">
-      <div class="modal-box flex w-full flex-col border-opacity-50" [ngClass]="isSaving ? 'opacity-50 transition-opacity' : 'opacity-100 transition-opacity'">
+      <div class="modal-box flex w-full flex-col border-opacity-50" [ngClass]="(isSaving || isResettingPassword) ? 'opacity-50 transition-opacity' : 'opacity-100 transition-opacity'">
+        <!-- Spinner -->
+        <div *ngIf="isSaving || isResettingPassword" class="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-white-100">
+          <span class="loading loading-spinner text-primary loading-lg"></span>
+        </div>
+        <!-- Fine Spinner -->
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <form [formGroup]="userForm" (ngSubmit)="onSave()">
-          <!-- Spinner -->
-          <div *ngIf="isSaving" class="fixed inset-0 flex justify-center items-center z-50 bg-opacity-50 bg-gray-100">
-            <span class="loading loading-spinner text-primary loading-lg"></span>
-          </div>
-          <!-- Fine Spinner -->
+
           <h2 class="text-base font-semibold leading-7 text-gray-900">Modifica le informazioni personali</h2>
           <p class="mt-1 text-sm leading-6 text-gray-600">Riempi i campi con i dati modificati e clicca sul pulsante "Salva".</p>
 
@@ -149,7 +150,24 @@
             class="w-full max-w-md rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Resetta la password
           </button>
-          <p *ngIf="message">{{ message }}</p>
+        </div>
+        <div class="mt-6 flex items-center justify-center gap-x-6">
+        <div *ngIf="message" class="text-red-600 text-sm">
+          <div role="alert" class="alert alert-error">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 shrink-0 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ message }}</span>
+          </div>
+        </div>
         </div>
       </div>
     </dialog>

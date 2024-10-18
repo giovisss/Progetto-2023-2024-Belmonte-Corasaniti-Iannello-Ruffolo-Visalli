@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(Principal principal) {
+    public ResponseEntity<String> resetPassword(Principal principal) {
         String username = principal.getName();
 
         try {
@@ -59,9 +59,9 @@ public class UserController {
             // Chiama il servizio per forzare il reset della password
             keycloakService.sendResetPassword(user.getId());
 
-            return ResponseEntity.ok().body("Password reset richiesto. Effettua nuovamente il login per aggiornare la password.");
+            return ResponseEntity.ok().body(new Gson().toJson("Password reset richiesto. Effettua nuovamente il login per aggiornare la password."));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Errore durante il reset della password.");
+            return ResponseEntity.status(500).body(new Gson().toJson("Errore durante il reset della password."));
         }
     }
 
