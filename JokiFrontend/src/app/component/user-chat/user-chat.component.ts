@@ -21,18 +21,8 @@ export class UserChatComponent implements OnInit, OnDestroy {
   constructor(private messageService: MessageService) {}
 
   ngOnInit(): void {
-    // Chiamata per ottenere un admin disponibile
-    this.messageService.getAvailableAdmin();
-
-    // Sottoscrizione ai messaggi dell'utente
-    this.userMessagesSubscription = this.messageService.getUserMessages().subscribe((newMessages) => {
-      const formattedMessages = newMessages.map(msg => ({
-        content: msg.content,
-        timestamp: new Date(msg.timestamp),
-        isUser: false
-      }));
-      
-      this.allMessages = [...this.allMessages, ...formattedMessages].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    this.messageService.addUser().subscribe(() => {
+      console.log('User added');
     });
   }
 
@@ -45,7 +35,7 @@ export class UserChatComponent implements OnInit, OnDestroy {
       };
       this.allMessages.push(newMessage);
       this.allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-      this.messageService.UserSendsToAdmin(this.message); // Assicurati che questo metodo funzioni
+      this.messageService.UserSendsToAdmin(this.message);
       this.message = '';
     }
   }
@@ -54,5 +44,17 @@ export class UserChatComponent implements OnInit, OnDestroy {
     if (this.userMessagesSubscription) {
       this.userMessagesSubscription.unsubscribe();
     }
+  }
+  
+  connect() {
+    this.messageService.getAvailableAdmin();
+    this.userMessagesSubscription = this.messageService.getUserMessages().subscribe((newMessages) => {
+      const formattedMessages = newMessages.map(msg => ({
+        content: msg.content,
+        timestamp: new Date(msg.timestamp),
+        isUser: false
+      }));
+      this.allMessages = [...this.allMessages, ...formattedMessages].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    });
   }
 }

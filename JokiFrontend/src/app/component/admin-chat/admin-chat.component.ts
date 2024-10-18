@@ -21,23 +21,9 @@ export class AdminChatComponent implements OnInit, OnDestroy {
   constructor(private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.messageService.addAdmin().subscribe(
-      response => {
-        console.log('Admin added successfully:', response);
-        this.adminMessagesSubscription = this.messageService.getAdminMessages().subscribe((newMessages) => {
-          const formattedMessages = newMessages.map(msg => ({
-            content: msg.content,
-            timestamp: new Date(msg.timestamp),
-            isAdmin: false
-          }));
-
-          this.allMessages = [...this.allMessages, ...formattedMessages].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-        });
-      },
-      error => {
-        console.error('Error adding admin:', error);
-      }
-    );
+    this.messageService.addAdmin().subscribe(() => {
+      console.log('Admin added');
+    });
   }
 
   sendMessage() {
@@ -49,7 +35,7 @@ export class AdminChatComponent implements OnInit, OnDestroy {
       };
       this.allMessages.push(newMessage);
       this.allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-      this.messageService.AdminSendsToUser(this.message); // Assicurati che questo metodo funzioni
+      this.messageService.AdminSendsToUser(this.message);
       this.message = '';
     }
   }
@@ -58,5 +44,17 @@ export class AdminChatComponent implements OnInit, OnDestroy {
     if (this.adminMessagesSubscription) {
       this.adminMessagesSubscription.unsubscribe();
     }
+  }
+
+  connect() {
+    this.messageService.getUser();
+    this.adminMessagesSubscription = this.messageService.getAdminMessages().subscribe((newMessages) => {
+      const formattedMessages = newMessages.map(msg => ({
+        content: msg.content,
+        timestamp: new Date(msg.timestamp),
+        isAdmin: false
+      }));
+      this.allMessages = [...this.allMessages, ...formattedMessages].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    });
   }
 }

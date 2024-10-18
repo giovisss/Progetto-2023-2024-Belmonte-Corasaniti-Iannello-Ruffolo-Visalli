@@ -19,6 +19,9 @@ export class MessageService {
   private isUserConnected = false;
   private isAdminConnected = false;
 
+  private userConnectedPromise!: Promise<void>;
+  private adminConnectedPromise!: Promise<void>;
+
   constructor(
     private http: HttpClient,
     private keycloakService: KeycloakService
@@ -41,6 +44,21 @@ export class MessageService {
     }
   }
 
+  private initializeAdminId() {
+    try {
+      const token = this.keycloakService.getKeycloakInstance().tokenParsed;
+      if (token && token.sub) {
+        this.adminId = token.sub;
+        console.log('Admin ID initialized:', this.adminId);
+        this.initializeAdminClient();
+      } else {
+        console.error('Admin ID not found in token');
+      }
+    } catch (e) {
+      console.error('Error initializing admin ID', e);
+    }
+  }
+
   private initializeUserClient() {
     if (!this.userId) {
       console.error('User ID not set');
@@ -50,59 +68,66 @@ export class MessageService {
     const brokerURL = 'ws://localhost:8081/ws';
     console.log('Initializing user client with broker URL:', brokerURL);
 
-    this.userClient = new Client({
-      brokerURL: brokerURL,
-      onConnect: () => {
-        console.log('User connected');
-        this.isUserConnected = true;
-        this.connectClients(); // Chiama il metodo per connettere i client
-      },
+    this.userConnectedPromise = new Promise<void>((resolve) => {
+      this.userClient = new Client({
+        brokerURL: brokerURL,
+        onConnect: () => {
+          console.log('User connected');
+          this.isUserConnected = true;
+          resolve(); // Risolvi la promise quando l'utente è connesso
+          this.connectClients(); // Chiama connectClients qui
+        },
+      });
+      this.userClient.activate();
     });
-    this.userClient.activate();
   }
 
   private initializeAdminClient() {
-    if (!this.userId || !this.adminId) {
-      console.error('User ID or Admin ID not set');
+    if (!this.adminId) {
+      console.error('Admin ID not set');
       return;
     }
 
     const brokerURL = 'ws://localhost:8081/ws';
     console.log('Initializing admin client with broker URL:', brokerURL);
 
-    this.adminClient = new Client({
-      brokerURL: brokerURL,
-      onConnect: () => {
-        console.log('Admin connected');
-        this.isAdminConnected = true;
-        this.connectClients(); // Chiama il metodo per connettere i client
-      },
+    this.adminConnectedPromise = new Promise<void>((resolve) => {
+      this.adminClient = new Client({
+        brokerURL: brokerURL,
+        onConnect: () => {
+          console.log('Admin connected');
+          this.isAdminConnected = true;
+          resolve(); // Risolvi la promise quando l'admin è connesso
+          this.connectClients(); // Chiama connectClients qui
+        },
+      });
+      this.adminClient.activate();
     });
-    this.adminClient.activate();
   }
 
   private connectClients() {
-    // Controlla se entrambi i client sono connessi
-    if (this.isUserConnected && this.isAdminConnected) {
-      const subscriptionTopicUser = `/topic/chat/${this.userId}_${this.adminId}`;
-      const subscriptionTopicAdmin = `/topic/chat/${this.adminId}_${this.userId}`;
+    Promise.all([this.userConnectedPromise, this.adminConnectedPromise])
+      .then(() => {
+        const subscriptionTopicUser = `/topic/chat/${this.userId}_${this.adminId}`;
+        const subscriptionTopicAdmin = `/topic/chat/${this.adminId}_${this.userId}`;
 
-      // Sottoscrivi il client utente
-      this.userClient.subscribe(subscriptionTopicUser, message => {
-        const messageContent = JSON.parse(message.body);
-        console.log('User received message:', messageContent);
-        this.userMessages.next([...this.userMessages.getValue(), messageContent]);
+        this.userClient.subscribe(subscriptionTopicUser, message => {
+          const messageContent = JSON.parse(message.body);
+          console.log('User received message:', messageContent);
+          this.userMessages.next([...this.userMessages.getValue(), messageContent]);
+        });
+
+        this.adminClient.subscribe(subscriptionTopicAdmin, message => {
+          const messageContent = JSON.parse(message.body);
+          console.log('Admin received message:', messageContent);
+          this.adminMessages.next([...this.adminMessages.getValue(), messageContent]);
+        });
+
+        console.log('Both clients are connected and subscribed.');
+      })
+      .catch((error) => {
+        console.error('Error connecting clients:', error);
       });
-
-      // Sottoscrivi il client admin
-      this.adminClient.subscribe(subscriptionTopicAdmin, message => {
-        const messageContent = JSON.parse(message.body);
-        console.log('Admin received message:', messageContent);
-        this.adminMessages.next([...this.adminMessages.getValue(), messageContent]);
-      });
-
-      console.log('Both clients are connected and subscribed.');
-    }
   }
 
   UserSendsToAdmin(message: string) {
@@ -131,11 +156,11 @@ export class MessageService {
     }
   }
 
-  getUserMessages() {
+  getUserMessages(): Observable<{ content: string, timestamp: string }[]> {
     return this.userMessages.asObservable();
   }
 
-  getAdminMessages() {
+  getAdminMessages(): Observable<{ content: string, timestamp: string }[]> {
     return this.adminMessages.asObservable();
   }
 
@@ -153,11 +178,31 @@ export class MessageService {
         this.adminId = response.adminId;
         console.log('Received admin ID:', this.adminId);
         this.initializeUserId();
-        this.initializeAdminClient(); // Inizializza anche il client admin
       },
       error => {
         console.error('Error getting available admin:', error);
       }
     );
+  }
+
+  getUser() {
+    const url = `${this.apiChatUrl}/user`;
+    console.log('Getting user, GET request to:', url);
+    this.http.get<{ userId: string }>(url).subscribe(
+      response => {
+        this.userId = response.userId;
+        console.log('Received user ID:', this.userId);
+        this.initializeAdminId();
+      },
+      error => {
+        console.error('Error getting user:', error);
+      }
+    );
+  }
+
+  addUser(): Observable<string> {
+    const url = `${this.apiChatUrl}/user`;
+    console.log('Adding user, POST request to:', url);
+    return this.http.post<string>(url, {});
   }
 }
