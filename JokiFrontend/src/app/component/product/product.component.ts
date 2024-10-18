@@ -8,6 +8,7 @@ import {ReviewService} from "../../services/review.service";
 import {Review} from "../../model/review";
 import {UserService} from "../../services/user.service";
 import {Game} from "../../model/game";
+import {Wishlist} from "../../model/wishlist";
 
 @Component({
   selector: 'app-product',
@@ -16,6 +17,8 @@ import {Game} from "../../model/game";
 })
 
 export class ProductComponent {
+  protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
+
   reviewExists: boolean = false;
   userReview: Review | null = null;
   reviewsAvg: number = 0;
@@ -30,7 +33,7 @@ export class ProductComponent {
   newWishlistVisibility: number = 1; // 0: privata, 1: pubblica, 2: solo amici  pubblica di default
   newSuggestedReviewText: string = '';
   newNotSuggestedReviewText: string = '';
-  wishlists = this.wishlistService.getWishlists();
+  wishlists: Wishlist[] = [];
 
   photo1: boolean = true;
   photo2: boolean = true;
@@ -39,6 +42,15 @@ export class ProductComponent {
   constructor(private route : ActivatedRoute, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService, private reviewService: ReviewService, private userService: UserService) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
+
+    this.wishlistService.getWishlists().subscribe((response) => {
+      if (response != null) {
+        this.wishlists = response;
+        console.log(this.wishlists);
+      } else {
+        console.error('Errore nel caricamento delle wishlist!');
+      }
+    })
 
     productsService.getGame(id).subscribe((product: Game) => {
       this.product = product;
@@ -129,23 +141,35 @@ export class ProductComponent {
 
   createWishlist() {
     if (this.newWishlistName.trim()) {
-      this.wishlists.push({ name: this.newWishlistName, wishListProducts: [this.product], visibility: this.newWishlistVisibility});
-      localStorage.setItem('wishlists', JSON.stringify(this.wishlists));
-      console.log(this.wishlists);
-      this.newWishlistName = '';
-      this.newWishlistVisibility = 1;
-      this.closeWishlistModal();
+      let out = [];
+      if (this.product != null) out.push(this.product);
+
+      this.wishlistService.createWishlist(new Wishlist(this.newWishlistName, out, 0)).subscribe(response => {
+        if (response) {
+            console.log('Wishlist creata con successo!');
+          this.newWishlistName = '';
+          this.newWishlistVisibility = 1;
+          this.closeWishlistModal();
+        } else {
+            alert('Errore nella creazione della wishlist!');
+        }
+      });
     }
   }
 
-  addToWishlist(wishlist: any) {
-    wishlist.wishListProducts.push(this.product);
-    localStorage.setItem('wishlists', JSON.stringify(this.wishlists));
-    console.log(this.wishlists);
-    this.closeWishlistModal();
+  addToWishlist(wishlistName: string, productId: string | null) {
+    if (productId != null) {
+      this.wishlistService.addProductToWishlist(wishlistName, productId).subscribe(response => {
+        if (response) {
+          console.log('Prodotto aggiunto alla wishlist con successo!');
+          this.closeWishlistModal();
+        } else {
+          alert('Errore durante l\'aggiunta del prodotto alla wishlist!');
+        }
+      });
+    }
   }
 
-    protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 
   openModal() {
     this.isReviewsModalOpen = true;

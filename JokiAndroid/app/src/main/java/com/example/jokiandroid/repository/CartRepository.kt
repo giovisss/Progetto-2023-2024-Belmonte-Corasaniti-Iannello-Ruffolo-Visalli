@@ -4,7 +4,7 @@ import TokenManager
 import android.util.Log
 import com.example.jokiandroid.model.Admin
 import com.example.jokiandroid.model.Game
-import com.example.jokiandroid.service.ApiService
+import com.example.jokiandroid.service.UserApiService
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -16,7 +16,7 @@ class CartRepository() {
 
     suspend fun getUserCart(): List<Game> {
         return withContext(Dispatchers.IO) {
-            val response = RetrofitInstance.createApi(ApiService::class.java, TokenManager.getToken()).getUserCart()
+            val response = RetrofitInstance.createApi(UserApiService::class.java, TokenManager.getToken()).getUserCart()
             Log.d("CartRepository", "Response code: ${response.code()}")
             if (response.isSuccessful) {
                 val responseBody: List<Game>? = response.body()
@@ -59,6 +59,34 @@ class CartRepository() {
             } else {
                 Log.e("CartRepository", "Error response: ${response.errorBody()?.string()}")
                 throw Exception("Impossibile ottenere il carrello utente: ${response.code()}")
+            }
+        }
+    }
+
+    suspend fun addGameToCart(game: Game): Boolean{
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.createApi(UserApiService::class.java, TokenManager.getToken()).addGameToCart(game.id)
+            Log.d("CartRepository", "Game ID: ${game.id}")
+            Log.d("CartRepository", "Response code: ${response.code()}")
+            if (response.isSuccessful) {
+                true
+            } else {
+                Log.e("CartRepository", "Error response: ${response.errorBody()?.string()}")
+                false
+            }
+        }
+    }
+
+    suspend fun removeGameFromCart(gameId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.createApi(UserApiService::class.java, TokenManager.getToken()).removeGameFromCart(gameId)
+            Log.d("CartRepository", "Game ID: $gameId")
+            Log.d("CartRepository", "Response code: ${response.code()}")
+            if (response.isSuccessful) {
+                true
+            } else {
+                Log.e("CartRepository", "Error response: ${response.errorBody()?.string()}")
+                false
             }
         }
     }
