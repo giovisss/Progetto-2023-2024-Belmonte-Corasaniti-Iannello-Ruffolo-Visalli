@@ -18,9 +18,9 @@ export class WishlistProductsComponent {
 
   ngOnInit() {
     const name = this.route.snapshot.params['name'];
-    this.wishlistService.getWishlist(name).subscribe(wishlist => {
-      console.log(wishlist);
-      this.wishlist = wishlist;
+    this.wishlistService.getWishlist(name).subscribe(response => {
+      console.log(response);
+      this.wishlist = response;
     });
   }
 
@@ -29,11 +29,15 @@ export class WishlistProductsComponent {
   }
 
   removeProduct(product: any) {
-    if (this.wishlist) {
-      this.wishlistService.removeProductFromWishlist(this.wishlist.name, product.id)
-        .subscribe(updatedWishlist => {
-          if (updatedWishlist) {
-            this.wishlist = updatedWishlist;
+    if (this.wishlist != null) {
+      this.wishlistService.removeProductFromWishlist(this.wishlist.wishlistName, product.id)
+        .subscribe(response => {
+          if (response) {
+            // @ts-ignore
+            this.wishlistService.getWishlist(this.wishlist.wishlistName).subscribe(response => {
+                console.log(response);
+                this.wishlist = response;
+            })
             console.log('Prodotto rimosso con successo!');
           } else {
             console.error('Wishlist non trovata.');

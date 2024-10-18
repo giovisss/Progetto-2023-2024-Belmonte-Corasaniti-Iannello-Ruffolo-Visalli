@@ -137,9 +137,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public void addWishlist(String wishlistName) {
-        WishlistDto wishlistDto = new WishlistDto();
-        wishlistDto.setWishlistName(wishlistName);
+    public void addWishlist(WishlistDto wishlistDto) {
         wishlistDto.setUser(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()));
 
         wishlistDao.save(modelMapper.map(wishlistDto, Wishlist.class));
