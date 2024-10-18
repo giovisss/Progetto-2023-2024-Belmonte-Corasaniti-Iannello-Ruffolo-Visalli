@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jokiandroid.model.Game
-import com.example.jokiandroid.service.ApiService
+import com.example.jokiandroid.service.GameApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ class GameViewModel : ViewModel() {
     private fun fetchGames() {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.createApi(ApiService::class.java).getGames()
+                val response = RetrofitInstance.createApi(GameApiService::class.java).getGames()
                 if (response.isSuccessful) {
                     val collectionModel = response.body()
                     val games = collectionModel?._embedded?.modelList?.map { it.model } ?: emptyList()
@@ -71,7 +71,7 @@ class GameViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val token = TokenManager.getToken()
-                val response = RetrofitInstance.createApi(ApiService::class.java,token).getGameById(gameId)
+                val response = RetrofitInstance.createApi(GameApiService::class.java,token).getGameById(gameId)
                 if (response.isSuccessful) {
                     val entityModel = response.body()
                     _gameDetails.value = entityModel?.model?.let { Game(it) }
@@ -93,7 +93,7 @@ class GameViewModel : ViewModel() {
             try {
                 val token = TokenManager.getToken()
                 if (token != null) {
-                    _libraryGames.value = RetrofitInstance.createApi(ApiService::class.java,token).getGamesByUser()
+                    _libraryGames.value = RetrofitInstance.createApi(GameApiService::class.java,token).getGamesByUser()
                 } else {
                     _error.value = "Effettua il login per visualizzare i giochi"
                 }
@@ -114,7 +114,7 @@ class GameViewModel : ViewModel() {
     fun updateGame(game: Game) {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.createApi(ApiService::class.java,TokenManager.getToken()).updateGame(game.id, game)
+                val response = RetrofitInstance.createApi(GameApiService::class.java,TokenManager.getToken()).updateGame(game.id, game)
                 if (response.isSuccessful) {
                     _error.value = "Gioco aggiornato con successo"
                     fetchGames()

@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-interface ApiService {
+interface GameApiService {
     @GET("api/v1/games")
     suspend fun getGames(): Response<CollectionModel>
 
@@ -20,8 +20,6 @@ interface ApiService {
     @GET("api/v1/users/user/library")
     suspend fun getGamesByUser(): Response<List<Game>>
 
-    @GET("api/v1/users/user/cart")
-    suspend fun getUserCart(): Response<List<Game>>
 
 
     data class CollectionModel(val _embedded: Embedded)

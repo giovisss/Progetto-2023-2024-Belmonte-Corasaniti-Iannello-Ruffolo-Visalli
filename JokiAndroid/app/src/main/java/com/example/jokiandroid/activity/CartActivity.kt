@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldReload: Boolean = false) {
     val cartItems by viewModel.cartItems.observeAsState(emptyList())
     val isLoading by viewModel.isLoading.observeAsState()
-    val error by viewModel.error.observeAsState()
 
     LaunchedEffect(shouldReload) {
         if (shouldReload) {
@@ -39,36 +38,30 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
     Column(modifier = Modifier.fillMaxSize()) {
         if (isLoading == true) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        } else if (error != null) {
-            Text(text = error!!, color = MaterialTheme.colorScheme.error)
-        } else {
+        }
+        else {
             LazyColumn(modifier = Modifier.weight(1f)) {
                 itemsIndexed(cartItems) { index: Int, game: Game ->
-                    GameItem(game = game, onRemove = { /* Rimuovi gioco */ })
+                    GameItem(game = game, viewModel = viewModel)}
                 }
             }
             Button(
                 onClick = {
                     viewModel.clearCart()
                     viewModel.loadCart()
-                          },
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
                 Text("Clear Cart")
             }
-            Button(
-                onClick = { viewModel.loadCart() }
-            ) {
-                Text("Refresh")
-            }
         }
     }
-}
+
 
 @Composable
-fun GameItem(game: Game, onRemove: () -> Unit) {
+fun GameItem(game: Game, viewModel: CartViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,7 +72,8 @@ fun GameItem(game: Game, onRemove: () -> Unit) {
             Text(text = game.title, fontSize = 18.sp)
             Text(text = "Prezzo: €${String.format("%.2f", game.price)}")
         }
-        Button(onClick = onRemove) {
+        Button(onClick = { viewModel.removeGame(game) }
+        ) {
             Text("Remove")
         }
     }
