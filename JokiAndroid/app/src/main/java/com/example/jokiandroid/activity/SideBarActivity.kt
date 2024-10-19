@@ -122,7 +122,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                     NavigationDrawerItem(
                         label = { Text(text = "About") },
                         selected = selectedItem.value == "about",
-                        onClick = { /*TODO*/ }
+                        onClick = { selectPage("about", coroutineScope, drawerState, navController, selectedItem) }
                     )
                 }
             }
@@ -228,6 +228,13 @@ fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
 fun SetEditGameContent(navController: NavController, gameViewModel: GameViewModel, gameId: String = "") {
     SideBarActivity.setContent {
         EditGamesActivity(navController, gameViewModel, gameId)
+    }
+}
+
+@Composable
+fun SetAboutContent() {
+    SideBarActivity.setContent {
+        AboutActivity()
     }
 }
 

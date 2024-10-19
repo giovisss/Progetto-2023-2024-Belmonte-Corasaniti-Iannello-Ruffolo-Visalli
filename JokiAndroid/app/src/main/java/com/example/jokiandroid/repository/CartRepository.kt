@@ -90,6 +90,19 @@ class CartRepository() {
             }
         }
     }
+
+    suspend fun removeAllGamesFromCart(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.createApi(UserApiService::class.java, TokenManager.getToken()).removeAllGamesFromCart()
+            Log.d("CartRepository", "Response code: ${response.code()}")
+            if (response.isSuccessful) {
+                true
+            } else {
+                Log.e("CartRepository", "Error response: ${response.errorBody()?.string()}")
+                false
+            }
+        }
+    }
 }
 
 data class GameResponse(

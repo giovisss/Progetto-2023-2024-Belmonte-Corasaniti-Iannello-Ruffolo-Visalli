@@ -81,11 +81,27 @@ class CartViewModel() : ViewModel() {
         }
     }
 
-
-    fun clearCart() {
-        _cartItems.value = emptyList()
-        _totalPrice.value = 0.0
+    fun removeAllGamesFromCart() {
+        viewModelScope.launch {
+            try {
+                val response = cartRepository.removeAllGamesFromCart()
+                if (response) {
+                    Log.d("CartViewModel", "Tutti i giochi sono stati rimossi dal carrello")
+                } else {
+                    Log.e("CartViewModel", "Errore nella rimozione di tutti i giochi dal carrello")
+                }
+                loadCart()
+            } catch (e: Exception) {
+                Log.e("CartViewModel", "Errore nella rimozione di tutti i giochi dal carrello", e)
+            }
+        }
     }
+
+
+//    fun clearCart() {
+//        _cartItems.value = emptyList()
+//        _totalPrice.value = 0.0
+//    }
 
     fun getTotalPrice(): Double {
         val currentList = _cartItems.value ?: emptyList()

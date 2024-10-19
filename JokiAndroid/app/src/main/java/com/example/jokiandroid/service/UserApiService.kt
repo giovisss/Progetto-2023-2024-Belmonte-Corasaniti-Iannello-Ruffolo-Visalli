@@ -39,4 +39,7 @@ interface UserApiService {
 
     @DELETE("$BASE_URL/user/cart/{gameId}")
     suspend fun removeGameFromCart(@Path("gameId") gameId: String): Response<Any>
+
+    @DELETE("$BASE_URL/user/cart")
+    suspend fun removeAllGamesFromCart(): Response<Any>
 }

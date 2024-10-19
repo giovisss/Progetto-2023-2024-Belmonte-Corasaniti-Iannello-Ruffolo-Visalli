@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.sp
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldReload: Boolean = false) {
     val cartItems by viewModel.cartItems.observeAsState(emptyList())
@@ -45,9 +47,18 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
                     GameItem(game = game, viewModel = viewModel)}
                 }
             }
+            Text(
+                text = "Totale: €${String.format("%.2f", cartItems.sumOf { it.price })}",
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
             Button(
                 onClick = {
-                    viewModel.clearCart()
+                    viewModel.removeAllGamesFromCart()
                     viewModel.loadCart()
                 },
                 modifier = Modifier
