@@ -15,6 +15,7 @@ import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
+import unical.enterprise.jokibackend.Utility.UserFriendship;
 
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
@@ -112,12 +113,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isFriend(String other) {
+    public UserFriendship isFriend(String other) {
         String user=UserContextHolder.getContext().getPreferredUsername();
 
-        if(user.equals(other)) return true;
+        UserFriendship out = UserFriendship.NOT_FRIENDS;
 
-        return (getFriendByUsername(user, other) != null) && (getFriendByUsername(other,user) != null);
+        if (user.equals(other)) {
+            out = UserFriendship.FRIENDS;
+        } else if (getFriendByUsername(user, other) != null && getFriendByUsername(other, user) != null) {
+            out = UserFriendship.FRIENDS;
+        } else if (getFriendByUsername(user, other) != null) {
+            out = UserFriendship.PENDING;
+        } else if (getFriendByUsername(other, user) != null) {
+            out = UserFriendship.REQUESTED;
+        }
+
+        return out;
+    }
+
+    @Override
+    @Transactional
+    public void editFriendship(String other, boolean add) {
+        UUID user=UserContextHolder.getContext().getId();
+        UUID oth=userDao.findUserByUsername(other).orElseThrow(() -> new UsernameNotFoundException("User not found")).getId();
+
+        if (add) {
+            userDao.addFriendship(user, oth);
+        } else {
+            userDao.removeFriendship(user, oth);
+        }
     }
 
     @Override
@@ -209,3 +233,4 @@ public class UserServiceImpl implements UserService {
         userDao.deleteGameFromUsers(id);
     }
 }
+

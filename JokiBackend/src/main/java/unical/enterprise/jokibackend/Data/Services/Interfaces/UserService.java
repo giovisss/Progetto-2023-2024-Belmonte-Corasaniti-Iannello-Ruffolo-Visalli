@@ -4,6 +4,7 @@ import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Utility.UserFriendship;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -30,7 +31,9 @@ public interface UserService {
 
     User getFriendByUsername(String first, String second);
 
-    boolean isFriend(String other);
+    UserFriendship isFriend(String other);
+
+    void editFriendship(String other, boolean add);
 
     boolean addGameToUserLibrary(String username, UUID gameId);
 

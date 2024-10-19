@@ -128,4 +128,11 @@ export class UserService {
     return this.httpClient.delete<string>(this.adminApiUrl + "/" + username, { observe: 'response' });
   }
 
+  checkFriendship(username: string): Observable<HttpResponse<string>> {
+    return this.httpClient.get<string>(this.apiUrl + "/user/friends/" + username, { observe: 'response' });
+  }
+
+  editFriendship(positive: boolean, username: string): Observable<HttpResponse<string>> {
+    return this.httpClient.put<string>(this.apiUrl + "/user/friends/" + username + "/" + positive, {}, { observe: 'response' });
+  }
 }

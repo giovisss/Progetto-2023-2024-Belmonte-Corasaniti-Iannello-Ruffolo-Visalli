@@ -148,5 +148,11 @@ public class UserController {
         return ResponseEntity.ok(new Gson().toJson(userService.isFriend(username)));
     }
 
+    @PutMapping(value = "/user/friends/{username}/{positive}", produces = "application/json")
+    public ResponseEntity<String> editFriend(@PathVariable String username, @PathVariable Boolean positive) {
+        userService.editFriendship(username, positive);
+        return ResponseEntity.ok(new Gson().toJson("Friendship updated"));
+    }
+
     // Fine controller amici
 }
