@@ -12,14 +12,16 @@ import {AuthGuard} from "./guard/auth.guard";
 import {EditGameComponent} from "./component/edit-game/edit-game.component";
 import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-user-info-admin.component";
 import { CheckoutComponent } from './component/checkout/checkout.component';
+import { UserChatComponent } from './component/user-chat/user-chat.component';
+import { AdminChatComponent } from './component/admin-chat/admin-chat.component';
+import {FindUsers} from "./component/find-users/find-users";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'product/:id', component: ProductComponent },
   { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
-  // { path: 'api/admin/personal', component: LoginComponent },
-  // { path: 'api/user/personal', component: LoginComponent },
   { path: 'login', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'find-users', component: FindUsers, canActivate: [AuthGuard] },
   { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
   { path: 'library', component: LibraryComponent, canActivate: [AuthGuard]},
   { path: 'wishlists', component: WishlistsComponent, canActivate: [AuthGuard]},
@@ -28,7 +30,9 @@ const routes: Routes = [
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'about', component: AboutComponent },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'home' },
+  { path: 'userchat', component: UserChatComponent },
+  { path: 'adminchat', component: AdminChatComponent }
 ];
 
 @NgModule({

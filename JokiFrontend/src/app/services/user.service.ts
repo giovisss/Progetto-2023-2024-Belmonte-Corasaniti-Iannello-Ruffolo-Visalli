@@ -112,8 +112,12 @@ export class UserService {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
 
-  getUserList(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.adminApiUrl);
+  getUserList(isAdmin: boolean = true): Observable<User[]> {
+    if (isAdmin) {
+      return this.httpClient.get<User[]>(this.adminApiUrl);
+    } else {
+      return this.httpClient.get<User[]>(this.apiUrl);
+    }
   }
 
   updateUserByAdmin(userData: User): Observable<HttpResponse<string>> {
@@ -124,4 +128,11 @@ export class UserService {
     return this.httpClient.delete<string>(this.adminApiUrl + "/" + username, { observe: 'response' });
   }
 
+  checkFriendship(username: string): Observable<HttpResponse<string>> {
+    return this.httpClient.get<string>(this.apiUrl + "/user/friends/" + username, { observe: 'response' });
+  }
+
+  editFriendship(positive: boolean, username: string): Observable<HttpResponse<string>> {
+    return this.httpClient.put<string>(this.apiUrl + "/user/friends/" + username + "/" + positive, {}, { observe: 'response' });
+  }
 }

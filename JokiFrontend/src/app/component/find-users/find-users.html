@@ -1,0 +1,39 @@
+<div class="container mx-auto flex flex-wrap items-center justify-between p-10">
+  <div class="w-full flex-grow flex justify-center p-4 flex-wrap">
+    <input (input)="OnInput($event)" type="text" placeholder="Cerca username" class="w-1/2 p-2 border border-gray-300 rounded-md">
+  </div>
+
+  <div class="w-full flex-grow flex justify-center flex-wrap">
+    <ul class="w-1/2">
+      <li *ngFor="let user of searchedUsers" class="p-2 border-b border-gray-300 flex items-center cursor-pointer" (click)="onUserClick(user)">
+        <img src="./assets/default-user-propic.png" class="w-10 h-15 mr-4">
+        {{ user.username }}
+      </li>
+    </ul>
+  </div>
+
+  <hr class="w-full my-4 border-t-2 border-gray-300">
+
+
+
+
+    <div class="user-profile-container">
+        <div class="user-info">
+            <img src="./assets/default-user-propic.png" alt="User Photo" class="user-photo">
+            <div class="user-details">
+                <h2 class="username">{{ selectedUser ? selectedUser.username : "Username" }}</h2>
+                <br>
+                <button class="follow-button" [disabled]="selectedUser==null" (click)="btnClick()">{{ btnText }}</button>
+            </div>
+        </div>
+        <hr class="w-full my-4 border-t-2 border-gray-300">
+        <div class="user-list">
+            <ul>
+                <li *ngFor="let item of users">diomerda</li>
+            </ul>
+        </div>
+    </div>
+
+
+
+</div>
