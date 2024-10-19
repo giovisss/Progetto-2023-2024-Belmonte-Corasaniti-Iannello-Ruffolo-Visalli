@@ -10,7 +10,7 @@ import { BASE_IMAGE_URL } from "../../global";
 @Component({
   selector: 'app-user-info',
   templateUrl: './edit-user-info-admin.component.html',
-  //styleUrl: './edit-user-info-admin.component.css'
+  //styleUrl: './find-users.css'
   styleUrls: ['./edit-user-info-admin.component.css'],
   providers: [DatePipe]
 

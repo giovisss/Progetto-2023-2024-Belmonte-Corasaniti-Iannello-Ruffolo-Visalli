@@ -2,14 +2,10 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.boot.actuate.web.exchanges.HttpExchange;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
@@ -20,7 +16,9 @@ import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHol
 
 import javax.ws.rs.Produces;
 import java.security.Principal;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -29,6 +27,12 @@ import java.util.*;
 public class UserController {
     private final KeycloakService keycloakService;
     private final UserService userService;
+
+    @GetMapping("")
+    public ResponseEntity<String> getUsersList(){
+        var out = userService.getAllUsers();
+        return ResponseEntity.ok(new Gson().toJson(out));
+    }
 
     @GetMapping("/user")
     @Produces("application/json")
@@ -136,4 +140,13 @@ public class UserController {
         }
     }
     // Fine controller carrello
+
+    // Controller amici
+
+    @GetMapping(value = "/user/friends/{username}", produces = "application/json")
+    public ResponseEntity<String> getIsFriend(@PathVariable String username) {
+        return ResponseEntity.ok(new Gson().toJson(userService.isFriend(username)));
+    }
+
+    // Fine controller amici
 }

@@ -112,8 +112,12 @@ export class UserService {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
 
-  getUserList(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.adminApiUrl);
+  getUserList(isAdmin: boolean = true): Observable<User[]> {
+    if (isAdmin) {
+      return this.httpClient.get<User[]>(this.adminApiUrl);
+    } else {
+      return this.httpClient.get<User[]>(this.apiUrl);
+    }
   }
 
   updateUserByAdmin(userData: User): Observable<HttpResponse<string>> {

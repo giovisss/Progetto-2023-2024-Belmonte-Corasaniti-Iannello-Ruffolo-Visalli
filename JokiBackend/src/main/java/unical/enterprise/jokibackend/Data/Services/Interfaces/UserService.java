@@ -30,6 +30,8 @@ public interface UserService {
 
     User getFriendByUsername(String first, String second);
 
+    boolean isFriend(String other);
+
     boolean addGameToUserLibrary(String username, UUID gameId);
 
     boolean removeGameFromUserLibrary(String username, UUID gameId);
