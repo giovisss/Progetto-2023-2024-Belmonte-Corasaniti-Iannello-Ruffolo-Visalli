@@ -26,7 +26,7 @@ public class ChatController {
 
     List<UUID> adminIds = new ArrayList<> ();
     List<UUID> userIds = new ArrayList<> ();
-    List<HashMap<String, String>> conversations = new ArrayList<> (); // lista delle conversazioni
+    List<HashMap<UUID, UUID>> conversations = new ArrayList<> (); // lista delle conversazioni
 
     @MessageMapping("/ping")
     @SendTo("/topic/ping")

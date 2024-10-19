@@ -1,16 +1,13 @@
-<div class="chat-container">
-  <h2>Admin Chat</h2>
-  <button (click)="connect()">Connetti</button> <!-- Bottone per connettersi -->
-  <div class="chat-box">
-    <div *ngFor="let msg of allMessages" [ngClass]="{'admin-message': msg.isAdmin, 'user-message': !msg.isAdmin}">
-      <div class="message-bubble">
-        {{ msg.content }}
-      </div>
-      <div class="message-time">{{ msg.timestamp | date:'HH:mm' }}</div>
+<div #chatContainer class="chat-container">
+  <div *ngFor="let message of allMessages" class="message-wrapper">
+    <div [ngClass]="{'admin-message': message.isAdmin, 'user-message': !message.isAdmin}">
+      <p>{{ message.content }}</p>
+      <small>{{ message.timestamp | date:'HH:mm' }}</small>
     </div>
   </div>
-  <div class="input-area">
-    <input [(ngModel)]="message" placeholder="Scrivi un messaggio..." />
-    <button (click)="sendMessage()">Invia</button>
-  </div>
+</div>
+
+<div class="input-container">
+  <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message...">
+  <button (click)="sendMessage()">Send</button>
 </div>

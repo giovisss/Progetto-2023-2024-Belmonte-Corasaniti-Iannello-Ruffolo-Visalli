@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 
@@ -13,10 +13,13 @@ interface ChatMessage {
   templateUrl: './user-chat.component.html',
   styleUrls: ['./user-chat.component.css']
 })
-export class UserChatComponent implements OnInit, OnDestroy {
+export class UserChatComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
   message: string = '';
   allMessages: ChatMessage[] = [];
   private userMessagesSubscription!: Subscription;
+  private shouldScroll = false;
 
   constructor(private messageService: MessageService) {}
 
@@ -24,6 +27,14 @@ export class UserChatComponent implements OnInit, OnDestroy {
     this.messageService.addUser().subscribe(() => {
       console.log('User added');
     });
+    this.connect();
+  }
+
+  ngAfterViewChecked() {
+    if (this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
   }
 
   sendMessage() {
@@ -36,6 +47,7 @@ export class UserChatComponent implements OnInit, OnDestroy {
       this.allMessages.push(newMessage);
       this.messageService.UserSendsToAdmin(this.message);
       this.message = '';
+      this.shouldScroll = true;
     }
   }
 
@@ -55,6 +67,13 @@ export class UserChatComponent implements OnInit, OnDestroy {
       };
       this.allMessages.push(formattedMessage);
       this.allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      this.shouldScroll = true;
     });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    } catch(err) { }
   }
 }
