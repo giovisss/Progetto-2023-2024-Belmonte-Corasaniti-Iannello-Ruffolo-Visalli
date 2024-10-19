@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { BASE_API_URL } from '../global';
 import { KeycloakService } from 'keycloak-angular';
@@ -11,16 +11,11 @@ import { KeycloakService } from 'keycloak-angular';
 export class MessageService {
   private userClient!: Client;
   private adminClient!: Client;
-  private userMessages = new BehaviorSubject<{ content: string, timestamp: string }[]>([]);
-  private adminMessages = new BehaviorSubject<{ content: string, timestamp: string }[]>([]);
+  private userMessages = new Subject<{ content: string, timestamp: string }>();
+  private adminMessages = new Subject<{ content: string, timestamp: string }>();
   private userId: string | null = null;
   private adminId: string | null = null;
   private apiChatUrl = BASE_API_URL + '/chat';
-  private isUserConnected = false;
-  private isAdminConnected = false;
-
-  private userConnectedPromise!: Promise<void>;
-  private adminConnectedPromise!: Promise<void>;
 
   constructor(
     private http: HttpClient,
@@ -29,105 +24,56 @@ export class MessageService {
     console.log('API Chat URL:', this.apiChatUrl);
   }
 
-  private initializeUserId() {
-    try {
-      const token = this.keycloakService.getKeycloakInstance().tokenParsed;
-      if (token && token.sub) {
-        this.userId = token.sub;
-        console.log('User ID initialized:', this.userId);
-        this.initializeUserClient();
-      } else {
-        console.error('User ID not found in token');
-      }
-    } catch (e) {
-      console.error('Error initializing user ID', e);
-    }
-  }
-
-  private initializeAdminId() {
-    try {
-      const token = this.keycloakService.getKeycloakInstance().tokenParsed;
-      if (token && token.sub) {
-        this.adminId = token.sub;
-        console.log('Admin ID initialized:', this.adminId);
-        this.initializeAdminClient();
-      } else {
-        console.error('Admin ID not found in token');
-      }
-    } catch (e) {
-      console.error('Error initializing admin ID', e);
-    }
-  }
-
-  private initializeUserClient() {
-    if (!this.userId) {
-      console.error('User ID not set');
+  private initializeClients() {
+    if (!this.userId || !this.adminId) {
+      console.error('User ID or Admin ID not set');
       return;
     }
 
     const brokerURL = 'ws://localhost:8081/ws';
-    console.log('Initializing user client with broker URL:', brokerURL);
+    console.log('Initializing clients with broker URL:', brokerURL);
 
-    this.userConnectedPromise = new Promise<void>((resolve) => {
-      this.userClient = new Client({
-        brokerURL: brokerURL,
-        onConnect: () => {
-          console.log('User connected');
-          this.isUserConnected = true;
-          resolve(); // Risolvi la promise quando l'utente è connesso
-          this.connectClients(); // Chiama connectClients qui
-        },
-      });
-      this.userClient.activate();
+    this.userClient = new Client({
+      brokerURL: brokerURL,
+      onConnect: () => {
+        console.log('User connected');
+        this.subscribeToTopics();
+      },
     });
+
+    this.adminClient = new Client({
+      brokerURL: brokerURL,
+      onConnect: () => {
+        console.log('Admin connected');
+        this.subscribeToTopics();
+      },
+    });
+
+    this.userClient.activate();
+    this.adminClient.activate();
   }
 
-  private initializeAdminClient() {
-    if (!this.adminId) {
-      console.error('Admin ID not set');
+  private subscribeToTopics() {
+    if (!this.userClient.connected || !this.adminClient.connected) {
       return;
     }
 
-    const brokerURL = 'ws://localhost:8081/ws';
-    console.log('Initializing admin client with broker URL:', brokerURL);
+    const subscriptionTopicUser = `/topic/chat/${this.userId}_${this.adminId}`;
+    const subscriptionTopicAdmin = `/topic/chat/${this.adminId}_${this.userId}`;
 
-    this.adminConnectedPromise = new Promise<void>((resolve) => {
-      this.adminClient = new Client({
-        brokerURL: brokerURL,
-        onConnect: () => {
-          console.log('Admin connected');
-          this.isAdminConnected = true;
-          resolve(); // Risolvi la promise quando l'admin è connesso
-          this.connectClients(); // Chiama connectClients qui
-        },
-      });
-      this.adminClient.activate();
+    this.userClient.subscribe(subscriptionTopicUser, message => {
+      const messageContent = JSON.parse(message.body);
+      console.log('User received message:', messageContent);
+      this.userMessages.next(messageContent);
     });
-  }
 
-  private connectClients() {
-    Promise.all([this.userConnectedPromise, this.adminConnectedPromise])
-      .then(() => {
-        const subscriptionTopicUser = `/topic/chat/${this.userId}_${this.adminId}`;
-        const subscriptionTopicAdmin = `/topic/chat/${this.adminId}_${this.userId}`;
+    this.adminClient.subscribe(subscriptionTopicAdmin, message => {
+      const messageContent = JSON.parse(message.body);
+      console.log('Admin received message:', messageContent);
+      this.adminMessages.next(messageContent);
+    });
 
-        this.userClient.subscribe(subscriptionTopicUser, message => {
-          const messageContent = JSON.parse(message.body);
-          console.log('User received message:', messageContent);
-          this.userMessages.next([...this.userMessages.getValue(), messageContent]);
-        });
-
-        this.adminClient.subscribe(subscriptionTopicAdmin, message => {
-          const messageContent = JSON.parse(message.body);
-          console.log('Admin received message:', messageContent);
-          this.adminMessages.next([...this.adminMessages.getValue(), messageContent]);
-        });
-
-        console.log('Both clients are connected and subscribed.');
-      })
-      .catch((error) => {
-        console.error('Error connecting clients:', error);
-      });
+    console.log('Both clients are connected and subscribed.');
   }
 
   UserSendsToAdmin(message: string) {
@@ -156,11 +102,11 @@ export class MessageService {
     }
   }
 
-  getUserMessages(): Observable<{ content: string, timestamp: string }[]> {
+  getUserMessages(): Observable<{ content: string, timestamp: string }> {
     return this.userMessages.asObservable();
   }
 
-  getAdminMessages(): Observable<{ content: string, timestamp: string }[]> {
+  getAdminMessages(): Observable<{ content: string, timestamp: string }> {
     return this.adminMessages.asObservable();
   }
 
@@ -177,7 +123,7 @@ export class MessageService {
       response => {
         this.adminId = response.adminId;
         console.log('Received admin ID:', this.adminId);
-        this.initializeUserId();
+        this.initializeUserIdAndClients();
       },
       error => {
         console.error('Error getting available admin:', error);
@@ -192,7 +138,7 @@ export class MessageService {
       response => {
         this.userId = response.userId;
         console.log('Received user ID:', this.userId);
-        this.initializeAdminId();
+        this.initializeAdminIdAndClients();
       },
       error => {
         console.error('Error getting user:', error);
@@ -204,5 +150,39 @@ export class MessageService {
     const url = `${this.apiChatUrl}/user`;
     console.log('Adding user, POST request to:', url);
     return this.http.post<string>(url, {});
+  }
+
+  private initializeUserIdAndClients() {
+    try {
+      const token = this.keycloakService.getKeycloakInstance().tokenParsed;
+      if (token && token.sub) {
+        this.userId = token.sub;
+        console.log('User ID initialized:', this.userId);
+        if (this.adminId) {
+          this.initializeClients();
+        }
+      } else {
+        console.error('User ID not found in token');
+      }
+    } catch (e) {
+      console.error('Error initializing user ID', e);
+    }
+  }
+
+  private initializeAdminIdAndClients() {
+    try {
+      const token = this.keycloakService.getKeycloakInstance().tokenParsed;
+      if (token && token.sub) {
+        this.adminId = token.sub;
+        console.log('Admin ID initialized:', this.adminId);
+        if (this.userId) {
+          this.initializeClients();
+        }
+      } else {
+        console.error('Admin ID not found in token');
+      }
+    } catch (e) {
+      console.error('Error initializing admin ID', e);
+    }
   }
 }

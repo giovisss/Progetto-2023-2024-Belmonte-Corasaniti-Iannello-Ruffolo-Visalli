@@ -34,7 +34,6 @@ export class UserChatComponent implements OnInit, OnDestroy {
         isUser: true
       };
       this.allMessages.push(newMessage);
-      this.allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
       this.messageService.UserSendsToAdmin(this.message);
       this.message = '';
     }
@@ -45,16 +44,17 @@ export class UserChatComponent implements OnInit, OnDestroy {
       this.userMessagesSubscription.unsubscribe();
     }
   }
-  
+
   connect() {
     this.messageService.getAvailableAdmin();
-    this.userMessagesSubscription = this.messageService.getUserMessages().subscribe((newMessages) => {
-      const formattedMessages = newMessages.map(msg => ({
-        content: msg.content,
-        timestamp: new Date(msg.timestamp),
+    this.userMessagesSubscription = this.messageService.getUserMessages().subscribe((newMessage) => {
+      const formattedMessage: ChatMessage = {
+        content: newMessage.content,
+        timestamp: new Date(newMessage.timestamp),
         isUser: false
-      }));
-      this.allMessages = [...this.allMessages, ...formattedMessages].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      };
+      this.allMessages.push(formattedMessage);
+      this.allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     });
   }
 }
