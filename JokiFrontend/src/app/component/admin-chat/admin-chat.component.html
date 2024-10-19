@@ -1,0 +1,13 @@
+<div #chatContainer class="chat-container">
+  <div *ngFor="let message of allMessages" class="message-wrapper">
+    <div [ngClass]="{'admin-message': message.isAdmin, 'user-message': !message.isAdmin}">
+      <p>{{ message.content }}</p>
+      <small>{{ message.timestamp | date:'HH:mm' }}</small>
+    </div>
+  </div>
+</div>
+
+<div class="input-container">
+  <input [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Type a message...">
+  <button (click)="sendMessage()">Send</button>
+</div>

@@ -41,10 +41,15 @@ class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, prefix+"/games/**").permitAll() // permetti tutte le richieste GET a /api/games/ */
                         .requestMatchers(HttpMethod.GET, prefix+"/reviews/**").permitAll() // Permetti tutte le GET a /reviews/
                         .requestMatchers(HttpMethod.GET, "/images/**").permitAll() // Permette tutte le richieste GET a /api/images/{imageName:.+}
-//                        .requestMatchers(prefix+"/**").hasRole("client_user") // Permetti tutte le GET a /reviews/**
+
+                        .requestMatchers(HttpMethod.POST, prefix+"/chat/admin/**").hasRole("client_admin") // Permetti solo agli admin di aggiungersi
+                        .requestMatchers(HttpMethod.GET, prefix+"/chat/user").hasRole("client_admin") // Permetti solo agli admin di vedere la lista degli utenti in chat
+                        .requestMatchers(HttpMethod.POST, prefix+"/chat/user/**").hasRole("client_user") // Permetti solo agli utenti di aggiungersi
+                        .requestMatchers(HttpMethod.GET, prefix+"/chat/admin").hasRole("client_user") // Permetti solo agli utenti di vedere la lista degli admin in chat
+                        .requestMatchers("/ws/**").permitAll() // Permetti l'accesso al WebSocket
+
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
-//                        .anyRequest().authenticated()); // permetti tutte le richieste se autenticato
-//                        .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
+                        // .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
         http
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults()).jwt(
