@@ -2,9 +2,7 @@ package com.example.jokiandroid.activity
 
 import CartActivity
 import GameViewModel
-import TokenManager
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -43,7 +41,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
-import com.example.jokiandroid.viewmodel.CurrentUserViewModel
+import com.example.jokiandroid.viewmodel.UserViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -59,14 +57,15 @@ object SideBarActivity {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicUI(navController: NavController, authManager: AuthManager, currentUserViewModel: CurrentUserViewModel) {
+fun BasicUI(navController: NavController, authManager: AuthManager, userViewModel: UserViewModel) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(DrawerValue.Closed) //crea e ricorda lo stato del drawer
     val coroutineScope = rememberCoroutineScope() //coroutine ( eseguire operazioni asincrone), questo crea un coroutineScope che è un contesto di esecuzione delle coroutine
     val localContext = LocalContext.current
     val composable by SideBarActivity.composable.observeAsState()
     val selectedItem = remember { mutableStateOf("home") } // Stato per l'elemento selezionato
-    val isAdmin by currentUserViewModel.isAdmin.observeAsState()
+    val isAdmin by userViewModel.isAdmin.observeAsState()
+    val cartViewModel = CartViewModel()
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,
@@ -96,6 +95,12 @@ fun BasicUI(navController: NavController, authManager: AuthManager, currentUserV
                         label = { Text(text = "Gestione Giochi") },
                         selected = selectedItem.value == "edit_games",
                         onClick = { selectPage("edit_games", coroutineScope, drawerState, navController, selectedItem) }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text(text = "Gestione Utenti") },
+                        selected = selectedItem.value == "edit_users",
+                        onClick = { selectPage("edit_users", coroutineScope, drawerState, navController, selectedItem) }
                     )
                 }
                 else {
@@ -150,7 +155,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager, currentUserV
                         }
                     },
                     actions = {
-                        IconButton(onClick = { navigateToCart(navController, CartViewModel(TokenManager.getToken()?:"")) }) {
+                        IconButton(onClick = { navigateToCart(navController, cartViewModel) }) {
                             Icon(
                                 imageVector = Icons.Filled.ShoppingCart,
                                 contentDescription = "Cart"
@@ -215,7 +220,7 @@ fun SetSingleWishlistContent() {
 @Composable
 fun SetCartContent(navController: NavController, cartViewModel: CartViewModel) {
     SideBarActivity.setContent {
-        CartActivity(navController, cartViewModel)
+        CartActivity(navController, cartViewModel, true)
     }
 }
 
@@ -226,7 +231,15 @@ fun SetEditGameContent(navController: NavController, gameViewModel: GameViewMode
     }
 }
 
+@Composable
+fun SetEditUserContent(navController: NavController, userViewModel: UserViewModel, gameId: String = "") {
+    SideBarActivity.setContent {
+        EditUserDataActivity(navController, userViewModel, gameId)
+    }
+}
+
 fun navigateToCart(navController: NavController, cartViewModel: CartViewModel) {
-    cartViewModel.loadCart() // Carica i dati del carrello
     navController.navigate("cart")
+    cartViewModel.loadCart() // Carica i dati del carrello
+
 }

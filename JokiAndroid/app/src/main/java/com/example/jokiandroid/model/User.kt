@@ -1,7 +1,7 @@
 package com.example.jokiandroid.model
 
 import com.example.jokiandroid.utility.Date
-import com.example.jokiandroid.viewmodel.CurrentUserViewModel
+import com.example.jokiandroid.viewmodel.UserViewModel
 import java.util.UUID
 
 class User {
@@ -44,8 +44,17 @@ class User {
     }
 
     override fun toString(): String {
-        if (CurrentUserViewModel.isAdmin.value == true) return "Admin(id=$id, username='$username', email='$email')"
+        if (UserViewModel.isAdmin.value == true) return "Admin(id=$id, username='$username', email='$email')"
 
         return "User(id=$id, firstName='$firstName', lastName='$lastName', username='$username', email='$email', birthDate=$birthdate, formattedBirthDate=$formattedBirthDate)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        try {
+            val otherUser = other as User
+            return this.id == otherUser.id
+        } catch (e: Exception) {
+            return false
+        }
     }
 }

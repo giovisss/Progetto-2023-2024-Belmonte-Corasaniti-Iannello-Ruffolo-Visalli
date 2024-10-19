@@ -74,6 +74,8 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                         Text("Genere: ${game?.genre}")
                         Text("Prezzo: €${String.format("%.2f", game?.price ?: 0.0)}")
                         Text("Developer: ${game?.developer}")
+                        Text("Publisher: ${game?.publisher}")
+                        Text("Data di uscita: ${game?.formattedReleaseDate}")
                     }
                 }
             }

@@ -34,11 +34,14 @@
             </li>
 
 <!--            USER LINKS -->
-            <li *ngIf="!adminService.isAdmin">
+            <li *ngIf="!adminService.isAdmin && userService.isUser">
               <a [routerLink]="'/library'" routerLinkActive="active-link" href="#" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">La tua Libreria</a>
             </li>
             <li *ngIf="!adminService.isAdmin && userService.isUser">
               <a [routerLink]="'/wishlists'" routerLinkActive="active-link" href="#" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Le tue wishlist</a>
+            </li>
+            <li *ngIf="!adminService.isAdmin && userService.isUser">
+              <a [routerLink]="'/find-users'" routerLinkActive="active-link" href="#" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Cerca Utenti</a>
             </li>
             <li *ngIf="!adminService.isAdmin && userService.isUser">
               <a [routerLink]="'/user-info'" routerLinkActive="active-link" href="#" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Profilo</a>

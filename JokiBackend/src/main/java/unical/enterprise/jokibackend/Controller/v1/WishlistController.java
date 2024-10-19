@@ -33,8 +33,8 @@ public class WishlistController {
     }
 
     @PostMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> addWishlist(@RequestBody String wishlistName){
-        wishlistService.addWishlist(wishlistName);
+    public ResponseEntity<String> addWishlist(@RequestBody WishlistDto wishlistDto){
+        wishlistService.addWishlist(wishlistDto);
         return ResponseEntity.ok(new Gson().toJson("Wishlist added"));
     }
 

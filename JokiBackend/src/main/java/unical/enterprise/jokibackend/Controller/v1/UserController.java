@@ -2,6 +2,7 @@ package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import unical.enterprise.jokibackend.Exceptions.NotModifiedException;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
 import javax.ws.rs.Produces;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +27,12 @@ import java.util.UUID;
 public class UserController {
     private final KeycloakService keycloakService;
     private final UserService userService;
+
+    @GetMapping("")
+    public ResponseEntity<String> getUsersList(){
+        var out = userService.getAllUsers();
+        return ResponseEntity.ok(new Gson().toJson(out));
+    }
 
     @GetMapping("/user")
     @Produces("application/json")
@@ -43,6 +51,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Field can not be the same as before");
         }
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(Principal principal) {
+        String username = principal.getName();
+
+        try {
+            // Ottieni l'utente da Keycloak tramite username
+            UserRepresentation user = keycloakService.getUser(username);
+
+            // Chiama il servizio per forzare il reset della password
+            keycloakService.sendResetPassword(user.getId());
+
+            return ResponseEntity.ok().body(new Gson().toJson("Password reset richiesto. Effettua nuovamente il login per aggiornare la password."));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new Gson().toJson("Errore durante il reset della password."));
+        }
+    }
+
 
     @DeleteMapping("/user")
     @Produces("application/json")
@@ -114,4 +140,13 @@ public class UserController {
         }
     }
     // Fine controller carrello
+
+    // Controller amici
+
+    @GetMapping(value = "/user/friends/{username}", produces = "application/json")
+    public ResponseEntity<String> getIsFriend(@PathVariable String username) {
+        return ResponseEntity.ok(new Gson().toJson(userService.isFriend(username)));
+    }
+
+    // Fine controller amici
 }

@@ -1,8 +1,8 @@
 package com.example.jokiandroid.activity
 
-import CartActivity
 import GameDetailsActivity
 import GameViewModel
+import TokenManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,14 +24,14 @@ import com.example.jokiandroid.repository.CartRepository
 import com.example.jokiandroid.ui.theme.JokiAndroidTheme
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
-import com.example.jokiandroid.viewmodel.CurrentUserViewModel
+import com.example.jokiandroid.viewmodel.UserViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
     private lateinit var gameViewModel: GameViewModel
     private lateinit var cartRepository: CartRepository
-    private lateinit var currentUserViewModel: CurrentUserViewModel
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -42,10 +42,10 @@ class MainActivity : ComponentActivity() {
 
         // Inizializziamo sempre il GameViewModel
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-        currentUserViewModel = ViewModelProvider(this)[CurrentUserViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
         // Inizializziamo il CartRepository
-        cartRepository = CartRepository(TokenManager.getToken() ?: "")
+        cartRepository = CartRepository()
 
 //        if (TokenManager.getToken() == null) {
 //            authManager.startAuthorization(this)
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JokiAndroidTheme {
                 Surface {
-                    MainScreen(authManager, gameViewModel, cartRepository, currentUserViewModel)
+                    MainScreen(authManager, gameViewModel, cartRepository, userViewModel)
                 }
             }
         }
@@ -100,12 +100,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, currentUserViewModel: CurrentUserViewModel) {
+fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, userViewModel: UserViewModel) {
     val navController = rememberNavController()
-    val cartViewModel = remember { CartViewModel(TokenManager.getToken() ?: "") }
+    val cartViewModel = remember { CartViewModel() }
     val wishlistViewModel = remember { WishlistViewModel() }
 
-    BasicUI(navController = navController, authManager = authManager, currentUserViewModel = currentUserViewModel)
+    BasicUI(navController = navController, authManager = authManager, userViewModel = userViewModel)
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { SetGameListContent(gameViewModel, cartViewModel, navController) }
@@ -124,9 +124,16 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepos
             gameId?.let { EditGamesActivity(gameId = it, gameViewModel = gameViewModel, navController = navController) }
         }
 
+        composable("edit_users") { SetEditUserContent(navController, userViewModel) }
+        composable("edit_users/{username}") { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username")
+            username?.let { EditUserDataActivity(searchedUsername = it, userViewModel = userViewModel, navController = navController) }
+        }
+
         composable("game_detail/{gameId}") { backStackEntry ->
             val gameId = backStackEntry.arguments?.getString("gameId")
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }
         }
+
     }
 }

@@ -112,6 +112,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isFriend(String other) {
+        String user=UserContextHolder.getContext().getPreferredUsername();
+
+        if(user.equals(other)) return true;
+
+        return (getFriendByUsername(user, other) != null) && (getFriendByUsername(other,user) != null);
+    }
+
+    @Override
     @Transactional
     public boolean addGameToUserLibrary(String username, UUID gameId) {
         Game game = gameDao.findById(gameId)

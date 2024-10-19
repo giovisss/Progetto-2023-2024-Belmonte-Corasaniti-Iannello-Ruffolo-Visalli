@@ -18,6 +18,23 @@ class Date {
     }
 
     constructor(dataString: String){
+        if (dataString.contains("T")){
+            val data = dataString.split("T")[0].split("-")
+            this.year = data[0].toInt()
+            this.month = data[1].toInt()
+            // per correggere il timezone facciamo +1
+            this.day = data[2].toInt()+1
+            return
+        }
+
+        if(dataString.contains("-")){
+            val data = dataString.split("-")
+            this.year = data[0].toInt()
+            this.month = data[1].toInt()
+            this.day = data[2].toInt()
+            return
+        }
+
         val data = dataString
             .replace(",","")
             .split(" ")
@@ -46,6 +63,9 @@ class Date {
     }
 
     override fun toString(): String {
-        return "$day-$month-$year"
+        val month = if (month < 10) "0$month" else month.toString()
+        val day = if (day < 10) "0$day" else day.toString()
+
+        return "$year-$month-$day"
     }
 }

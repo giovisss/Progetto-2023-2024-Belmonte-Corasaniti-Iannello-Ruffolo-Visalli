@@ -26,6 +26,7 @@ import {EditUserInfoAdminComponent} from "./component/edit-user-info-admin/edit-
 import { CheckoutComponent } from './component/checkout/checkout.component';
 import { AdminChatComponent } from './component/admin-chat/admin-chat.component';
 import { UserChatComponent } from './component/user-chat/user-chat.component';
+import {FindUsers} from "./component/find-users/find-users";
 
 function initializeKeycloak(keycloak: KeycloakInitService) {
   return () => keycloak.init();
@@ -51,7 +52,8 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     EditUserInfoAdminComponent,
     CheckoutComponent,
     AdminChatComponent,
-    UserChatComponent
+    UserChatComponent,
+    FindUsers,
   ],
   imports: [
     BrowserModule,

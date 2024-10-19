@@ -17,11 +17,18 @@ export class WishlistsComponent {
   constructor(private wishlistService: WishlistService, private router: Router) {}
 
   ngOnInit() {
-    this.wishlists = this.wishlistService.getWishlists();
+      this.loadWishlists()
   }
 
   loadWishlists() {
-    this.wishlists = this.wishlistService.getWishlists();
+    this.wishlistService.getWishlists().subscribe( response => {
+        if (response != null) {
+            this.wishlists = response;
+            console.log(this.wishlists);
+        } else {
+            alert('Errore nel caricamento delle wishlist!');
+        }
+    })
   }
 
     openModal() {
@@ -33,24 +40,28 @@ export class WishlistsComponent {
     }
 
     createWishlist() {
-        const newWishlist: Wishlist = {
-            name: this.newWishlistName,
-            wishListProducts: [],
-            visibility: this.newWishlistVisibility
-        };
-        this.wishlistService.addWishlist(newWishlist)
-        this.loadWishlists();
-        console.log('Wishlist creata con successo!');
-        this.closeModal();
+        this.wishlistService.createWishlist(new Wishlist(this.newWishlistName, [], this.newWishlistVisibility)).subscribe( response => {
+            if (!response) alert('Errore nella creazione della wishlist!');
+            else {
+                this.loadWishlists();
+                console.log('Wishlist creata con successo!');
+                this.closeModal();
+            }
+        })
     }
 
-  removeWishlist(wishlist: Wishlist) {
-    this.wishlistService.removeWishlist(wishlist);
-    this.loadWishlists();
+  removeWishlist(wishlistName: string) {
+    this.wishlistService.deleteWishlist(wishlistName).subscribe( response => {
+        if (!response) alert('Errore nella rimozione della wishlist!');
+        else {
+            this.loadWishlists();
+            console.log('Wishlist rimossa con successo!');
+        }
+    })
   }
 
   OpenWishlistDetails(wishlist: Wishlist) {
-    this.router.navigate(['/wishlists', wishlist.name]);
+    this.router.navigate(['/wishlists', wishlist.wishlistName]);
   }
 
 }

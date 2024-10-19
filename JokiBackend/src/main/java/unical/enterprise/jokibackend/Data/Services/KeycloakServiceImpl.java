@@ -2,6 +2,8 @@ package unical.enterprise.jokibackend.Data.Services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -69,11 +71,6 @@ public class KeycloakServiceImpl implements KeycloakService {
         return userDao.save(modelMapper.map(userDto, User.class));
     }
 
-    @Override
-    public UserRepresentation getUser(String userName){
-        UsersResource usersResource = getInstance();
-        return usersResource.search(userName, true).get(0);
-    }
 
     @Override
     @Transactional
@@ -129,11 +126,18 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
-    public void sendResetPassword(String userId){
-        UsersResource usersResource = getInstance();
+    public UserRepresentation getUser(String username) {
+        UsersResource usersResource = KeycloakManager.getUsersResource();
+        return usersResource.search(username, true).get(0);  // Cerca l'utente per username
+    }
 
-        usersResource.get(userId)
-                .executeActionsEmail(Arrays.asList("UPDATE_PASSWORD"));
+    @Override
+    public void sendResetPassword(String userId) {
+        RealmResource realmResource = KeycloakManager.getRealmResource();  // Get the Realm
+        UserResource userResource = realmResource.users().get(userId);
+        UserRepresentation userRepresentation = userResource.toRepresentation();
+        userRepresentation.setRequiredActions(Arrays.asList("UPDATE_PASSWORD"));  // Set the required action for password reset
+        userResource.update(userRepresentation);  // Update the user
     }
 
     @Override
