@@ -3,6 +3,9 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../model/user';
 import {BASE_IMAGE_URL} from "../../global";
 import {HttpResponse} from "@angular/common/http";
+import {WishlistService} from "../../services/wishlist.service";
+import {Wishlist} from "../../model/wishlist";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-find-users',
@@ -16,12 +19,14 @@ export class FindUsers {
   protected users: User[] = [];
   protected searchedUsers: User[] = [];
 
+  protected wishlists: Wishlist[] = [];
+
   btnText: string = 'Richiedi amicizia';
 
 
 
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private wishlistService: WishlistService, private router: Router) {
     this.userService.getUserList(false).subscribe((response: User[]) => {
       this.users = response;
     });
@@ -44,6 +49,15 @@ export class FindUsers {
   protected onUserClick(user: User) {
     this.selectedUser = user;
     this.searchedUsers = [];
+    this.wishlists = [];
+
+    this.wishlistService.getOtherWishlists(user.username).subscribe( response => {
+      if (response != null) {
+        this.wishlists = response;
+      } else {
+        alert('Errore nel caricamento delle wishlist!');
+      }
+    })
 
     this.checkFriendship()
   }
@@ -89,4 +103,7 @@ export class FindUsers {
     })
   }
 
+    protected onWishlistClick(wishlist: Wishlist) {
+        this.router.navigate(['/wishlists/other', this.selectedUser?.username, wishlist.wishlistName]);
+    }
 }

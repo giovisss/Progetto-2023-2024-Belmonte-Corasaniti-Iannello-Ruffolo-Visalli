@@ -29,7 +29,10 @@
         <hr class="w-full my-4 border-t-2 border-gray-300">
         <div class="user-list">
             <ul>
-                <li *ngFor="let item of users">diomerda</li>
+                <li *ngFor="let item of wishlists" class="flex justify-between p-2 border-b border-gray-300" (click)="onWishlistClick(item)">
+                    <span>{{ item.wishlistName }}</span>
+                    <span>{{ item.games.length }}</span>
+                </li>
             </ul>
         </div>
     </div>
