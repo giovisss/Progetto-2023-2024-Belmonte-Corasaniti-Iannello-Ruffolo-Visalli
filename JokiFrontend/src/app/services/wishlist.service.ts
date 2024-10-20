@@ -25,8 +25,33 @@ export class WishlistService {
     )
   }
 
+  getOtherWishlists(username: string): Observable<Wishlist[]> {
+    return this.httpClient.get<Wishlist[]>(this.apiUrl+"/other/"+username, {
+      observe: 'response'
+    }).pipe(
+        map(response => {
+            console.log(response);
+            if (!response.ok || response.body == null) return [];
+            return response.body.map(wishlist => new Wishlist(wishlist.wishlistName, wishlist.games, wishlist.visibility))
+        }
+      )
+    )
+  }
+
   getWishlist(name: string): Observable<Wishlist> {
     return this.httpClient.get<Wishlist>(this.apiUrl+"/"+name, {
+      observe: 'response'
+    }).pipe(
+        map(response => {
+            console.log(response);
+            if (response.body == null) return new Wishlist("", [], 0);
+            return new Wishlist(response.body.wishlistName, response.body.games, response.body.visibility)
+        })
+    )
+  }
+
+  getOtherWishlist(username: string, wishlistName: string): Observable<Wishlist> {
+    return this.httpClient.get<Wishlist>(this.apiUrl+"/other/"+username+"/"+wishlistName, {
       observe: 'response'
     }).pipe(
         map(response => {

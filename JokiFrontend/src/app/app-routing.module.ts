@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'product/:id', component: ProductComponent },
   { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
+  { path: 'wishlists/other/:username/:wishlistName', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   { path: 'login', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'find-users', component: FindUsers, canActivate: [AuthGuard] },
   { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
