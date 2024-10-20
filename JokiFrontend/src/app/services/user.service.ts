@@ -27,39 +27,8 @@ export class UserService {
     }
   }
 
-  keycloakAuth() {
-    // Make HTTP request with authorization token
-    this.auth.keycloak.getToken().then(token => {
-      console.log(token);
-      this.httpClient.get('http://localhost:8081/tmp/v1/admin/personal', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        responseType: 'text'
-      }).subscribe(response => {
-        try {
-          const jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
-        } catch (e) {
-          console.log(response);
-        }
-      });
-    });
-
-    // this.httpClient.get('http://localhost:8081/tmp/admin/personal', {
-    //   responseType: 'text'
-    // }).subscribe(response => {
-    //   try {
-    //     const jsonResponse = JSON.parse(response);Quando viene premuto sul bottone "resetta password" il programma chiama lo script che setta il "Required user actions Update Password" di keycloak su TRUE e l'utente viene reindirizzato su una nuova pagina per la modifica della password
-    //     console.log(jsonResponse);
-    //   } catch (e) {
-    //     console.log(response);
-    //   }
-    // });
-
-    // this.auth.keycloak.getToken().then(token => {
-    //   console.log(token);
-    // })
+  firstLogin(): Observable<HttpResponse<string>> {
+    return this.httpClient.get<string>(this.apiUrl + '/first-login', { observe: 'response' });
   }
 
   resetPassword(): Observable<any> {

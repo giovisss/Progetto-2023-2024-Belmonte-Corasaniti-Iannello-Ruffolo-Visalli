@@ -13,6 +13,8 @@ public interface UserService {
 
     void save(User user);
 
+    boolean firstLogin();
+
     UserDto getUserById(UUID id);
 
     UserDto getUserByUsername(String username);

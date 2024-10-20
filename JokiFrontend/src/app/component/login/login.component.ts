@@ -1,6 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
-import { MessageService } from '../../services/message.service';
-import { AdminService } from '../../services/admin.service';
+import {catchError} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
+import {UserService} from "../../services/user.service";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -8,6 +11,16 @@ import { AdminService } from '../../services/admin.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  
-  constructor() {}
+
+  constructor(private router: Router, private userService: UserService){
+    this.userService.firstLogin().pipe(catchError(() => { return of(null) })).subscribe((response: HttpResponse<string> | null) => {
+      if (response?.ok) {
+        this.router.navigate(['']);
+      } else {
+        alert("Errore nella verifica dell'utente");
+      }
+    });
+  }
 }
+
+

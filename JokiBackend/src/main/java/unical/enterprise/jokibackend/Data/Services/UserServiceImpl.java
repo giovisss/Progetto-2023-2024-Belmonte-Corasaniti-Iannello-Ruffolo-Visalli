@@ -13,8 +13,11 @@ import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
+import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContext;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
+import unical.enterprise.jokibackend.Utility.KeycloakManager;
 import unical.enterprise.jokibackend.Utility.UserFriendship;
 
 import javax.ws.rs.NotFoundException;
@@ -33,6 +36,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User user) {
         userDao.save(user);
+    }
+
+    @Override
+    public boolean firstLogin() {
+        try {
+            if (userDao.findUserByUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null) == null) {
+                UserContext context = UserContextHolder.getContext();
+
+                userDao.save(userDao.save(new User(
+                        UUID.fromString(KeycloakManager.getUsersResource().search(context.getPreferredUsername(), true).get(0).getId()),
+                        context.getPreferredUsername(),
+                        context.getEmail(),
+                        context.getGivenName(),
+                        context.getFamilyName(),
+                        null,null,null,null,null)));
+            } else {
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

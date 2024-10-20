@@ -34,6 +34,11 @@ public class UserController {
         return ResponseEntity.ok(new Gson().toJson(out));
     }
 
+    @GetMapping(value = "first-login", produces = "application/json")
+    public ResponseEntity<String> firstLogin() {
+        return userService.firstLogin() ? ResponseEntity.ok(new Gson().toJson(true)) : ResponseEntity.ok().body(new Gson().toJson(false));
+    }
+
     @GetMapping("/user")
     @Produces("application/json")
     public ResponseEntity<String> getCurrentUser() {
