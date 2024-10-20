@@ -1,58 +1,74 @@
-package com.example.jokiandroid.viewmodel;
+package com.example.jokiandroid.viewmodel
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.jokiandroid.model.Wishlist
+import com.example.jokiandroid.repository.WishlistRepository
+import kotlinx.coroutines.launch
 
-import com.example.jokiandroid.model.Wishlist;
+class WishlistViewModel : ViewModel() {
+    private val _wishlists: MutableLiveData<List<Wishlist>> = MutableLiveData()
+    val wishlists: LiveData<List<Wishlist>> get() = _wishlists
 
-import java.util.ArrayList;
-import java.util.List;
+    private val wishlistRepository = WishlistRepository()
 
-public class WishlistViewModel extends ViewModel {
-    private MutableLiveData<List<Wishlist>> listOfWishlist = new MutableLiveData<>();
-//    private WishlistRepository wishlistRepository;
+    fun loadWishlists() {
+        viewModelScope.launch {
+            try{
+                val tmp = wishlistRepository.getWishlists()
+                val out = mutableListOf<Wishlist>()
+                for (wishlist in tmp) {
+                    out.add(Wishlist(wishlist))
+                }
+                _wishlists.value = out
+                Log.d("WishlistViewModel", "Updated static wishlists: ${wishlists.value?.size}")
+            } catch (e: Exception) {
+                Log.e("WishlistViewModel", "Error loading wishlists", e)
+            }
+        }
 
-//    public WishlistViewModel() {
-////        wishlistRepository = new WishlistRepository();
-//    }
-
-//    public void setWishlist() {
-//        wishlist.setValue(wishlistRepository.getWishlist());
-//    }
-
-    public LiveData<List<Wishlist>> getListOfWishlist() {
-        return listOfWishlist;
     }
 
-//    public void createWishlist(String name, int visibility) {
-//        Wishlist newWishlist = new Wishlist(name, visibility);
-//        List<Wishlist> currentWishlist = listOfWishlist.getValue();
-////        assert currentWishlist != null;
-//        currentWishlist.add(newWishlist);
-//        listOfWishlist.setValue(currentWishlist);
+    //crea una nuova wishlist
+//    fun createWishlist(name: String, visibility: Int) {
+//        viewModelScope.launch {
+//            try {
+//                val response = wishlistRepository.createWishlist(name, visibility)
+//                if (response) {
+//                    Log.d("WishlistViewModel", "Wishlist creata: Response = $response")
+//                    loadWishlists()
+//                } else {
+//                    Log.e("WishlistViewModel", "Errore nella creazione della wishlist: Response = $response")
+//                }
+//            } catch (e: Exception) {
+//                Log.e("WishlistViewModel", "Errore nella creazione della wishlist", e)
+//            }
+//        }
+//    }
+//    fun getListOfWishlist(): LiveData<MutableList<Wishlist>>? {
+//        return wishlists
+//    }
+
+//    fun createWishlist(name: String?, visibility: Int) {
+//        require(!(name == null || name.isEmpty())) { "Il nome della wishlist non può essere vuoto" }
+//        var currentWishlists: MutableList<Wishlist>? = wishlists!!.getValue()
+//        if (currentWishlists == null) {
+//            currentWishlists = ArrayList()
+//        }
+//        val newWishlist = Wishlist(name, visibility)
+//        currentWishlists.add(newWishlist)
+//        wishlists.setValue(currentWishlists)
+//    }
 //
+//
+//    fun removeWishlist(name: String) {
+//        val currentWishlist: MutableList<Wishlist> = checkNotNull(
+//            wishlists!!.value
+//        )
+//        currentWishlist.removeIf { wishlist: Wishlist -> wishlist.name == name }
+//        wishlists.setValue(currentWishlist)
 //    }
-
-    public void createWishlist(String name, int visibility) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Il nome della wishlist non può essere vuoto");
-        }
-        List<Wishlist> currentWishlists = listOfWishlist.getValue();
-        if (currentWishlists == null) {
-            currentWishlists = new ArrayList<>();
-        }
-        Wishlist newWishlist = new Wishlist(name, visibility);
-        currentWishlists.add(newWishlist);
-        listOfWishlist.setValue(currentWishlists);
-    }
-
-
-    public void removeWishlist(String name) {
-        List<Wishlist> currentWishlist = listOfWishlist.getValue();
-        assert currentWishlist != null;
-        currentWishlist.removeIf(wishlist -> wishlist.getName().equals(name));
-        listOfWishlist.setValue(currentWishlist);
-    }
-
 }

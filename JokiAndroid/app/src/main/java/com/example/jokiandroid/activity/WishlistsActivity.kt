@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -40,8 +39,13 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistViewModel) {
 
-    val wishlists by wishlistViewModel.listOfWishlist.observeAsState(emptyList())
+    val wishlists by wishlistViewModel.wishlists.observeAsState(emptyList())
     var showModal by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        wishlistViewModel.loadWishlists()
+    }
+
     Scaffold(
         topBar = {
             //Qui dobbiamo visualizzare il titolo della pagina
@@ -57,7 +61,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
                             onDismiss = { showModal = false },
                             onCreate = { nome, visibilita ->
                                 Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
-                                wishlistViewModel.createWishlist(nome, visibilita)
+//                                wishlistViewModel.createWishlist(nome, visibilita)
                                 // Qui gestisci la creazione della wishlist
                                 // con i dati ricevuti (nome, visibilita)
                             }
@@ -77,9 +81,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
                     WishlistsItem(
                         item = wishlist,
                         onWishlistClick = {
-                            navController.navigate("wishlists/${wishlist.name}")
-
-
+                            navController.navigate("wishlists/${wishlist.wishlistName}")
                         }
                     )
                 }
@@ -105,8 +107,8 @@ fun WishlistsItem(item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
             .clickable { onWishlistClick(item) }
     ){
         Column {
-            Text(text = item.name, style = MaterialTheme.typography.titleMedium)
-            Text(text = "Games: ${item.games.size}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = item.wishlistName, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Games: ${item.games}", style = MaterialTheme.typography.bodyMedium)
         }
 }
 
