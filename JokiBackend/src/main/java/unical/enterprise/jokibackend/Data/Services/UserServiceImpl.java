@@ -13,7 +13,7 @@ import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContext;
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final ModelMapper modelMapper;
     private final GameDao gameDao;
+    private final AdminService adminService;
 
     @Override
     public void save(User user) {
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean firstLogin() {
         try {
+            if (adminService.getById(UserContextHolder.getContext().getId()) != null) return false;
+
             if (userDao.findUserByUsername(UserContextHolder.getContext().getPreferredUsername()).orElse(null) == null) {
                 UserContext context = UserContextHolder.getContext();
 
