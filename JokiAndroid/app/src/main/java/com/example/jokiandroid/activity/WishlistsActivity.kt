@@ -1,5 +1,6 @@
 package com.example.jokiandroid.activity
 
+import RetrofitInstance
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
@@ -32,6 +33,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewModelScope
+import com.example.jokiandroid.service.WishlistApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 //Qui dobbiamo visualizzare le wishlist dell'utente
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -58,6 +64,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
 
                     if (showModal) {
                         CreaWishlistModal(
+                            wishlistViewModel = wishlistViewModel,
                             onDismiss = { showModal = false },
                             onCreate = { nome, visibilita ->
                                 Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
@@ -120,6 +127,7 @@ fun WishlistsItem(item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
 
 @Composable
 fun CreaWishlistModal(
+    wishlistViewModel: WishlistViewModel,
     onDismiss: () -> Unit, // Funzione per chiudere il modal
     onCreate: (String, Int) -> Unit // Funzione per creare la wishlist
 ) {
@@ -172,8 +180,18 @@ fun CreaWishlistModal(
                     }
 
                     TextButton(onClick = {
-                        onCreate(nomeWishlist, visibilita)
-                        onDismiss() // Chiudi il modal dopo la creazione
+                        // Avvia una coroutine per la chiamata API
+                            wishlistViewModel.viewModelScope.launch {
+                            withContext(Dispatchers.IO) {
+                            val response = RetrofitInstance.createApi(WishlistApiService::class.java, TokenManager.getToken()).createWishlist(wishlist = Wishlist(nomeWishlist, visibilita))
+                            response.body()?.let {
+                                Log.d("WishlistsActivity", "Wishlist creata: $it")
+                            }
+                        }
+
+                            onCreate(nomeWishlist, visibilita)
+                            onDismiss() // Chiudi il modal dopo la creazione
+                        }
                     }) {
                         Text("Crea")
                     }

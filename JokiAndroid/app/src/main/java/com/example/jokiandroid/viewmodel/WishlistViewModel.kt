@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.model.Wishlist
 import com.example.jokiandroid.repository.WishlistRepository
 import kotlinx.coroutines.launch
@@ -29,6 +30,10 @@ class WishlistViewModel : ViewModel() {
                 Log.e("WishlistViewModel", "Error loading wishlists", e)
             }
         }
+
+    }
+
+    fun addGameToWishlist(it: Game) {
 
     }
 
