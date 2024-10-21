@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Wishlist} from "../../model/wishlist";
 import {WishlistService} from "../../services/wishlist.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {BASE_IMAGE_URL} from "../../global";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-wishlist-products',
@@ -12,33 +13,40 @@ import {BASE_IMAGE_URL} from "../../global";
 export class WishlistProductsComponent implements OnInit {
   protected other: boolean = false;
   private username: string = "";
+  protected wishlistName: string = "";
 
   wishlist: Wishlist | null = null; // Memorizza i dati della wishlist
 
   showProductDetails: { [productId: string]: boolean } = {}; // Oggetto per tenere traccia della visibilità dei dettagli
 
-  constructor(private wishlistService: WishlistService, private route: ActivatedRoute) {}
+  constructor(private wishlistService: WishlistService, private route: ActivatedRoute, protected router: Router, protected cartService: CartService) {}
 
   ngOnInit() {
     this.route.url.subscribe(url => {
+        this.other = false;
+        this.username = "";
+        this.wishlistName = "";
+
         if (url[1].path == "other"){
           this.other = true;
           this.username = url[2].path;
+          this.wishlistName = url[3].path;
         }
         else {
           this.other = false;
+            this.wishlistName = url[1].path;
         }
     })
 
-    const wishlistName = this.route.snapshot.params['wishlistName'];
+    // const wishlistName = this.route.snapshot.params['wishlistName'];
 
     if (this.other) {
-        this.wishlistService.getOtherWishlist(this.username, wishlistName).subscribe(response => {
+        this.wishlistService.getOtherWishlist(this.username, this.wishlistName).subscribe(response => {
             console.log(response);
             this.wishlist = response;
         });
     } else {
-      this.wishlistService.getWishlist(wishlistName).subscribe(response => {
+      this.wishlistService.getWishlist(this.wishlistName).subscribe(response => {
         console.log(response);
         this.wishlist = response;
       });

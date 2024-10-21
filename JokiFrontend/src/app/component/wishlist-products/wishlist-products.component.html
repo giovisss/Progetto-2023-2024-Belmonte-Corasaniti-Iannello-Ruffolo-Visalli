@@ -14,11 +14,11 @@
     </div>
     <div class="mt-10 lg:mt-12 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-10 lg:gap-y-0">
 
-      <div *ngFor="let product of wishlist.games" class="flex flex-col px-4 py-8">
+      <div *ngFor="let product of wishlist.games" class="flex flex-col px-4 py-8 dynamic-image-container">
         <div class="relative">
-          <img class="hidden lg:block w-45 h-45 object-cover" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />
-          <img class="hidden sm:block lg:hidden" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />
-          <img class="sm:hidden" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />
+          <img class="hidden lg:block w-45 h-45 object-cover dynamic-image" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />
+<!--          <img class="hidden sm:block lg:hidden dynamic-image" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />-->
+<!--          <img class="sm:hidden dynamic-image" [src]="BASE_IMAGE_URL + product.url1" [alt]="product.title" />-->
           <button *ngIf="!other" (click)="removeProduct(product)" aria-label="close" class="top-4 right-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 absolute p-1.5 bg-gray-800 dark:bg-white dark:text-gray-800 text-white hover:text-gray-400">
             <svg class="fill-stroke" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -50,10 +50,10 @@
           </div>
           <div class="flex jusitfy-between flex-col lg:flex-row items-center mt-10 w-full space-y-4 lg:space-y-0 lg:space-x-4 xl:space-x-8">
             <div class="w-full">
-              <button class="focus:outline-none focus:ring-gray-800 focus:ring-offset-2 focus:ring-2 text-gray-800  w-full tracking-tight py-4 text-lg leading-4 hover:bg-gray-300 hover:text-gray-800 dark:text-white bg-white border border-gray-800 dark:border-white dark:hover:bg-gray-800 dark:hover:text-white">More information</button>
+              <button (click)="this.router.navigate(['product/' + product.id])" class="focus:outline-none text-white focus:ring-gray-800 focus:ring-offset-2 focus:ring-2 w-full tracking-tight py-4 text-lg leading-4 hover:bg-black bg-gray-800 border border-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">More information</button>
             </div>
             <div class="w-full">
-              <button class="focus:outline-none focus:ring-gray-800 focus:ring-offset-2 focus:ring-2 w-full tracking-tight py-4 text-lg leading-4 hover:bg-black bg-gray-800 border border-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">Add to cart</button>
+              <button (click)="this.cartService.addToCart(this.product!)" class="focus:outline-none text-white focus:ring-gray-800 focus:ring-offset-2 focus:ring-2 w-full tracking-tight py-4 text-lg leading-4 hover:bg-black bg-gray-800 border border-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">Add to cart</button>
             </div>
           </div>
         </div>
