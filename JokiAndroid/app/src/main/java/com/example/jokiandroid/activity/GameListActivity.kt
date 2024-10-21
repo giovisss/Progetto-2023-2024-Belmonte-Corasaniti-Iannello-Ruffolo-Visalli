@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.jokiandroid.R
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
@@ -46,6 +47,7 @@ fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, nav
                     GameItem(
                         item = game,
                         onAddToCart = { cartViewModel.addGame(it) },
+                        onAddToWishlist = { /*TODO*/ },
                         onGameClick = { navController.navigate("game_detail/${game.id}") }
                     )
                 }
@@ -55,7 +57,7 @@ fun GameListPage(gameViewModel: GameViewModel, cartViewModel: CartViewModel, nav
 }
 
 @Composable
-fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, onGameClick: (Game) -> Unit = {}){
+fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, onAddToWishlist: (Game) -> Unit = {}, onGameClick: (Game) -> Unit = {}){
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -106,12 +108,29 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, onGameClick: (Game) 
                     .fillMaxSize(.5f)
                     .align(Alignment.CenterHorizontally)
             )
-            Button(
-                onClick = { onAddToCart(item) },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = "Aggiungi al carrello")
+            Row {
+                Button(
+                    onClick = { onAddToCart(item) },
+                    modifier = Modifier
+                        .weight(.5f)
+                        .fillMaxSize()
+                ) {
+                    AsyncImage(
+                        model = R.drawable.add_shopping_cart,
+                        contentDescription = "Aggiungi al carrello",
+                    )
+                }
+                Button(
+                    onClick = { onAddToWishlist(item) },
+                    modifier = Modifier
+                        .weight(.5f)
+                        .fillMaxSize()
+                ) {
+                    AsyncImage(
+                        model = R.drawable.heart,
+                        contentDescription = "Aggiungi alla lista dei desideri",
+                    )
+                }
             }
         }
     }
