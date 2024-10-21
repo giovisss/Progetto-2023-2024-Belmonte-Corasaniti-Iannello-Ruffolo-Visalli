@@ -113,9 +113,8 @@ export class UserInfoComponent implements OnInit {
     this.userService.resetPassword().subscribe(
       (response) => {
         console.log('User updated successfully', response);
-        window.location.reload(); // Ricarica la pagina per visualizzare i nuovi dati
-        // Reindirizza l'utente alla pagina di login
-        this.router.navigate(['/user-info']);  // O reindirizza dove necessario
+        window.location.reload();
+        this.router.navigate(['/user-info']);
       },
       (error) => {
         this.message = 'Si è verificato un errore. Riprova più tardi.';

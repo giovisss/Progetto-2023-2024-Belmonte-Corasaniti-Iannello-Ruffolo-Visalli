@@ -15,6 +15,7 @@ import {UserChatComponent} from './component/user-chat/user-chat.component';
 import {AdminChatComponent} from './component/admin-chat/admin-chat.component';
 import {FindUsers} from "./component/find-users/find-users";
 import {LoginComponent} from "./component/login/login.component";
+import {LogoutComponent} from "./component/logout/logout.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'wishlists/:name', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   { path: 'wishlists/other/:username/:wishlistName', component: WishlistProductsComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
+  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
   { path: 'find-users', component: FindUsers, canActivate: [AuthGuard] },
   { path: 'user-info', component: UserInfoComponent, canActivate: [AuthGuard]},
   { path: 'library', component: LibraryComponent, canActivate: [AuthGuard]},

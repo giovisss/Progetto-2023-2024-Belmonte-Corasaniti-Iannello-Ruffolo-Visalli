@@ -15,7 +15,6 @@ export class UserService {
   isUser: boolean = false;
   private apiUrl = BASE_API_URL + '/users';
   private adminApiUrl = BASE_API_URL + '/admin/users';
-  //private userApiUrl = '/api/v1/users'
   private _user: User | null = null;
 
   constructor(private httpClient: HttpClient, private auth: AuthGuard, private keycloakService: KeycloakService) {
