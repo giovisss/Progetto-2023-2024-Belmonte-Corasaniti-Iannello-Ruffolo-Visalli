@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.jokiandroid.auth.AuthManager
 import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.UserViewModel
@@ -211,9 +212,9 @@ fun SetWishlistContent(navController: NavController, wishlistViewModel: Wishlist
 }
 
 @Composable
-fun SetSingleWishlistContent() {
+fun SetSingleWishlistContent(navController: NavHostController, wishlistName: String) {
     SideBarActivity.setContent {
-        SingleWishlistActivity()
+        SingleWishlistActivity(navController, wishlistName)
     }
 }
 

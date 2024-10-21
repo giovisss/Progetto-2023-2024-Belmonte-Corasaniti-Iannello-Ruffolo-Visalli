@@ -108,7 +108,7 @@ fun WishlistsItem(item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
     ){
         Column {
             Text(text = item.wishlistName, style = MaterialTheme.typography.titleMedium)
-            Text(text = "Games: ${item.games}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Questa wishlist è ${item.visibility} e contiene ${item.games.size} giochi ", style = MaterialTheme.typography.bodyMedium)
         }
 }
 
