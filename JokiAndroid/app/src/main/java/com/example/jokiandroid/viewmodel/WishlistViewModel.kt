@@ -14,6 +14,9 @@ class WishlistViewModel : ViewModel() {
     private val _wishlists: MutableLiveData<List<Wishlist>> = MutableLiveData()
     val wishlists: LiveData<List<Wishlist>> get() = _wishlists
 
+    private val _singleWishlist: MutableLiveData<Wishlist> = MutableLiveData()
+    val singleWishlist: LiveData<Wishlist> get() = _singleWishlist
+
     private val wishlistRepository = WishlistRepository()
 
     fun loadWishlists() {
@@ -33,8 +36,37 @@ class WishlistViewModel : ViewModel() {
 
     }
 
-    fun addGameToWishlist(it: Game) {
+    fun addGameToWishlist(wishlistName: String, gameId: String) {
+        viewModelScope.launch {
+            try {
+                val response = wishlistRepository.addGameToWishlist(wishlistName, gameId)
+                if (response) {
+                    Log.d("WishlistViewModel", "Game aggiunto alla wishlist: Response = $response")
+                } else {
+                    Log.e("WishlistViewModel", "Errore nell'aggiunta del gioco alla wishlist: Response = $response")
+                }
+            } catch (e: Exception) {
+                Log.e("WishlistViewModel", "Errore nell'aggiunta del gioco alla wishlist", e)
+            }
+        }
 
+    }
+
+
+    fun getSingleWishlist(wishlistName: String) {
+        viewModelScope.launch {
+            try {
+                val response = wishlistRepository.getSingleWishlist(wishlistName)
+                if (response != null) {
+                    _singleWishlist.value = Wishlist(response)
+                    Log.d("WishlistViewModel", "Caricata la wishlist: ${singleWishlist.value?.wishlistName}")
+                } else {
+                    Log.e("WishlistViewModel", "Errore nel caricamento della wishlist: Response = $response")
+                }
+            } catch (e: Exception) {
+                Log.e("WishlistViewModel", "Errore nel caricamento della wishlist", e)
+            }
+        }
     }
 
     //crea una nuova wishlist

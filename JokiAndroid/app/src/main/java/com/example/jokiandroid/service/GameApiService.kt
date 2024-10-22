@@ -22,6 +22,8 @@ interface GameApiService {
 
 
 
+
+
     data class CollectionModel(val _embedded: Embedded)
     data class Embedded(val modelList: List<GameModel>)
     data class GameModel(val model: Game)

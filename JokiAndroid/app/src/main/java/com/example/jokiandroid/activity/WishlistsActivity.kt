@@ -86,6 +86,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
             ) {
                 itemsIndexed(wishlists) { index, wishlist ->
                     WishlistsItem(
+                        wishlistViewModel = wishlistViewModel,
                         item = wishlist,
                         onWishlistClick = {
                             navController.navigate("wishlists/${wishlist.wishlistName}")
@@ -93,9 +94,6 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
                     )
                 }
             }
-
-
-
             //Qui dobbiamo visualizzare la lista delle wishlist
 
         }
@@ -103,7 +101,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
 
 }
 @Composable
-fun WishlistsItem(item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
+fun WishlistsItem(wishlistViewModel: WishlistViewModel, item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,6 +114,28 @@ fun WishlistsItem(item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
         Column {
             Text(text = item.wishlistName, style = MaterialTheme.typography.titleMedium)
             Text(text = "Questa wishlist è ${item.visibility} e contiene ${item.games.size} giochi ", style = MaterialTheme.typography.bodyMedium)
+        }
+        //Pulsante per rimuovere gioco dalla wishlist
+        Button(
+            onClick = {
+                wishlistViewModel.viewModelScope.launch {
+                    val response = RetrofitInstance.createApi(
+                        WishlistApiService::class.java,
+                        TokenManager.getToken()
+                    ).deleteWishlist(item.wishlistName)
+                    if (response.isSuccessful) {
+                        Log.d("WishlistsActivity", "Wishlist eliminata: ${item.wishlistName}")
+                        wishlistViewModel.loadWishlists()
+                    } else {
+                        Log.e(
+                            "WishlistsActivity",
+                            "Errore eliminazione wishlist: ${response.errorBody()?.string()}"
+                        )
+                    }
+                }
+            }
+        ) {
+            Text("Elimina Wishlist")
         }
 }
 
@@ -190,6 +210,7 @@ fun CreaWishlistModal(
                         }
 
                             onCreate(nomeWishlist, visibilita)
+                            wishlistViewModel.loadWishlists()
                             onDismiss() // Chiudi il modal dopo la creazione
                         }
                     }) {
@@ -199,4 +220,51 @@ fun CreaWishlistModal(
             }
         }
     }
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun WishlistDetailsActivity(wishlistName: String, wishlistViewModel: WishlistViewModel) {
+
+    val wishlist by wishlistViewModel.wishlists.observeAsState()
+
+    LaunchedEffect(wishlistName) {
+        wishlistViewModel.loadWishlists()
+    }
+
+    Scaffold(
+        topBar = {
+            Row {
+                Text(text = "Wishlist: $wishlistName")
+                Button(onClick = {
+                    wishlistViewModel.viewModelScope.launch {
+                        val response = RetrofitInstance.createApi(WishlistApiService::class.java, TokenManager.getToken()).deleteWishlist(wishlistName)
+                        if (response.isSuccessful) {
+                            Log.d("WishlistsActivity", "Wishlist eliminata: $wishlistName")
+                            wishlistViewModel.loadWishlists()
+                        } else {
+                            Log.e("WishlistsActivity", "Errore eliminazione wishlist: ${response.errorBody()?.string()}")
+                        }
+                    }
+                }) {
+                    Text("Elimina Wishlist")
+                }
+            }
+        },
+        content = {
+            wishlist?.let {
+                val wishlist = it.find { it.wishlistName == wishlistName }
+                if (wishlist != null) {
+                    LazyColumn {
+                        itemsIndexed(wishlist.games) { index, game ->
+                            Text(text = game.title)
+                        }
+                    }
+                }
+            }
+        }
+    )
+
+
+
 }

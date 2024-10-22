@@ -185,7 +185,7 @@ fun selectPage(page:String, coroutineScope:CoroutineScope, drawerState: DrawerSt
 @Composable
 fun SetGameListContent(gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
     SideBarActivity.setContent {
-        GameListPage(gameViewModel = gameViewModel, cartViewModel = cartViewModel, navController = navController)
+        GameListPage(gameViewModel = gameViewModel, cartViewModel = cartViewModel, navController = navController, wishlistViewModel = WishlistViewModel())
     }
 }
 
@@ -212,9 +212,9 @@ fun SetWishlistContent(navController: NavController, wishlistViewModel: Wishlist
 }
 
 @Composable
-fun SetSingleWishlistContent(navController: NavHostController, wishlistName: String) {
+fun SetSingleWishlistContent(navController: NavHostController, wishlistName: String, wishlistViewModel: WishlistViewModel) {
     SideBarActivity.setContent {
-        SingleWishlistActivity(navController, wishlistName)
+        SingleWishlistActivity(navController, wishlistName, wishlistViewModel)
     }
 }
 
