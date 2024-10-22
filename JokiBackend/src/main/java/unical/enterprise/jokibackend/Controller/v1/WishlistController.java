@@ -54,8 +54,8 @@ public class WishlistController {
     public ResponseEntity<String> addGameToWishlist(@PathVariable UUID gameId, @PathVariable String wishlistName){
         boolean added = wishlistService.addGameToWishlist(gameService.getGameById(gameId), wishlistName);
 
-        if (added) return ResponseEntity.ok("Game added to wishlist");
-        else return ResponseEntity.badRequest().body("Game already in wishlist");
+        if (added) return ResponseEntity.ok(new Gson().toJson("Game added to wishlist"));
+        else return ResponseEntity.badRequest().body(new  Gson().toJson("Game already in wishlist"));
     }
 
     @DeleteMapping(value = "/{wishlistName}/{gameId}", produces = "application/json")
