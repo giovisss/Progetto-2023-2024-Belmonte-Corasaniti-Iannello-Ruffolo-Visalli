@@ -15,6 +15,7 @@ export class MessageService {
   private adminMessages = new Subject<{ content: string, timestamp: string }>();
   private userId: string | null = null;
   private adminId: string | null = null;
+  private userCount: number = 0;
   private apiChatUrl = BASE_API_URL + '/chat';
 
   constructor(
@@ -184,5 +185,23 @@ export class MessageService {
     } catch (e) {
       console.error('Error initializing admin ID', e);
     }
+  }
+
+  getUserCount(): void {
+    const url = `${this.apiChatUrl}/user/count`;
+    console.log('Getting user count, GET request to:', url);
+    this.http.get<{ userCount: number }>(url).subscribe(
+      response => {
+        this.userCount = response.userCount;
+        console.log('Received user count:', this.userCount);
+      },
+      error => {
+        console.error('Error getting user count:', error);
+      }
+    );
+  }
+
+  public getUserCountValue(): number {
+    return this.userCount;
   }
 }

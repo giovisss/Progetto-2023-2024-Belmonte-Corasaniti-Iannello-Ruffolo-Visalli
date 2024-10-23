@@ -124,5 +124,11 @@ public class ChatController {
         response.put("userId", firstUserId.toString()); // Restituisce l'ID come risposta
         return ResponseEntity.ok(response);
     }
-    
+
+    @GetMapping("/chat/user/count")
+    public ResponseEntity<Map<String, Integer>> getUserCount() {
+        Map<String, Integer> response = new HashMap<>();
+        response.put("userCount", userIds.size());
+        return ResponseEntity.ok(response);
+    }
 }

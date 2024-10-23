@@ -30,11 +30,11 @@ const routes: Routes = [
   { path: 'wishlists', component: WishlistsComponent, canActivate: [AuthGuard]},
   { path: 'editGames', component: EditGameComponent, canActivate: [AuthGuard]},
   { path: 'edit-user-data' , component: EditUserInfoAdminComponent, canActivate: [AuthGuard] },
-  { path: 'checkout', component: CheckoutComponent },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
   { path: 'about', component: AboutComponent },
-  { path: '**', redirectTo: 'home' },
-  { path: 'userchat', component: UserChatComponent },
-  { path: 'adminchat', component: AdminChatComponent }
+  { path: 'userchat', component: UserChatComponent, canActivate: [AuthGuard] },
+  { path: 'adminchat', component: AdminChatComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

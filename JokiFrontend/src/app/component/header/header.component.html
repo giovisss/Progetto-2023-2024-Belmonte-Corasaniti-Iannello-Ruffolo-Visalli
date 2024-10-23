@@ -58,6 +58,14 @@
             <li *ngIf="adminService.isAdmin">
               <a [routerLink]="'/edit-user-data'" routerLinkActive="active-link" href="#" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Gestisci Utente</a>
             </li>
+            <li *ngIf="adminService.isAdmin">
+              <a [routerLink]="['/adminchat']" target="_blank" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700 relative">
+                Collegati alla chat
+                <span *ngIf="hasNewMessages" class="absolute top-[-4px] right-[-8px]">
+                  <span class="block h-2 w-2 rounded-full bg-red-600"></span>
+                </span>
+              </a>
+            </li>
         </ul>
       </div>
     </div>
