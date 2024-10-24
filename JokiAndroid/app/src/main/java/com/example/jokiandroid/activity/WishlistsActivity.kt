@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,8 +33,12 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewModelScope
+import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.service.WishlistApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,54 +57,66 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
         wishlistViewModel.loadWishlists()
     }
 
-    Scaffold(
-        topBar = {
+
+
             //Qui dobbiamo visualizzare il titolo della pagina
 //            CenterAlignedTopAppBar(title = {
-                Row {
-                    Text(text = "Wishlists")
-                    Button(onClick = { showModal = true }) {
-                        Text(text = "Crea (Saverio!!) Wishlist")
+    Column(modifier = Modifier.fillMaxSize()
+        .padding(8.dp)
+        .clip(RoundedCornerShape(15.dp))
+    ) {
+
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+
+
+        ) {
+            itemsIndexed(wishlists) { index, wishlist ->
+                WishlistsItem(
+                    wishlistViewModel = wishlistViewModel,
+                    item = wishlist,
+                    onWishlistClick = {
+                        navController.navigate("wishlists/${wishlist.wishlistName}")
                     }
-
-                    if (showModal) {
-                        CreaWishlistModal(
-                            wishlistViewModel = wishlistViewModel,
-                            onDismiss = { showModal = false },
-                            onCreate = { nome, visibilita ->
-                                Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
-//                                wishlistViewModel.createWishlist(nome, visibilita)
-                                // Qui gestisci la creazione della wishlist
-                                // con i dati ricevuti (nome, visibilita)
-                            }
-                        )
-
-                    }
-                }
-
-        },
-        content = {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp)
-
-            ) {
-                itemsIndexed(wishlists) { index, wishlist ->
-                    WishlistsItem(
-                        wishlistViewModel = wishlistViewModel,
-                        item = wishlist,
-                        onWishlistClick = {
-                            navController.navigate("wishlists/${wishlist.wishlistName}")
-                        }
-                    )
-                }
+                )
             }
+        }
+
+        Button(
+            onClick = { showModal = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+
+        ) {
+            Text(text = "Crea (Saverio!!) Wishlist")
+        }
+
+        if (showModal) {
+            CreaWishlistModal(
+                wishlistViewModel = wishlistViewModel,
+                onDismiss = { showModal = false },
+                onCreate = { nome, visibilita ->
+                    Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
+//                                wishlistViewModel.createWishlist(nome, visibilita)
+                    // Qui gestisci la creazione della wishlist
+                    // con i dati ricevuti (nome, visibilita)
+                }
+            )
+
+        }
+    }
+
+
+
             //Qui dobbiamo visualizzare la lista delle wishlist
 
         }
-    )
 
-}
+
+
+
+//singola wishlist visualizzata nella schermata delle wishlist
 @Composable
 fun WishlistsItem(wishlistViewModel: WishlistViewModel, item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
     Row(
@@ -138,10 +155,6 @@ fun WishlistsItem(wishlistViewModel: WishlistViewModel, item : Wishlist, onWishl
             Text("Elimina Wishlist")
         }
 }
-
-
-        //Qui dobbiamo visualizzare la singola wishlist
-
 
 }
 
@@ -222,49 +235,3 @@ fun CreaWishlistModal(
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun WishlistDetailsActivity(wishlistName: String, wishlistViewModel: WishlistViewModel) {
-
-    val wishlist by wishlistViewModel.wishlists.observeAsState()
-
-    LaunchedEffect(wishlistName) {
-        wishlistViewModel.loadWishlists()
-    }
-
-    Scaffold(
-        topBar = {
-            Row {
-                Text(text = "Wishlist: $wishlistName")
-                Button(onClick = {
-                    wishlistViewModel.viewModelScope.launch {
-                        val response = RetrofitInstance.createApi(WishlistApiService::class.java, TokenManager.getToken()).deleteWishlist(wishlistName)
-                        if (response.isSuccessful) {
-                            Log.d("WishlistsActivity", "Wishlist eliminata: $wishlistName")
-                            wishlistViewModel.loadWishlists()
-                        } else {
-                            Log.e("WishlistsActivity", "Errore eliminazione wishlist: ${response.errorBody()?.string()}")
-                        }
-                    }
-                }) {
-                    Text("Elimina Wishlist")
-                }
-            }
-        },
-        content = {
-            wishlist?.let {
-                val wishlist = it.find { it.wishlistName == wishlistName }
-                if (wishlist != null) {
-                    LazyColumn {
-                        itemsIndexed(wishlist.games) { index, game ->
-                            Text(text = game.title)
-                        }
-                    }
-                }
-            }
-        }
-    )
-
-
-
-}

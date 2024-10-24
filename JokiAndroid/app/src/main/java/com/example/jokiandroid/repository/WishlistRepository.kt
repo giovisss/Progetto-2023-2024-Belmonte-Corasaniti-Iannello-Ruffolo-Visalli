@@ -61,4 +61,12 @@ class WishlistRepository {
             }
         }
     }
+
+    suspend fun removeGameFromWishlist(wishlistName: String, gameId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.createApi(WishlistApiService::class.java, TokenManager.getToken()).removeGameFromWishlist(wishlistName, gameId)
+            Log.d("WishlistRepository", "Response code: ${response.code()}")
+            response.isSuccessful
+        }
+    }
 }

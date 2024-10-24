@@ -1,9 +1,21 @@
 package com.example.jokiandroid.activity
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -14,21 +26,123 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.jokiandroid.R
+import com.example.jokiandroid.model.Game
+import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SingleWishlistActivity(navController: NavController, wishlistName: String, wishlistViewModel: WishlistViewModel) {
+fun SingleWishlistActivity(navController: NavController, wishlistName: String, wishlistViewModel: WishlistViewModel, cartViewModel: CartViewModel) {
     val singleWishlist = wishlistViewModel.singleWishlist.observeAsState()
+    var gameList = singleWishlist.value?.games ?: emptyList()
+
 
     LaunchedEffect(Unit) {
         wishlistViewModel.getSingleWishlist(wishlistName)
+        gameList = singleWishlist.value?.games ?: emptyList()
     }
 
-    singleWishlist.value?.games?.forEach() {
-        Text(text = it.title)
+    Column (
+        modifier = Modifier.fillMaxSize()
+            .padding(8.dp)
+
+    ){
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(8.dp)
+        ) {
+            itemsIndexed(gameList!!) { index: Int, game: Game ->
+                WishlistsGameItem(
+                    item = game,
+                    wishlistViewModel = wishlistViewModel,
+                    wishlistName = wishlistName,
+                    onAddToCart = { cartViewModel.addGame(it) }
+                )
+            }
+        }
+
+
     }
 
+}
+
+@Composable
+fun WishlistsGameItem(item : Game, onGameClick: (Game) -> Unit = {}, onAddToCart: (Game) -> Unit = {}, wishlistViewModel: WishlistViewModel, wishlistName: String) {
+
+
+
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(15.dp)
+            .clickable { onGameClick(item) }
+    ){
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            if (isSystemInDarkTheme()) {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.DarkGray
+                )
+            } else {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.LightGray
+                )
+            }
+
+            Row {
+
+                Button(
+                    onClick = {
+                        wishlistViewModel.removeGameFromWishlist(wishlistName, item.id)
+                        wishlistViewModel.getSingleWishlist(wishlistName)
+                    }
+                ) {
+                    Text("Rimuovi")
+                }
+
+                Button(
+                    onClick = { onAddToCart(item) },
+                    modifier = Modifier
+                        .weight(.3f)
+                ) {
+                    AsyncImage(
+                        model = R.drawable.add_shopping_cart,
+                        contentDescription = "Aggiungi al carrello",
+                    )
+                }
+
+            }
+
+        }
+    }
 }
