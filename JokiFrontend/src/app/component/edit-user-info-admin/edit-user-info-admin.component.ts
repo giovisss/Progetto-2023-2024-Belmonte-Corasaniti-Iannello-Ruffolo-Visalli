@@ -76,8 +76,6 @@ export class EditUserInfoAdminComponent implements OnInit, OnChanges {
     }
   }
 
-
-
   protected saveChanges() {
 
       this.userService.updateUserByAdmin(this.tempUser as User).subscribe((response: HttpResponse<string>) => {

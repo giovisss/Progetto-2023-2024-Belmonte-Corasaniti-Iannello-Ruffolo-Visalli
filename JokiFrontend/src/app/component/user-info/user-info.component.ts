@@ -13,7 +13,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {
-  //user: any;
   user: User | null = null;
   formattedBirthdate: string | null = null;
   userForm!: FormGroup;
@@ -34,9 +33,6 @@ export class UserInfoComponent implements OnInit {
         firstName: [null, Validators.maxLength(50)], // Non è obbligatorio
         lastName: [null, Validators.maxLength(50)], // Non è obbligatorio
         email: [null, [Validators.email]] // Non è obbligatorio, ma deve essere un'email valida
-//         password: [null, this.passwordStrengthValidator], // Non è obbligatorio, ma deve rispettare la validazione della forza
-//         repeatpassword: [null] // Non è obbligatorio
-//       }, { validators: this.passwordsMatchValidator });
       });
 
       // Recupera le informazioni dell'utente dal backend
@@ -46,12 +42,14 @@ export class UserInfoComponent implements OnInit {
           this.userService.setUser(data);
           this.user = this.userService.getUser();
 
+          if (this.user) {
+            this.formattedBirthdate = this._formatBirthdate(this.user);
+          }
+
           // Aggiorna i valori del form con i dati dell'utente
           this.userForm.patchValue({
             username: this.user?.username,
-//             firstName: this.user?.firstName,
-//             lastName: this.user?.lastName,
-//             email: this.user?.email
+            formattedBirthdate: this.formattedBirthdate,
           });
         },
         error => {
@@ -59,51 +57,6 @@ export class UserInfoComponent implements OnInit {
         }
       );
     }
-
-//     // Funzione di validazione per la forza della password
-//     passwordStrengthValidator(control: AbstractControl) {
-//       const password = control.value;
-//
-//       if (!password) {
-//         return null; // Non fare nulla se il campo è vuoto
-//       }
-//
-//       // La regex richiede:
-//       // - Almeno 16 caratteri
-//       // - Almeno una lettera maiuscola
-//       // - Almeno una lettera minuscola
-//       // - Almeno un simbolo
-//       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{5,}$/;
-//
-//       //Per reimpostare la password semplice a 5 caratteri
-//       //const passwordRegex = /^.{5,}$/;
-//
-//       const valid = passwordRegex.test(password);
-//
-//       return valid ? null : { weakPassword: true };
-//     }
-//
-//   passwordsMatchValidator(control: AbstractControl) {
-//     const password = control.get('password')?.value;
-//     const repeatPassword = control.get('repeatpassword')?.value;
-//
-//     if (password && repeatPassword && password !== repeatPassword) {
-//       control.get('repeatpassword')?.setErrors({ mismatch: true });
-//     } else {
-//       control.get('repeatpassword')?.setErrors({ mismatch: false });
-//     }
-//     return null;
-//   }
-
-//   // Funzione per alternare la visibilità della password
-//   togglePasswordVisibility() {
-//     this.showPassword = !this.showPassword;
-//   }
-//
-//   // Funzione per alternare la visibilità della password ripetuta
-//   toggleRepeatPasswordVisibility() {
-//     this.showRepeatPassword = !this.showRepeatPassword;
-//   }
 
   // Funzione per resettare la password
   onResetPassword() {
@@ -148,5 +101,12 @@ export class UserInfoComponent implements OnInit {
     } else {
       console.log('No fields to update');
     }
+  }
+
+  private _formatBirthdate(user: User): string {
+    const day = ('0' + user.birthdate.getDate()).slice(-2);
+    const month = ('0' + (user.birthdate.getMonth() + 1)).slice(-2);
+    const year = user.birthdate.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 }

@@ -4,7 +4,6 @@ export class User {
   private _lastName: string;
   private _email: string;
   private _birthdate: Date;
-  private _formattedBirthdate: string;
 
   constructor(
     username: string = '',
@@ -18,7 +17,6 @@ export class User {
     this._lastName = lastName;
     this._email = email;
     this._birthdate = birthdate;
-    this._formattedBirthdate = this._formatBirthdate();
   }
 
   get username(): string {
@@ -41,10 +39,6 @@ export class User {
     return this._birthdate;
   }
 
-  get formattedBirthdate(): string {
-    return this._formattedBirthdate;
-  }
-
   set username(username: string) {
     this._username = username;
   }
@@ -63,19 +57,6 @@ export class User {
 
   set birthdate(birthdate: Date) {
     this._birthdate = birthdate;
-    this._formattedBirthdate = this._formatBirthdate();
   }
-
-
-  private _formatBirthdate(): string {
-    if (!this._birthdate || !(this._birthdate instanceof Date)) {
-      return 'Data non valida';
-    }
-    const day = ('0' + this._birthdate.getDate()).slice(-2);
-    const month = ('0' + (this._birthdate.getMonth() + 1)).slice(-2);
-    const year = this._birthdate.getFullYear();
-    return `${day} - ${month} - ${year}`;
-  }
-
 
 }
