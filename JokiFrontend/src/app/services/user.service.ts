@@ -54,11 +54,6 @@ export class UserService {
     return this._user !== null;
   }
 
-  // Metodo per ottenere la data di nascita formattata
-  getFormattedBirthdate(): string | null {
-    return this._user ? this._user.formattedBirthdate : null;
-  }
-
   getUserLibrary(): Observable<Game[]> {
     return this.httpClient.get<Game[]>(this.apiUrl + '/user/library').pipe(
         map(response => {
