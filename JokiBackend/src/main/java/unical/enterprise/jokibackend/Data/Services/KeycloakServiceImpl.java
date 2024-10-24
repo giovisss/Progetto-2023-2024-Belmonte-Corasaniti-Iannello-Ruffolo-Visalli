@@ -145,6 +145,14 @@ public class KeycloakServiceImpl implements KeycloakService {
         return KeycloakManager.getInstance().realm(KeycloakManager.realm).users();
     }
 
+    //Funzione di Logout
+    //TODO: Non serve per il frontend, rimuoverla se non serve nemmeno per Android
+    @Override
+    public void logoutUser(String username) {
+        UsersResource usersResource = getInstance();
+        usersResource.get(username).logout();
+    }
+
     private CredentialRepresentation createPasswordCredentials(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);

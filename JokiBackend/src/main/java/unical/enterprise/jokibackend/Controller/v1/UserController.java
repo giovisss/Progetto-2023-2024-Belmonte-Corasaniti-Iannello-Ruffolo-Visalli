@@ -1,11 +1,15 @@
 package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
@@ -158,6 +162,18 @@ public class UserController {
         userService.editFriendship(username, positive);
         return ResponseEntity.ok(new Gson().toJson("Friendship updated"));
     }
-
     // Fine controller amici
+
+    //Funzione di Logout
+    //TODO: Non serve per il frontend, rimuoverla se non serve nemmeno per Android
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(Principal principal) {
+        String username = principal.getName();
+        try {
+            keycloakService.logoutUser(username);
+            return ResponseEntity.ok(new Gson().toJson("Logout successful"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new Gson().toJson("Error during logout"));
+        }
+    }
 }

@@ -69,6 +69,21 @@ class WishlistViewModel : ViewModel() {
         }
     }
 
+    fun removeGameFromWishlist(wishlistName: String, gameId: String) {
+        viewModelScope.launch {
+            try {
+                val response = wishlistRepository.removeGameFromWishlist(wishlistName, gameId)
+                if (response) {
+                    Log.d("WishlistViewModel", "Game rimosso dalla wishlist: Response = $response")
+                } else {
+                    Log.e("WishlistViewModel", "Errore nella rimozione del gioco dalla wishlist: Response = $response")
+                }
+            } catch (e: Exception) {
+                Log.e("WishlistViewModel", "Errore nella rimozione del gioco dalla wishlist", e)
+            }
+        }
+    }
+
     //crea una nuova wishlist
 //    fun createWishlist(name: String, visibility: Int) {
 //        viewModelScope.launch {

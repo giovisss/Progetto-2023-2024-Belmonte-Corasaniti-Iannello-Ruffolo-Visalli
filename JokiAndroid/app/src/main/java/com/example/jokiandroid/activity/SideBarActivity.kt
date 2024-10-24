@@ -212,9 +212,9 @@ fun SetWishlistContent(navController: NavController, wishlistViewModel: Wishlist
 }
 
 @Composable
-fun SetSingleWishlistContent(navController: NavHostController, wishlistName: String, wishlistViewModel: WishlistViewModel) {
+fun SetSingleWishlistContent(navController: NavHostController, wishlistName: String, wishlistViewModel: WishlistViewModel, cartViewModel: CartViewModel) {
     SideBarActivity.setContent {
-        SingleWishlistActivity(navController, wishlistName, wishlistViewModel)
+        SingleWishlistActivity(navController, wishlistName, wishlistViewModel, cartViewModel)
     }
 }
 

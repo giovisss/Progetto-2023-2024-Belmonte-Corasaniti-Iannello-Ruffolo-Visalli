@@ -34,5 +34,9 @@ interface WishlistApiService {
     @GET("$BASE_URL/{wishlistName}")
     suspend fun getWishlist(@Path("wishlistName") wishlistName: String): Response<Wishlist>
 
+    @Headers("Content-Type: application/json")
+    @DELETE("$BASE_URL/{wishlistName}/{gameId}")
+    suspend fun removeGameFromWishlist(@Path("wishlistName") wishlistName: String, @Path("gameId") gameId: String): Response<String>
+
 }
 
