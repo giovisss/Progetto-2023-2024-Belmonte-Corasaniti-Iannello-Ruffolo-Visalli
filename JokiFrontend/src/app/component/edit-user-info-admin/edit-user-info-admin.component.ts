@@ -1,52 +1,35 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import { KeycloakService } from 'keycloak-angular';
-import { UserService } from '../../services/user.service';
-import { User } from '../../model/user';
-import {ProductsService} from "../../services/products.service";
+import {Component} from '@angular/core';
+import {UserService} from '../../services/user.service';
+import {User} from '../../model/user';
 import {DatePipe, Location} from "@angular/common";
 import {HttpResponse} from "@angular/common/http";
-import { BASE_IMAGE_URL } from "../../global";
+import {BASE_IMAGE_URL} from "../../global";
+import {Date} from "../../utility/Date";
 
 @Component({
   selector: 'app-user-info',
   templateUrl: './edit-user-info-admin.component.html',
-  //styleUrl: './find-users.css'
   styleUrls: ['./edit-user-info-admin.component.css'],
   providers: [DatePipe]
 
 })
-export class EditUserInfoAdminComponent implements OnInit, OnChanges {
-  protected readonly User = User;
+export class EditUserInfoAdminComponent {
   protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 
   protected selectedUser: User | null = null;
   protected users: User[] = [];
   protected searchedUsers: User[] = [];
-  protected tempUser: Partial<User> = {}; // Temporary object
+  protected tempUsername: string = '';
+  protected tempName: string = '';
+  protected tempLastName: string = '';
+  protected tempEmail: string = '';
+  protected tempDate: string = '';
 
-  formattedBirthDate: string | null = '';
 
-
-  constructor(private userService: UserService, private datePipe: DatePipe, private location: Location) {
+  constructor(private userService: UserService, private location: Location) {
     this.userService.getUserList().subscribe((response: User[]) => {
       this.users = response;
     });
-  }
-
-  ngOnInit() {
-    this.formatBirthDate();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['tempUser'] && changes['tempUser'].currentValue['birthdate'] !== changes['tempUser'].previousValue['birthdate']) {
-      this.formatBirthDate();
-    }
-  }
-
-  formatBirthDate() {
-    if (this.tempUser['birthdate']) {
-      this.formattedBirthDate = this.datePipe.transform(this.tempUser['birthdate'], 'yyyy-MM-dd');
-    }
   }
 
   protected OnInput(event: any) {
@@ -65,20 +48,31 @@ export class EditUserInfoAdminComponent implements OnInit, OnChanges {
 
   protected onUserClick(user: User) {
     this.selectedUser = user;
-    this.tempUser = { ...user }; // Copia utente selezionato in tempUser
-    this.formatBirthDate();
     this.searchedUsers = [];
+
+    this.tempUsername = user.username;
+    this.tempName = user.firstName;
+    this.tempLastName = user.lastName;
+    this.tempEmail = user.email;
+    this.tempDate = new Date(user.birthdate).toString();
   }
 
   protected updateBirthDate(event: any) {
-    if (this.tempUser) {
-      this.tempUser.birthdate = event.target.value;
+    if (this.tempDate !== null) {
+      this.tempDate = event.target.value;
     }
   }
 
   protected saveChanges() {
-
-      this.userService.updateUserByAdmin(this.tempUser as User).subscribe((response: HttpResponse<string>) => {
+      let tmp=new User(
+          this.tempUsername,
+          this.tempName,
+          this.tempLastName,
+          this.tempEmail,
+          this.tempDate
+      )
+    console.log(tmp);
+      this.userService.updateUserByAdmin(tmp).subscribe((response: HttpResponse<string>) => {
         if(!response.ok) {
           alert('Failed to update user'); }
         else{this.reloadPage()}
@@ -94,9 +88,13 @@ export class EditUserInfoAdminComponent implements OnInit, OnChanges {
 
   resetForm() {
     this.selectedUser = null;
-    this.tempUser = {};
-    this.formattedBirthDate = '';
     this.searchedUsers = [];
+
+    this.tempUsername = '';
+    this.tempName = '';
+    this.tempLastName = '';
+    this.tempEmail = '';
+    this.tempDate = '';
   }
 
 

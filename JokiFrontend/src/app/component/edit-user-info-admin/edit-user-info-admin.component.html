@@ -21,28 +21,28 @@
           <div class="sm:col-span-3">
             <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
             <div class="mt-2">
-              <input type="text" name="username" id="username" [(ngModel)]="tempUser.username" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="true">
+              <input type="text" name="username" id="username" [(ngModel)]="this.tempUsername" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="true">
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <label for="firstname" class="block text-sm font-medium leading-6 text-gray-900">Nome</label>
             <div class="mt-2">
-              <input type="text" name="firstname" id="firstname" [(ngModel)]="tempUser.firstName" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
+              <input type="text" name="firstname" id="firstname" [(ngModel)]="this.tempName" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
             </div>
           </div>
 
           <div class="sm:col-span-6">
             <label for="lastname" class="block text-sm font-medium leading-6 text-gray-900">Cognome</label>
             <div class="mt-2">
-              <textarea name="lastname" id="lastname" [(ngModel)]="tempUser.lastName" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null"></textarea>
+              <textarea name="lastname" id="lastname" [(ngModel)]="this.tempLastName" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null"></textarea>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <label for="birth-date" class="block text-sm font-medium leading-6 text-gray-900">Data di Nascita</label>
             <div class="mt-2">
-              <input type="date" name="birth-date" id="birth-date" [(ngModel)]="formattedBirthDate" (change)="updateBirthDate($event)" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
+              <input type="date" name="birth-date" id="birth-date" [(ngModel)]="this.tempDate" (change)="updateBirthDate($event)" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
             </div>
           </div>
 
@@ -50,7 +50,7 @@
           <div class="sm:col-span-3">
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
             <div class="mt-2">
-              <input type="email" name="email" id="email" [(ngModel)]="tempUser.email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
+              <input type="email" name="email" id="email" [(ngModel)]="this.tempEmail" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-4" [disabled]="this.selectedUser == null">
             </div>
           </div>
 

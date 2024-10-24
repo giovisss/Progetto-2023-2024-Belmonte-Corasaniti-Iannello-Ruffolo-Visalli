@@ -37,6 +37,11 @@ public class AdminUserController {
 
     @PutMapping("/{username}")
     public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
+        System.out.println(userDto.getUsername());
+        System.out.println(userDto.getEmail());
+
+        if (userDto.getUsername() == null || userDto.getEmail() == null) return ResponseEntity.badRequest().body("porcodio nullo");
+
         if(userService.updateUser(username, userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
         else return ResponseEntity.notFound().build();
     }

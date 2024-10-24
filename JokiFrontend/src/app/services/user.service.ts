@@ -6,6 +6,7 @@ import { Game } from '../model/game';
 import { BASE_API_URL } from '../global';
 import { User } from '../model/user';
 import { KeycloakService } from 'keycloak-angular';
+import { Date } from '../utility/Date';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class UserService {
         userData.firstName,
         userData.lastName,
         userData.email,
-        new Date(userData.birthdate)
+        userData.birthdate
       );
     }
 
@@ -75,6 +76,30 @@ export class UserService {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
 
+  // getUserList(isAdmin: boolean = true): Observable<User[]> {
+  //   if (isAdmin) {
+  //     return this.httpClient.get<User[]>(this.adminApiUrl).pipe(
+  //         map(response => {
+  //           let out = [];
+  //           for (let user of response) {
+  //             out.push(new User(user.username, user.firstName, user.lastName, user.email, new Date(user.birthdate.toString())));
+  //           }
+  //           return out;
+  //         })
+  //     );
+  //   } else {
+  //     return this.httpClient.get<User[]>(this.apiUrl).pipe(
+  //         map(response => {
+  //           let out = [];
+  //           for (let user of response) {
+  //             out.push(new User(user.username, user.firstName, user.lastName, user.email, new Date(user.birthdate.toString())));
+  //           }
+  //           return out;
+  //         })
+  //     );
+  //   }
+  // }
+
   getUserList(isAdmin: boolean = true): Observable<User[]> {
     if (isAdmin) {
       return this.httpClient.get<User[]>(this.adminApiUrl);
@@ -83,8 +108,8 @@ export class UserService {
     }
   }
 
-  updateUserByAdmin(userData: User): Observable<HttpResponse<string>> {
-    return this.httpClient.put<string>(this.adminApiUrl + "/" + userData.username, userData, { observe: 'response' });
+  updateUserByAdmin(user: User): Observable<HttpResponse<string>> {
+    return this.httpClient.put<string>(this.adminApiUrl + "/" + user.username, user, { observe: 'response' });
   }
 
   deleteUser(username: string): Observable<HttpResponse<string>> {

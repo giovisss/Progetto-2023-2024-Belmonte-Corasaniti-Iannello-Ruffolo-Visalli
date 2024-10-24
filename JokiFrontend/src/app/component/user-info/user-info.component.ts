@@ -5,6 +5,7 @@ import { User } from '../../model/user';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {Date} from "../../utility/Date";
 
 @Component({
   selector: 'app-user-info',
@@ -104,9 +105,10 @@ export class UserInfoComponent implements OnInit {
   }
 
   private _formatBirthdate(user: User): string {
-    const day = ('0' + user.birthdate.getDate()).slice(-2);
-    const month = ('0' + (user.birthdate.getMonth() + 1)).slice(-2);
-    const year = user.birthdate.getFullYear();
-    return `${day}/${month}/${year}`;
+    // const day = ('0' + user.birthdate.day).slice(-2);
+    // const month = ('0' + (user.birthdate.month + 1)).slice(-2);
+    // const year = user.birthdate.year;
+    // return `${day}/${month}/${year}`;
+    return new Date(user.birthdate).toString();
   }
 }
