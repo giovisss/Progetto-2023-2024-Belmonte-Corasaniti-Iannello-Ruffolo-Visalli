@@ -49,7 +49,7 @@ class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll() // Permetti l'accesso al WebSocket
 
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
-                        // .anyRequest().permitAll()); // permetti tutte le richieste se autenticato
+                        // .anyRequest().permitAll()); // permetti tutte le richieste
         http
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults()).jwt(

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.http.ResponseEntity;
 
 import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHolder;
 
@@ -26,8 +26,8 @@ public class ChatController {
 
     List<UUID> adminIds = new ArrayList<> ();
     List<UUID> userIds = new ArrayList<> ();
-    List<HashMap<UUID, UUID>> conversations = new ArrayList<> (); // lista delle conversazioni
 
+    // ping-pong per debug
     @MessageMapping("/ping")
     @SendTo("/topic/ping")
     public String ping(String message) {
@@ -38,7 +38,7 @@ public class ChatController {
     @MessageMapping("/chat/user-to-admin/{userId}/{adminId}") // ricevo da
     @SendTo("/topic/chat/{adminId}_{userId}") // invio a
     public Map<String, Object> sendMessageToAdmin(Map<String, Object> message, @DestinationVariable String userId, @DestinationVariable String adminId) {
-        message.put("timestamp", LocalDateTime.now().toString()); // Aggiungi timestamp
+        message.put("timestamp", LocalDateTime.now().toString());
         return message;
     }
 
@@ -46,7 +46,7 @@ public class ChatController {
     @MessageMapping("/chat/admin-to-user/{userId}/{adminId}") // ricevo da
     @SendTo("/topic/chat/{userId}_{adminId}") // invio a
     public Map<String, Object> sendMessageToUser(Map<String, Object> message, @DestinationVariable String userId, @DestinationVariable String adminId) {
-        message.put("timestamp", LocalDateTime.now().toString()); // Aggiungi timestamp
+        message.put("timestamp", LocalDateTime.now().toString());
         return message;
     }
 
@@ -81,8 +81,7 @@ public class ChatController {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Nessun admin disponibile al momento."));
         }
         UUID firstAdminId = adminIds.get(0); // Prende il primo admin dalla lista
-        // adminIds.remove(0); // Rimuove l'admin dalla lista per evitare che venga selezionato da più utenti
-        // Crea una mappa per la risposta JSON
+        adminIds.remove(0); // Rimuove l'admin dalla lista per evitare che venga selezionato da più utenti (non è perfetto)
         Map<String, String> response = new HashMap<>();
         response.put("adminId", firstAdminId.toString());
         return ResponseEntity.ok(response);
@@ -90,10 +89,9 @@ public class ChatController {
 
     @PostMapping("/chat/user")
     public ResponseEntity<Map<String, Object>> addUser() {
-        UUID userId = UserContextHolder.getContext().getId(); // Prende l'id dell'utente
-        userIds.add(userId); // Aggiunge l'utente alla lista
+        UUID userId = UserContextHolder.getContext().getId();
+        userIds.add(userId);
         
-        // Crea una mappa per la risposta JSON
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Utente aggiunto con ID: " + userId);
         response.put("userId", userId.toString());
@@ -103,7 +101,7 @@ public class ChatController {
 
     @PostMapping("/chat/user/remove")
     public ResponseEntity<String> removeUser(@RequestBody String id) {
-        UUID userId = UUID.fromString(id); // Converte l'id in UUID
+        UUID userId = UUID.fromString(id);
         if (userIds.remove(userId)) {
             return ResponseEntity.ok("Utente rimosso con ID: " + userId);
         } else {
@@ -118,10 +116,10 @@ public class ChatController {
             response.put("error", "Nessun utente disponibile al momento.");
             return ResponseEntity.status(404).body(response);
         }
-        UUID firstUserId = userIds.get(0); // Prende il primo utente disponibile
-        // userIds.remove(0); // Rimuove l'utente dalla lista per evitare che venga selezionato di nuovo
+        UUID firstUserId = userIds.get(0); // Prende il primo utente che vuole chattare
+        userIds.remove(0); // Rimuove l'utente dalla lista per evitare che venga selezionato di nuovo (non è perfetto)
         Map<String, String> response = new HashMap<>();
-        response.put("userId", firstUserId.toString()); // Restituisce l'ID come risposta
+        response.put("userId", firstUserId.toString());
         return ResponseEntity.ok(response);
     }
 
