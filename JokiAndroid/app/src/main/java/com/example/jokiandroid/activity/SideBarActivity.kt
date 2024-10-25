@@ -112,7 +112,7 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                     )
                     NavigationDrawerItem(
                         label = { Text(text = "Le tue wishlists") },
-                        selected = selectedItem.value == "Impostazioni",
+                        selected = selectedItem.value == "wishlist",
                         onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
                     )
                     NavigationDrawerItem(

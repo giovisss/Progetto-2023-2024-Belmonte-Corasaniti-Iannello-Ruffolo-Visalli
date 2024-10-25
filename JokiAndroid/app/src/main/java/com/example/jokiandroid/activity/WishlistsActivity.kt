@@ -52,66 +52,64 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
 
     val wishlists by wishlistViewModel.wishlists.observeAsState(emptyList())
     var showModal by remember { mutableStateOf(false) }
+    val isLoggedIn by TokenManager.token.collectAsState()
 
     LaunchedEffect(Unit) {
         wishlistViewModel.loadWishlists()
     }
 
-
-
-            //Qui dobbiamo visualizzare il titolo della pagina
-//            CenterAlignedTopAppBar(title = {
     Column(modifier = Modifier.fillMaxSize()
         .padding(8.dp)
         .clip(RoundedCornerShape(15.dp))
     ) {
+        if (isLoggedIn == null) {
+            LoginRequiredDialog(
+                onDismissRequest = { /* Non fare nulla, l'utente deve effettuare il login */ },
+                onConfirmClick = { navController.popBackStack() })
+        } else {
 
-        LazyColumn(
-            modifier = Modifier.weight(1f)
+            LazyColumn(
+                modifier = Modifier.weight(1f)
 
 
-        ) {
-            itemsIndexed(wishlists) { index, wishlist ->
-                WishlistsItem(
+            ) {
+                itemsIndexed(wishlists) { index, wishlist ->
+                    WishlistsItem(
+                        wishlistViewModel = wishlistViewModel,
+                        item = wishlist,
+                        onWishlistClick = {
+                            navController.navigate("wishlists/${wishlist.wishlistName}")
+                        }
+                    )
+                }
+            }
+
+            Button(
+                onClick = { showModal = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+
+            ) {
+                Text(text = "Crea (Saverio!!) Wishlist")
+            }
+
+            if (showModal) {
+                CreaWishlistModal(
                     wishlistViewModel = wishlistViewModel,
-                    item = wishlist,
-                    onWishlistClick = {
-                        navController.navigate("wishlists/${wishlist.wishlistName}")
+                    onDismiss = { showModal = false },
+                    onCreate = { nome, visibilita ->
+                        Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
+    //                                wishlistViewModel.createWishlist(nome, visibilita)
+                        // Qui gestisci la creazione della wishlist
+                        // con i dati ricevuti (nome, visibilita)
                     }
                 )
+
             }
         }
-
-        Button(
-            onClick = { showModal = true },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-
-        ) {
-            Text(text = "Crea (Saverio!!) Wishlist")
-        }
-
-        if (showModal) {
-            CreaWishlistModal(
-                wishlistViewModel = wishlistViewModel,
-                onDismiss = { showModal = false },
-                onCreate = { nome, visibilita ->
-                    Log.d("WishlistsActivity", "Creazione wishlist: $nome, $visibilita")
-//                                wishlistViewModel.createWishlist(nome, visibilita)
-                    // Qui gestisci la creazione della wishlist
-                    // con i dati ricevuti (nome, visibilita)
-                }
-            )
-
-        }
     }
-
-
-
-            //Qui dobbiamo visualizzare la lista delle wishlist
-
-        }
+}
 
 
 
@@ -234,4 +232,6 @@ fun CreaWishlistModal(
         }
     }
 }
+
+
 

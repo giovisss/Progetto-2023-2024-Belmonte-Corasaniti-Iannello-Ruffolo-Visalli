@@ -1,9 +1,11 @@
 package com.example.jokiandroid.activity
 
 import GameViewModel
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -52,7 +54,7 @@ fun GameListPage(wishlistViewModel: WishlistViewModel, gameViewModel: GameViewMo
     ) {
         LazyColumn(
             content = {
-                itemsIndexed(games) { index: Int, game: Game ->
+                itemsIndexed(games) { _: Int, game: Game ->
                     GameItem(
                         item = game,
                         onAddToCart = { cartViewModel.addGame(it) },
@@ -69,11 +71,12 @@ fun GameListPage(wishlistViewModel: WishlistViewModel, gameViewModel: GameViewMo
         if (showModal) {
             selectedGame?.id?.let {
                 AvalibleWishlistsModal(
+                    gameId = it,
                     wishlistViewModel = wishlistViewModel,
                     onDismiss = { showModal = false },
-                    gameId = it,
                     modalAddToWishlist = { wishlistName, gameID: String ->
                         wishlistViewModel.addGameToWishlist(wishlistName, gameID)
+                        showModal = false
                     }
                 )
             }
@@ -170,21 +173,66 @@ fun AvalibleWishlistsModal(
 ) {
     wishlistViewModel.loadWishlists()
     val wishlists by wishlistViewModel.wishlists.observeAsState(emptyList())
+    var showModal2 by remember { mutableStateOf(false) }
+
+    if (showModal2) {
+        CreaWishlistModal(
+            wishlistViewModel = wishlistViewModel,
+            onDismiss = { showModal2 = false },
+            onCreate = { wishlistName, visibility ->
+                Log.d("WishlistsActivity", "Creazione wishlist: $wishlistName, $visibility")
+            }
+        )
+    }
     Dialog(onDismissRequest = onDismiss) {
         Card {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Aggiungi alla Wishlist", style = MaterialTheme.typography.bodyMedium)
+            Column(modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(16.dp))
+            {
+
+                // Close button
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = "X",
+                        modifier = Modifier
+                            .clickable { onDismiss() },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Text("Aggiungi il gioco ad una delle tue Wishlist: ", style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(8.dp))
 
                 LazyColumn(
                     content = {
-                        itemsIndexed(wishlists) { index: Int, wishlist: Wishlist ->
-                            Text(
-                                text = wishlist.wishlistName,
-                                modifier = Modifier.clickable { modalAddToWishlist(wishlist.wishlistName, gameId) }
-                            )
+                        itemsIndexed(wishlists) { _: Int, wishlist: Wishlist ->
+                            Button(
+                                onClick = { modalAddToWishlist(wishlist.wishlistName, gameId) },
+                                modifier = Modifier.fillMaxWidth(1f)
+                            ) {
+                                Text(wishlist.wishlistName)
+                            }
                         }
                     }
                 )
+
+                Text(modifier = Modifier.padding(5.dp)
+                    , text = "Se non hai una wishlist, creane una!", style = MaterialTheme.typography.bodyMedium)
+
+                Button(
+                    onClick = { showModal2 = true },
+                    modifier = Modifier.fillMaxWidth(1f)
+                ) {
+                    Text("Crea Nuova Wishlist")
+                }
+
+                Text(modifier = Modifier.padding(3.dp)
+                    , text = "*Il gioco verrà aggiunto alla wishlist appena creata", style = MaterialTheme.typography.bodySmall)
+
             }
         }
     }
