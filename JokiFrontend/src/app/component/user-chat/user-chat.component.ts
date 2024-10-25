@@ -55,6 +55,7 @@ export class UserChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.userMessagesSubscription) {
       this.userMessagesSubscription.unsubscribe();
     }
+    this.messageService.destroy(); // Toglie il polling
   }
 
   connect() {

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
-import { Subject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Subject, Observable, timer, Subscription } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BASE_API_URL } from '../global';
 import { KeycloakService } from 'keycloak-angular';
+import { retryWhen, delayWhen } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class MessageService {
   private adminId: string | null = null;
   private userCount: number = 0;
   private apiChatUrl = BASE_API_URL + '/chat';
+  private pollingSubscription?: Subscription;
+  private readonly POLLING_INTERVAL = 5000; // 5 seconds
 
   constructor(
     private http: HttpClient,
@@ -118,18 +121,37 @@ export class MessageService {
   }
 
   getAvailableAdmin() {
+    this.stopPolling();
+    
     const url = `${this.apiChatUrl}/admin`;
     console.log('Getting available admin, GET request to:', url);
-    this.http.get<{ adminId: string }>(url).subscribe(
-      response => {
-        this.adminId = response.adminId;
-        console.log('Received admin ID:', this.adminId);
-        this.initializeUserIdAndClients();
-      },
-      error => {
-        console.error('Error getting available admin:', error);
-      }
-    );
+
+    this.pollingSubscription = timer(0, this.POLLING_INTERVAL)
+      .subscribe(() => {
+        this.http.get<{ adminId: string }>(url).subscribe({
+          next: (response) => {
+            console.log('Admin found:', response);
+            this.adminId = response.adminId;
+            this.initializeUserIdAndClients();
+            this.stopPolling();
+          },
+          error: (error: HttpErrorResponse) => {
+            if (error.status === 404) {
+              console.log('No admin available, will retry in 5 seconds...');
+            } else {
+              console.error('Error getting available admin:', error);
+              this.stopPolling();
+            }
+          }
+        });
+      });
+  }
+
+  private stopPolling() {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = undefined;
+    }
   }
 
   getUser() {
@@ -203,5 +225,9 @@ export class MessageService {
 
   public getUserCountValue(): number {
     return this.userCount;
+  }
+
+  destroy() {
+    this.stopPolling();
   }
 }
