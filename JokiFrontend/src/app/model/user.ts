@@ -27,9 +27,9 @@ export class User {
     this.birthdate = user.birthdate;
   }
 
-  toString(): string {
-      return '{"birthdate":"2003-01-01","email":"aaa@gmail.com","firstName":"giovis","lastName":"pisello","username":"aaa"}'
-  }
+//   toString(): string {
+//       return '{"birthdate":"2003-01-01","email":"aaa@gmail.com","firstName":"giovis","lastName":"pisello","username":"aaa"}'
+//   }
 
   // get username(): string {
   //   return this._username;

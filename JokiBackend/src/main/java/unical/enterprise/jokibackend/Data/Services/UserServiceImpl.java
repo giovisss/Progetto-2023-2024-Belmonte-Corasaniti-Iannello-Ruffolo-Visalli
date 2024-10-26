@@ -218,6 +218,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    //TODO: gestire l'eccezione ¨Game already in library¨ nel frontend
     @Override
     @Transactional
     public boolean addGameToUserCart(String username, UUID gameId) {

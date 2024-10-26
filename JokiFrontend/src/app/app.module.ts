@@ -28,6 +28,7 @@ import { AdminChatComponent } from './component/admin-chat/admin-chat.component'
 import { UserChatComponent } from './component/user-chat/user-chat.component';
 import {FindUsers} from "./component/find-users/find-users";
 import { LogoutComponent } from './component/logout/logout.component';
+import { LoadingComponent } from './component/loading/loading.component';
 
 function initializeKeycloak(keycloak: KeycloakInitService) {
   return () => keycloak.init();
@@ -56,6 +57,7 @@ function initializeKeycloak(keycloak: KeycloakInitService) {
     UserChatComponent,
     FindUsers,
     LogoutComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

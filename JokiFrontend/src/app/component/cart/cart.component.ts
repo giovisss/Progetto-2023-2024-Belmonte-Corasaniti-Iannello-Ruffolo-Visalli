@@ -15,18 +15,25 @@ export class CartComponent implements OnInit {
   @Output() cartUpdated = new EventEmitter();
   cart: Observable<Game[]> = new Observable<Game[]>;
   total: Observable<number> = new Observable<number>();
+  isCartEmpty: boolean = true;
 
   constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit(): void {
     this.cart = this.cartService.getCart();
     this.total = this.cartService.getTotal();
+    this.cart.subscribe(items => {
+      this.isCartEmpty = items.length === 0;
+    });
   }
 
   removeItem(game: Game): void {
     this.cartService.removeFromCart(game).subscribe(() => {
       this.cart = this.cartService.getCart();
       this.total = this.cartService.getTotal();
+      this.cart.subscribe(items => {
+        this.isCartEmpty = items.length === 0;
+      });
     });
   }
 
