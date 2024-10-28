@@ -29,6 +29,7 @@ export class ProductComponent {
   showSuggestedModal: boolean = false;
   showNotSuggestedModal: boolean = false;
   isReviewsModalOpen: boolean = false;
+  isInLibrary: boolean = false;
   newWishlistName: string = '';
   newWishlistVisibility: number = 1; // 0: privata, 1: pubblica, 2: solo amici  pubblica di default
   newSuggestedReviewText: string = '';
@@ -82,6 +83,14 @@ export class ProductComponent {
         console.error('Errore durante l\'invio della recensione:', error);
       }
     );
+  }
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.params['id'];
+    this.productsService.getGame(id).subscribe((product: Game) => {
+      this.product = product;
+      this._checkIfInLibrary();
+    });
   }
 
   addToCart() {
@@ -177,5 +186,11 @@ export class ProductComponent {
 
   closeModal() {
     this.isReviewsModalOpen = false;
+  }
+
+  private _checkIfInLibrary(): void {
+    this.userService.getUserLibrary().subscribe((library: Game[]) => {
+      this.isInLibrary = library.some(game => game.id === this.product?.id);
+    });
   }
 }
