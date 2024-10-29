@@ -75,7 +75,19 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                 Text("MENU", modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.primary,)
                 HorizontalDivider()
-                NavigationDrawerItem(
+                if (TokenManager.isLoggedIn()) {
+                    NavigationDrawerItem(
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        label = { Text(text = "Logout") },
+                        selected = selectedItem.value == "logout",
+                        onClick = {
+                            // Avvia il flusso di autorizzazione (crasha per network error)
+                            authManager.logout(localContext as Activity)
+                            selectPage("home", coroutineScope, drawerState, navController, selectedItem)
+                        }
+                    )
+                }else{
+                    NavigationDrawerItem(
                     modifier = Modifier.padding(bottom = 16.dp),
                     label = { Text(text = "Login") },
                     selected = selectedItem.value == "login",
@@ -83,8 +95,9 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                         // Avvia il flusso di autorizzazione (crasha per network error)
                         authManager.startAuthorization(localContext as Activity)
                         selectPage("login", coroutineScope, drawerState, navController, selectedItem)
-                    }
-                )
+                        }
+                    )
+                }
                 NavigationDrawerItem(
                     label = { Text(text = "Home") },
                     selected = selectedItem.value == "home",

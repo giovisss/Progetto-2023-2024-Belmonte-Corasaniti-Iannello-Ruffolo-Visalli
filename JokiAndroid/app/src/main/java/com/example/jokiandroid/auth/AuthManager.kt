@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.jokiandroid.config.AuthConfig
 import com.example.jokiandroid.utility.IPManager
+import com.example.jokiandroid.viewmodel.UserViewModel
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -20,6 +21,7 @@ import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -59,7 +61,8 @@ class AuthManager(private val context: Context) {
                     Log.d("AuthManager", "AuthorizationRequest created: $authRequest")
 
                     val customTabsIntent = authService.createCustomTabsIntentBuilder().build()
-                    val authIntent = authService.getAuthorizationRequestIntent(authRequest, customTabsIntent)
+                    val authIntent =
+                        authService.getAuthorizationRequestIntent(authRequest, customTabsIntent)
                     activity.startActivityForResult(authIntent, RC_AUTH)
                 } else {
                     Log.e("AuthManager", "Failed to fetch configuration", ex)
@@ -69,7 +72,12 @@ class AuthManager(private val context: Context) {
         )
     }
 
-    fun handleAuthorizationResponse(requestCode: Int, resultCode: Int, data: Intent?, onTokenReceived: (String?, String?) -> Unit) {
+    fun handleAuthorizationResponse(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+        onTokenReceived: (String?, String?) -> Unit
+    ) {
         if (requestCode == RC_AUTH) {
             val response = data?.let { AuthorizationResponse.fromIntent(it) }
             val ex = AuthorizationException.fromIntent(data)
@@ -140,5 +148,64 @@ class AuthManager(private val context: Context) {
                 }
             }
         })
+    }
+
+    fun logout(activity: Activity) {
+        // Revoca il token di accesso
+        revokeAccessToken()
+
+        // Cancella il token salvato nel TokenManager
+        TokenManager.clearToken()
+
+        // Avvia il processo di logout in Keycloak
+        val logoutUri = Uri.parse("${AuthConfig.DISCOVERY_URI}/protocol/openid-connect/logout")
+        val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
+        activity.startActivity(logoutIntent)
+
+    }
+
+    private fun revokeAccessToken() {
+        val accessToken = TokenManager.getToken()
+
+        if (accessToken != null) {
+            val realmBaseUrl = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm"
+            val logoutUrl = "$realmBaseUrl/protocol/openid-connect/logout"
+
+            val client = OkHttpClient()
+
+            val formBody = FormBody.Builder()
+                .add("client_id", AuthConfig.CLIENT_ID)
+                .build()
+
+            val request = Request.Builder()
+                .url(logoutUrl)
+                .addHeader("Authorization", "Bearer $accessToken")
+                .post(formBody)
+                .build()
+
+            Log.d("AuthManager", "Attempting logout at URL: $logoutUrl")
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("AuthManager", "Failed to revoke access token", e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        Log.d("AuthManager", "Access token revoked successfully")
+                        // Pulisci il token solo dopo una risposta di successo
+                        TokenManager.clearToken()
+                    } else {
+                        Log.e("AuthManager", "Failed to revoke access token: ${response.code}")
+                        // Log the response body for debugging
+                        response.body?.string()?.let {
+                            Log.e("AuthManager", "Error response: $it")
+                        }
+                    }
+                }
+            })
+        } else {
+            Log.d("AuthManager", "No access token to revoke")
+        }
     }
 }
