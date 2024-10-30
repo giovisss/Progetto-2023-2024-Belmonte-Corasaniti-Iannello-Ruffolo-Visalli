@@ -36,14 +36,14 @@ export class UserService {
   }
 
   setUser(userData: any): void {
-      this._user = new User(
-        userData.username,
-        userData.firstName,
-        userData.lastName,
-        userData.email,
-        userData.birthdate
-      );
-    }
+    this._user = new User(
+      userData.username,
+      userData.firstName,
+      userData.lastName,
+      userData.email,
+      userData.birthdate
+    );
+  }
 
   // Metodo per ottenere l'utente
   getUser(): User | null {
@@ -75,30 +75,6 @@ export class UserService {
   getUserInfo(): Observable<any> {
     return this.httpClient.get<User>(this.apiUrl + '/user');
   }
-
-  // getUserList(isAdmin: boolean = true): Observable<User[]> {
-  //   if (isAdmin) {
-  //     return this.httpClient.get<User[]>(this.adminApiUrl).pipe(
-  //         map(response => {
-  //           let out = [];
-  //           for (let user of response) {
-  //             out.push(new User(user.username, user.firstName, user.lastName, user.email, new Date(user.birthdate.toString())));
-  //           }
-  //           return out;
-  //         })
-  //     );
-  //   } else {
-  //     return this.httpClient.get<User[]>(this.apiUrl).pipe(
-  //         map(response => {
-  //           let out = [];
-  //           for (let user of response) {
-  //             out.push(new User(user.username, user.firstName, user.lastName, user.email, new Date(user.birthdate.toString())));
-  //           }
-  //           return out;
-  //         })
-  //     );
-  //   }
-  // }
 
   getUserList(isAdmin: boolean = true): Observable<User[]> {
     if (isAdmin) {

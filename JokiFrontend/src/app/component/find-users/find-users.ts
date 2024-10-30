@@ -18,32 +18,39 @@ export class FindUsers {
   protected selectedUser: User | null = null;
   protected users: User[] = [];
   protected searchedUsers: User[] = [];
+  protected loggedInUsername: string = '';
+  protected loggedUser: User | null = null;
 
   protected wishlists: Wishlist[] = [];
 
   btnText: string = 'Richiedi amicizia';
 
 
+  constructor(private userService: UserService, private wishlistService: WishlistService, private router: Router) {}
 
-
-  constructor(private userService: UserService, private wishlistService: WishlistService, private router: Router) {
+  ngOnInit() {
     this.userService.getUserList(false).subscribe((response: User[]) => {
       this.users = response;
+    });
+
+    this.userService.getUserInfo().subscribe((userData: User) => {
+      this.loggedUser = userData;
+      this.loggedInUsername = userData.username;
     });
   }
 
   protected OnInput(event: any) {
+
     if (event.target.value === '') {
       this.searchedUsers = [];
       return;
     }
 
-    this.searchedUsers = [];
-    for (let user of this.users) {
-      if (user.username.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())) {
-        this.searchedUsers.push(user);
-      }
-    }
+    const searchTerm = event.target.value.toLocaleLowerCase();
+
+    this.searchedUsers = this.users.filter(
+      (user) => user.username.toLocaleLowerCase().includes(searchTerm) && user.username !== this.loggedInUsername
+    );
   }
 
   protected onUserClick(user: User) {
