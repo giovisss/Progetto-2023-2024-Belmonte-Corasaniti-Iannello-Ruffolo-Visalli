@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Controller.v1.admin;
 
 import com.google.gson.Gson;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class AdminUserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
+    public ResponseEntity<String> updateUser(@PathVariable String username, @Valid @RequestBody UpdateUserDto userDto) {
         System.out.println(userDto.getUsername());
         System.out.println(userDto.getEmail());
 

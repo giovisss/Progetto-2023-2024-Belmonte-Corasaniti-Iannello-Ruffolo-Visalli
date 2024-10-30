@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Controller.v1;
 
 import com.google.gson.Gson;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +29,7 @@ public class   ReviewController {
     }
 
     @PostMapping(value = "", consumes = "application/json")
-    public ResponseEntity <ReviewDto> insertReview(@RequestBody ReviewDto reviewDto) {
+    public ResponseEntity <ReviewDto> insertReview(@Valid @RequestBody ReviewDto reviewDto) {
         reviewDto.setUser(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()));
         reviewService.insertReview(reviewDto);
         return ResponseEntity.ok(reviewDto);
@@ -36,7 +37,7 @@ public class   ReviewController {
 
     //Non funziona, controllare. Errore mapping utente
     @PutMapping(value = "/{id}", consumes = "application/json")
-    public ResponseEntity <ReviewDto> updateReview(@PathVariable("id") String id, @RequestBody ReviewDto reviewDto) {
+    public ResponseEntity <ReviewDto> updateReview(@Valid @PathVariable("id") String id, @RequestBody ReviewDto reviewDto) {
         reviewDto.setUser(userService.getUserByUsername(UserContextHolder.getContext().getPreferredUsername()));
         System.out.println("Stampo il reviewDto");
         System.out.println(reviewDto.toString());

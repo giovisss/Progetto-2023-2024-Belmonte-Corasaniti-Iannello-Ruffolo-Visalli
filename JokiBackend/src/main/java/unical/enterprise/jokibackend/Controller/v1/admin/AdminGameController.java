@@ -1,6 +1,7 @@
 package unical.enterprise.jokibackend.Controller.v1.admin;
 
 import com.google.gson.Gson;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class AdminGameController {
     }
 
     @PostMapping(value = "", produces = "application/json")
-    public ResponseEntity<String> addGame(@RequestBody GameDto gameDto) {
+    public ResponseEntity<String> addGame(@Valid @RequestBody GameDto gameDto) {
         GameDto result = gameService.save(gameDto);
         if(result != null) {
             return ResponseEntity.ok(new Gson().toJson(result));
@@ -52,7 +53,7 @@ public class AdminGameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateGame(@PathVariable UUID id, @RequestBody GameDto gameDto) {
+    public ResponseEntity<String> updateGame(@PathVariable UUID id,@Valid @RequestBody GameDto gameDto) {
         if(gameService.update(id, gameDto) != null) {
             return ResponseEntity.ok(new Gson().toJson("Successfully updated game"));
         } else {

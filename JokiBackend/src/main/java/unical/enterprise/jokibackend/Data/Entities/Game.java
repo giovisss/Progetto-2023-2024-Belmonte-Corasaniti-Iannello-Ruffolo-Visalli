@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +29,15 @@ public class Game {
     private UUID id;
 
     @Column
+    @Size(min = 3, max = 50, message = "La lunghezza del titolo deve essere compresa tra 3 e 50 caratteri")
     private String title;
 
     @Column
+    @Size(min = 3, max = 500, message = "La lunghezza della descrizione deve essere compresa tra 3 e 500 caratteri")
     private String description;
 
     @Column
+    @Positive(message = "Il prezzo deve essere maggiore di 0")
     private Double price;
 
     @Column
@@ -41,15 +47,18 @@ public class Game {
     private String genre;
 
     @Column
+    @Size(min = 3, max = 50, message = "La lunghezza del developer deve essere compresa tra 3 e 50 caratteri")
     private String developer;
 
     @Column
+    @Size(min = 3, max = 50, message = "La lunghezza del developer deve essere compresa tra 3 e 50 caratteri")
     private String publisher;
 
     @Column(columnDefinition = "DATE")
     private Date releaseDate;
 
     @Column
+    @PositiveOrZero(message = "Lo stock deve essere maggiore o uguale a 0")
     private Integer stock;
 
     @ManyToOne

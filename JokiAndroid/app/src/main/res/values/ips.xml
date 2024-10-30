@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="keycloak">192.168.196.93:8080</string>
-    <string name="backend">192.168.196.93:8081</string>
+    <string name="keycloak">192.168.1.17:8080</string>
+    <string name="backend">192.168.1.17:8081</string>
 </resources>
