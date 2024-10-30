@@ -1,6 +1,6 @@
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {HttpResponse} from "@angular/common/http";

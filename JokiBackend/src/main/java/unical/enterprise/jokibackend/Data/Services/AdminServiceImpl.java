@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import unical.enterprise.jokibackend.Data.Dao.AdminDao;
-import unical.enterprise.jokibackend.Data.Entities.Admin;
-import unical.enterprise.jokibackend.Data.Entities.Game;
-import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 import unical.enterprise.jokibackend.Data.Dto.AdminDto;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
+import unical.enterprise.jokibackend.Data.Entities.Admin;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,19 +24,19 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public AdminDto getById(UUID id) {
         Admin admin = adminDao.findById(id).orElse(null);
-        return modelMapper.map(admin, AdminDto.class);
+        return checkBeforeReturn(admin);
     }
 
     @Override
     public AdminDto getByUsername(String username) {
         Admin admin = adminDao.findAdminByUsername(username).orElse(null);
-        return modelMapper.map(admin, AdminDto.class);
+        return checkBeforeReturn(admin);
     }
 
     @Override
     public AdminDto getByEmail(String email) {
         Admin admin = adminDao.findAdminByEmail(email).orElse(null);
-        return modelMapper.map(admin, AdminDto.class);
+        return checkBeforeReturn(admin);
     }
 
     @Override
@@ -82,5 +81,11 @@ public class AdminServiceImpl implements AdminService{
                         .map(game -> modelMapper.map(game, GameDto.class))
                         .toList())
                 .orElse(null));
+    }
+
+    private AdminDto checkBeforeReturn(Admin admin) {
+        if(admin == null) return null;
+
+        return modelMapper.map(admin, AdminDto.class);
     }
 }
