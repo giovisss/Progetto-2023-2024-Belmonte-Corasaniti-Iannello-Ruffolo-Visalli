@@ -10,7 +10,7 @@ object IPManager {
             if (field == "") {
                 field = value
             }else{
-                throw Exception("Non puoi cambiare il valore di questa variabile")
+                Log.e("IP Manager", "Non puoi cambiare il valore di KEYCLOAK_IP")
             }
         }
     var BACKEND_IP: String = ""
@@ -18,7 +18,7 @@ object IPManager {
             if (field == "") {
                 field = value
             }else{
-                throw Exception("Non puoi cambiare il valore di questa variabile")
+                Log.e("IP Manager", "Non puoi cambiare il valore di BACKEND_IP")
             }
         }
 
@@ -27,7 +27,7 @@ object IPManager {
             if (field == "NULL") {
                 field = value
             }else{
-                throw Exception("Non puoi cambiare il valore di questa variabile")
+                Log.e("IP Manager", "Non puoi cambiare il valore di BACKEND_IMAGES")
             }
         }
 

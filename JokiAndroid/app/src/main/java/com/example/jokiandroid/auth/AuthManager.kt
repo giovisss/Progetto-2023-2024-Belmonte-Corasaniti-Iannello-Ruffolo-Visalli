@@ -1,16 +1,13 @@
 package com.example.jokiandroid.auth
 
+import TokenManager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.jokiandroid.config.AuthConfig
 import com.example.jokiandroid.utility.IPManager
-import com.example.jokiandroid.viewmodel.UserViewModel
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -151,18 +148,64 @@ class AuthManager(private val context: Context) {
     }
 
     fun logout(activity: Activity) {
-        // Revoca il token di accesso
-        revokeAccessToken()
+    val accessToken = TokenManager.getToken()
 
-        // Cancella il token salvato nel TokenManager
-        TokenManager.clearToken()
+    if (accessToken != null) {
+        val realmBaseUrl = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm"
+        val logoutUrl = "$realmBaseUrl/protocol/openid-connect/logout"
 
-        // Avvia il processo di logout in Keycloak
-        val logoutUri = Uri.parse("${AuthConfig.DISCOVERY_URI}/protocol/openid-connect/logout")
-        val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
-        activity.startActivity(logoutIntent)
+        val client = OkHttpClient()
 
+        val formBody = FormBody.Builder()
+            .add("client_id", AuthConfig.CLIENT_ID)
+            .build()
+
+        val request = Request.Builder()
+            .url(logoutUrl)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .post(formBody)
+            .build()
+
+        Log.d("AuthManager", "Attempting logout at URL: $logoutUrl")
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("AuthManager", "Failed to revoke access token", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("AuthManager", "Access token revoked successfully")
+                    TokenManager.clearToken()
+                    val logoutUri = Uri.parse("http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm/protocol/openid-connect/logout")
+                    val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
+                    activity.startActivity(logoutIntent)
+                } else {
+                    Log.e("AuthManager", "Failed to revoke access token: ${response.code}")
+                    response.body?.string()?.let {
+                        Log.e("AuthManager", "Error response: $it")
+                    }
+                }
+            }
+        })
+    } else {
+        Log.d("AuthManager", "No access token to revoke")
     }
+}
+
+//    fun logout(activity: Activity) {
+//        // Revoca il token di accesso
+//        revokeAccessToken()
+//
+//        // Cancella il token salvato nel TokenManager
+//        TokenManager.clearToken()
+//
+//        // Avvia il processo di logout in Keycloak
+//        val logoutUri = Uri.parse("${AuthConfig.DISCOVERY_URI}/protocol/openid-connect/logout")
+//        val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
+//        activity.startActivity(logoutIntent)
+//
+//    }
 
     private fun revokeAccessToken() {
         val accessToken = TokenManager.getToken()

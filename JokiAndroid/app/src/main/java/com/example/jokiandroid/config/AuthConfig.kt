@@ -12,6 +12,6 @@ object AuthConfig {
 
     var DISCOVERY_URI = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm/.well-known/openid-configuration"
         set(value) {
-            throw Exception("Non puoi cambiare il valore di questa variabile")
+            throw Exception("Non puoi cambiare il valore di DISCOVERY_URI")
         }
 }
