@@ -23,7 +23,7 @@ import unical.enterprise.jokibackend.Utility.CustomContextManager.UserContextHol
 
 @Controller
 @RequestMapping("/api/v1")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class ChatController {
 
     List<UUID> adminIds = new ArrayList<> ();
