@@ -18,10 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.draw.clip
+import androidx.navigation.NavController
 import com.example.jokiandroid.R
 
 @Composable
-fun AboutActivity() {
+fun AboutActivity(navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -91,10 +92,4 @@ fun TeamMember(imageResId: Int, name: String, role: String) {
             Text(text = role, color = Color.Gray, fontSize = 14.sp)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTeamScreen() {
-    AboutActivity()
 }

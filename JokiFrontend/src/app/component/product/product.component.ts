@@ -257,6 +257,7 @@ export class ProductComponent {
         },
         (error) => {
           console.error('Errore durante l\'aggiornamento della recensione:', error);
+          this.closeEditReviewModal();
         }
       );
     }

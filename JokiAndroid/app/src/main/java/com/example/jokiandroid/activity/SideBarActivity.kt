@@ -3,6 +3,7 @@ package com.example.jokiandroid.activity
 import CartActivity
 import GameViewModel
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -129,14 +130,13 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                         onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
                     )
                     NavigationDrawerItem(
-                        label = { Text(text = "Impostazioni") },
-                        selected = selectedItem.value == "Impostazioni",
-                        onClick = { /*TODO*/ }
-                    )
-                    NavigationDrawerItem(
                         label = { Text(text = "About") },
                         selected = selectedItem.value == "about",
-                        onClick = { selectPage("about", coroutineScope, drawerState, navController, selectedItem) }
+                        onClick = {
+                            Log.d("About", "About clicked")
+                            selectPage("about", coroutineScope, drawerState, navController, selectedItem)
+                            Log.d("About", "About clicked after selectPage")
+                        }
                     )
                 }
             }
@@ -191,8 +191,8 @@ fun selectPage(page:String, coroutineScope:CoroutineScope, drawerState: DrawerSt
     selectedItem.value = page
     coroutineScope.launch {
         drawerState.close()
+        navController.navigate(page)
     }
-    navController.navigate(page)
 }
 
 @Composable
@@ -246,9 +246,9 @@ fun SetEditGameContent(navController: NavController, gameViewModel: GameViewMode
 }
 
 @Composable
-fun SetAboutContent() {
+fun SetAboutContent(navController: NavController) {
     SideBarActivity.setContent {
-        AboutActivity()
+        AboutActivity(navController)
     }
 }
 

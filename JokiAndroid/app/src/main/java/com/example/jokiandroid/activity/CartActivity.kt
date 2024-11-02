@@ -56,16 +56,31 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Button(
-                onClick = {
-                    viewModel.removeAllGamesFromCart()
-                    viewModel.loadCart()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Clear Cart")
+            Row {
+                Button(
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    Text("Paga ora")
+                }
+            }
+
+            Row {
+                Button(
+                    onClick = {
+                        viewModel.removeAllGamesFromCart()
+                        viewModel.loadCart()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    Text("Svuota carrello")
+                }
             }
         }
     }
