@@ -37,7 +37,7 @@ public class AdminUserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @Valid @RequestBody UpdateUserDto userDto) {
+    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
         System.out.println(userDto.getUsername());
         System.out.println(userDto.getEmail());
 

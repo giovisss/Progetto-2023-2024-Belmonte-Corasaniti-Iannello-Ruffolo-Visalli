@@ -10,7 +10,6 @@ import {Date} from "../../utility/Date";
 @Component({
   selector: 'app-user-info',
   templateUrl: './user-info.component.html',
-  //styleUrl: './edit-user-info-admin.component.css'
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {
@@ -105,10 +104,6 @@ export class UserInfoComponent implements OnInit {
   }
 
   private _formatBirthdate(user: User): string {
-    // const day = ('0' + user.birthdate.day).slice(-2);
-    // const month = ('0' + (user.birthdate.month + 1)).slice(-2);
-    // const year = user.birthdate.year;
-    // return `${day}/${month}/${year}`;
     return new Date(user.birthdate).toString();
   }
 }

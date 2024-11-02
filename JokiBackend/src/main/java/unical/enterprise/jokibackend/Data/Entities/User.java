@@ -29,24 +29,15 @@ public class User {
     @Column
     private UUID id;
 
-    @Size(min = 3, max = 20, message = "La lunghezza del nome utente deve essere compresa tra 3 e 20 caratteri")
-    @NotBlank(message = "Il nome utente non può essere vuoto")
     @Column(unique = true)
     private String username;
 
-    @Max(value = 30, message = "La lunghezza dell'email non può superare i 30 caratteri")
-    @NotBlank(message = "L'email non può essere vuota")
-    @Email(message = "Inserire un indirizzo email valido")
     @Column(unique = true)
     private String email;
 
-    @NotBlank(message = "Il nome non può essere vuoto")
-    @Size(min = 3, max = 20, message = "La lunghezza del nome deve essere compresa tra 3 e 20 caratteri")
     @Column
     private String firstName;
 
-    @NotBlank(message = "Il nome non può essere vuoto")
-    @Size(min = 3, max = 20, message = "La lunghezza del nome deve essere compresa tra 3 e 20 caratteri")
     @Column
     private String lastName;
 
