@@ -19,13 +19,13 @@ export class MessageService {
   private userCount: number = 0;
   private apiChatUrl = BASE_API_URL + '/chat';
   private pollingSubscription?: Subscription;
-  private readonly POLLING_INTERVAL = 5000; // 5 seconds
+  private readonly POLLING_INTERVAL = 10000; // 5 seconds
 
   constructor(
     private http: HttpClient,
     private keycloakService: KeycloakService
   ) {
-    console.log('API Chat URL:', this.apiChatUrl);
+    // console.log('API Chat URL:', this.apiChatUrl);
   }
 
   private initializeClients() {
@@ -35,12 +35,12 @@ export class MessageService {
     }
 
     const brokerURL = 'ws://localhost:8081/ws';
-    console.log('Initializing clients with broker URL:', brokerURL);
+    // console.log('Initializing clients with broker URL:', brokerURL);
 
     this.userClient = new Client({
       brokerURL: brokerURL,
       onConnect: () => {
-        console.log('User connected');
+        // console.log('User connected');
         this.subscribeToTopics();
       },
     });
@@ -48,7 +48,7 @@ export class MessageService {
     this.adminClient = new Client({
       brokerURL: brokerURL,
       onConnect: () => {
-        console.log('Admin connected');
+        // console.log('Admin connected');
         this.subscribeToTopics();
       },
     });
@@ -67,23 +67,23 @@ export class MessageService {
 
     this.userClient.subscribe(subscriptionTopicUser, message => {
       const messageContent = JSON.parse(message.body);
-      console.log('User received message:', messageContent);
+      // console.log('User received message:', messageContent);
       this.userMessages.next(messageContent);
     });
 
     this.adminClient.subscribe(subscriptionTopicAdmin, message => {
       const messageContent = JSON.parse(message.body);
-      console.log('Admin received message:', messageContent);
+      // console.log('Admin received message:', messageContent);
       this.adminMessages.next(messageContent);
     });
 
-    console.log('Both clients are connected and subscribed.');
+    // console.log('Both clients are connected and subscribed.');
   }
 
   UserSendsToAdmin(message: string) {
     if (this.userClient.connected && this.userId && this.adminId) {
       const destination = `/app/chat/user-to-admin/${this.userId}/${this.adminId}`;
-      console.log('User sending message to:', destination);
+      // console.log('User sending message to:', destination);
       this.userClient.publish({
         destination: destination,
         body: JSON.stringify({ content: message })
@@ -96,7 +96,7 @@ export class MessageService {
   AdminSendsToUser(message: string) {
     if (this.adminClient.connected && this.userId && this.adminId) {
       const destination = `/app/chat/admin-to-user/${this.userId}/${this.adminId}`;
-      console.log('Admin sending message to:', destination);
+      // console.log('Admin sending message to:', destination);
       this.adminClient.publish({
         destination: destination,
         body: JSON.stringify({ content: message })
@@ -116,7 +116,7 @@ export class MessageService {
 
   addAdmin(): Observable<string> {
     const url = `${this.apiChatUrl}/admin`;
-    console.log('Adding admin, POST request to:', url);
+    // console.log('Adding admin, POST request to:', url);
     return this.http.post<string>(url, {});
   }
 
@@ -124,20 +124,20 @@ export class MessageService {
     this.stopPolling();
     
     const url = `${this.apiChatUrl}/admin`;
-    console.log('Getting available admin, GET request to:', url);
+    // console.log('Gettikng available admin, GET request to:', url);
 
     this.pollingSubscription = timer(0, this.POLLING_INTERVAL)
       .subscribe(() => {
         this.http.get<{ adminId: string }>(url).subscribe({
           next: (response) => {
-            console.log('Admin found:', response);
+            // console.log('Admin found:', response);
             this.adminId = response.adminId;
             this.initializeUserIdAndClients();
             this.stopPolling();
           },
           error: (error: HttpErrorResponse) => {
             if (error.status === 404) {
-              console.log('No admin available, will retry in 5 seconds...');
+              // console.log('No admin available, will retry in 5 seconds...');
             } else {
               console.error('Error getting available admin:', error);
               this.stopPolling();
@@ -156,11 +156,11 @@ export class MessageService {
 
   getUser() {
     const url = `${this.apiChatUrl}/user`;
-    console.log('Getting user, GET request to:', url);
+    // console.log('Getting user, GET request to:', url);
     this.http.get<{ userId: string }>(url).subscribe(
       response => {
         this.userId = response.userId;
-        console.log('Received user ID:', this.userId);
+        // console.log('Received user ID:', this.userId);
         this.initializeAdminIdAndClients();
       },
       error => {
@@ -171,7 +171,7 @@ export class MessageService {
 
   addUser(): Observable<string> {
     const url = `${this.apiChatUrl}/user`;
-    console.log('Adding user, POST request to:', url);
+    // console.log('Adding user, POST request to:', url);
     return this.http.post<string>(url, {});
   }
 
@@ -180,7 +180,7 @@ export class MessageService {
       const token = this.keycloakService.getKeycloakInstance().tokenParsed;
       if (token && token.sub) {
         this.userId = token.sub;
-        console.log('User ID initialized:', this.userId);
+        // console.log('User ID initialized:', this.userId);
         if (this.adminId) {
           this.initializeClients();
         }
@@ -197,7 +197,7 @@ export class MessageService {
       const token = this.keycloakService.getKeycloakInstance().tokenParsed;
       if (token && token.sub) {
         this.adminId = token.sub;
-        console.log('Admin ID initialized:', this.adminId);
+        // console.log('Admin ID initialized:', this.adminId);
         if (this.userId) {
           this.initializeClients();
         }
@@ -211,11 +211,11 @@ export class MessageService {
 
   getUserCount(): void {
     const url = `${this.apiChatUrl}/user/count`;
-    console.log('Getting user count, GET request to:', url);
+    // console.log('Getting user count, GET request to:', url);
     this.http.get<{ userCount: number }>(url).subscribe(
       response => {
         this.userCount = response.userCount;
-        console.log('Received user count:', this.userCount);
+        // console.log('Received user count:', this.userCount);
       },
       error => {
         console.error('Error getting user count:', error);

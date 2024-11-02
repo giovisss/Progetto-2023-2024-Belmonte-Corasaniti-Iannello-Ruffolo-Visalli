@@ -25,7 +25,7 @@ export class UserChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit(): void {
     this.messageService.addUser().subscribe(() => {
-      console.log('User added');
+      // console.log('User added');
     });
     this.connect();
   }

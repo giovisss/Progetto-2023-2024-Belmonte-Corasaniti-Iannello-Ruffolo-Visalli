@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit{
       } else {
         this.hasNewMessages = false;
       }
-    }, 5000); // Controlla ogni 5 secondi
+    }, 10000); // Controlla ogni 5 secondi
   }
 
   ngOnDestroy() {

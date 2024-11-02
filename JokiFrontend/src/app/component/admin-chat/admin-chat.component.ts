@@ -25,7 +25,7 @@ export class AdminChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit(): void {
     this.messageService.addAdmin().subscribe(() => {
-      console.log('Admin added');
+      // console.log('Admin added');
     });
     this.connect();
   }
