@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProductsService} from "../../services/products.service";
 import {CartService} from "../../services/cart.service";
 import {WishlistService} from "../../services/wishlist.service";
@@ -40,7 +40,7 @@ export class ProductComponent {
   photo2: boolean = true;
   photo3: boolean = true;
 
-  constructor(private route : ActivatedRoute, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService, private reviewService: ReviewService, private userService: UserService) {
+  constructor(private route : ActivatedRoute, private router : Router, private productsService: ProductsService, private cartService: CartService, private wishlistService: WishlistService, private reviewService: ReviewService, private userService: UserService) {
     const id = this.route.snapshot.params['id'];
     console.log("ID", id);
 
@@ -94,8 +94,12 @@ export class ProductComponent {
   }
 
   addToCart() {
-    this.cartService.addToCart(this.product!);
-
+    this._checkUserLoggedInAndRedirect().then(isLoggedIn => {
+      if (!isLoggedIn) {
+        return;
+      }
+      this.cartService.addToCart(this.product!);
+    });
   }
 
   addSuggestedReview() {
@@ -125,15 +129,30 @@ export class ProductComponent {
   }
 
   OpenWishlistModal() {
-    this.showWishlistModal = true;
+    this._checkUserLoggedInAndRedirect().then(isLoggedIn => {
+      if (!isLoggedIn) {
+        return; // L'utente non è loggato, non procedere
+      }
+      this.showWishlistModal = true;
+    });
   }
 
   OpenSuggestedModal() {
-    this.showSuggestedModal = true;
+    this._checkUserLoggedInAndRedirect().then(isLoggedIn => {
+      if (!isLoggedIn) {
+        return;
+      }
+      this.showSuggestedModal = true;
+    });
   }
 
   OpenNotSuggestedModal() {
-    this.showNotSuggestedModal = true;
+    this._checkUserLoggedInAndRedirect().then(isLoggedIn => {
+      if (!isLoggedIn) {
+        return;
+      }
+      this.showNotSuggestedModal = true;
+    });
   }
 
   closeSuggestedModal() {
@@ -191,6 +210,16 @@ export class ProductComponent {
   private _checkIfInLibrary(): void {
     this.userService.getUserLibrary().subscribe((library: Game[]) => {
       this.isInLibrary = library.some(game => game.id === this.product?.id);
+    });
+  }
+
+  private _checkUserLoggedInAndRedirect(): Promise<boolean> {
+    return this.userService.isUserLoggedIn().then(isLoggedIn => {
+      if (!isLoggedIn) {
+        this.router.navigate(['/login']);
+        return false;
+      }
+      return true;
     });
   }
 }

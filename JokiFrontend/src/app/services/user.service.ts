@@ -45,14 +45,13 @@ export class UserService {
     );
   }
 
-  // Metodo per ottenere l'utente
   getUser(): User | null {
     return this._user;
   }
 
-  // Metodo per controllare se l'utente è settato
-  isUserLoggedIn(): boolean {
-    return this._user !== null;
+  async isUserLoggedIn(): Promise<boolean> {
+    const isLoggedIn = await this.keycloakService.isLoggedIn();
+    return isLoggedIn;
   }
 
   getUserLibrary(): Observable<Game[]> {
