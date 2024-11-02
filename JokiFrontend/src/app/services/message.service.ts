@@ -19,7 +19,7 @@ export class MessageService {
   private userCount: number = 0;
   private apiChatUrl = BASE_API_URL + '/chat';
   private pollingSubscription?: Subscription;
-  private readonly POLLING_INTERVAL = 10000; // 5 seconds
+  private readonly POLLING_INTERVAL = 5000; // 5 seconds
 
   constructor(
     private http: HttpClient,
