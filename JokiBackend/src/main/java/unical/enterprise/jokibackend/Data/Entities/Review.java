@@ -2,6 +2,7 @@ package unical.enterprise.jokibackend.Data.Entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Review {
     private Game game;
 
     @Column
-    @Max(value = 300, message = "La recensione deve essere lunga al massimo 300 caratteri")
+    @Size(min = 3, max = 300, message = "La recensione deve essere lunga almeno 3 caratteri")
     private String review;
 
     @Column

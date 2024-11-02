@@ -19,6 +19,12 @@ import {Wishlist} from "../../model/wishlist";
 export class ProductComponent {
   protected readonly BASE_IMAGE_URL = BASE_IMAGE_URL;
 
+
+  isEditReviewModalOpen: boolean = false;
+  updatedReviewText: string = '';
+  suggested: boolean = false;
+
+
   reviewExists: boolean = false;
   userReview: Review | null = null;
   reviewsAvg: number = 0;
@@ -67,6 +73,7 @@ export class ProductComponent {
         if (response) {
           this.reviewExists = true;
           this.userReview = response;
+          console.log('review:', response);
         } else {
           console.log('Recensione non trovata.');
         }
@@ -104,7 +111,7 @@ export class ProductComponent {
 
   addSuggestedReview() {
     const suggested = true;
-    const newReview = new Review(this.product!.id!, this.newSuggestedReviewText, suggested, this.userService.getUser()?.username);
+    const newReview = new Review("",this.product!.id!, this.newSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeSuggestedModal();
@@ -117,7 +124,7 @@ export class ProductComponent {
 
   addNotSuggestedReview() {
     const suggested = false;
-    const newReview = new Review(this.product!.id!, this.newNotSuggestedReviewText, suggested, this.userService.getUser()?.username);
+    const newReview = new Review("",this.product!.id!, this.newNotSuggestedReviewText, suggested, this.userService.getUser()?.username);
     this.reviewService.insertReview(newReview).subscribe(
       (response) => {
         this.closeNotSuggestedModal();
@@ -221,5 +228,37 @@ export class ProductComponent {
       }
       return true;
     });
+  }
+
+  openEditReviewModal() {
+    this.updatedReviewText = this.userReview?.review || '';
+    this.suggested = this.userReview?.suggested || false;
+    this.isEditReviewModalOpen = true;
+  }
+
+  setSuggested(value: boolean) {
+    this.suggested = value;
+  }
+
+
+
+  closeEditReviewModal() {
+    this.isEditReviewModalOpen = false;
+  }
+
+  updateReview() {
+    if (this.userReview) {
+      this.userReview.review = this.updatedReviewText;
+      this.userReview.suggested = this.suggested;
+      this.reviewService.updateReview(this.userReview).subscribe(
+        (response) => {
+          this.closeEditReviewModal();
+          console.log('Recensione aggiornata con successo!');
+        },
+        (error) => {
+          console.error('Errore durante l\'aggiornamento della recensione:', error);
+        }
+      );
+    }
   }
 }

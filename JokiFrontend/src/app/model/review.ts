@@ -2,12 +2,14 @@ import {User} from "./user";
 import {Game} from "./game";
 
 export class Review {
+  id: string;
   gameId: string;
   review: string;
   suggested: boolean;
   username: string | undefined;
 
-  constructor(gameId: string, review: string, suggested: boolean, username: string | undefined) {
+  constructor(reviewId: string, gameId: string, review: string, suggested: boolean, username: string | undefined) {
+    this.id = reviewId;
     this.gameId = gameId;
     this.review = review;
     this.suggested = suggested;
@@ -44,5 +46,11 @@ export class Review {
 
   public setSuggested(suggested: boolean): void {
     this.suggested = suggested;
+  }
+
+
+
+  public setReviewId(reviewId: string): void {
+    this.id = reviewId;
   }
 }

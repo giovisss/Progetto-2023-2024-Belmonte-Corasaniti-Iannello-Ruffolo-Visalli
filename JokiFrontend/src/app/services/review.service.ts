@@ -51,4 +51,8 @@ export class ReviewService{
   getAvgReviews(id: string): Observable<number> {
     return this.httpClient.get<number>(`${this.apiUrl}/average/${id}`);
   }
+
+  updateReview(review: Review): Observable<Review> {
+    return this.httpClient.put<Review>(`${this.apiUrl}/${review.id}`, review);
+  }
 }
