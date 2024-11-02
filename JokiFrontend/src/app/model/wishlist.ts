@@ -1,11 +1,17 @@
 import {Game} from "./game";
 
+enum wishlistVisibility {
+    PRIVATA = 0,
+    AMICI = 1,
+    PUBBLICA = 2
+}
+
 export class Wishlist {
   wishlistName: string;
   games: Game[] = [];
-  visibility: number = 0;
+  visibility: wishlistVisibility = wishlistVisibility.PRIVATA;
 
-  constructor(name: string, wishListProducts: Game[], visibility: number) {
+  constructor(name: string, wishListProducts: Game[], visibility: wishlistVisibility) {
     this.wishlistName = name;
     wishListProducts.forEach(game => {
         this.games.push(new Game(
@@ -23,8 +29,10 @@ export class Wishlist {
         ))
     })
     this.visibility = visibility;
+  }
 
-
+  getVisibilityName(value: number): string {
+    return Object.keys(wishlistVisibility).find(key => wishlistVisibility[key as keyof typeof wishlistVisibility] === value) || '';
   }
 
   toString(): string {

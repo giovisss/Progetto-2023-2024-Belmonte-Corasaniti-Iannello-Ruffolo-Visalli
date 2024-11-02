@@ -102,7 +102,8 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (
                 Text(
                     text = item.title,
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
                 )
                 Text(
                     text = item.description,
@@ -113,7 +114,8 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (
                 Text(
                     text = item.title,
                     fontSize = 20.sp,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
                 )
                 Text(
                     text = item.description,
@@ -130,8 +132,6 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (
             AsyncImage(
                 model = "${IPManager.BACKEND_IMAGES}/${item.url1}",
                 contentDescription = item.title,
-                //error = painterResource(id = R.drawable.games_image), // Uncomment and replace with your error image resource
-                //placeholder = painterResource(id = R.drawable.games_image), // Uncomment and replace with your placeholder image resource
                 modifier = Modifier
                     .fillMaxSize(.5f)
                     .align(Alignment.CenterHorizontally)

@@ -1,52 +1,59 @@
 package com.example.jokiandroid.activity
 
 import RetrofitInstance
+import TokenManager
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.jokiandroid.model.Wishlist
-import com.example.jokiandroid.viewmodel.WishlistViewModel
-
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewModelScope
-import com.example.jokiandroid.model.Game
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.jokiandroid.R
+import com.example.jokiandroid.model.Wishlist
 import com.example.jokiandroid.service.WishlistApiService
+import com.example.jokiandroid.viewmodel.WishlistViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 //Qui dobbiamo visualizzare le wishlist dell'utente
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistViewModel) {
 
@@ -91,7 +98,7 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
                     .padding(16.dp)
 
             ) {
-                Text(text = "Crea (Saverio!!) Wishlist")
+                Text(text = "Crea nuova Wishlist")
             }
 
             if (showModal) {
@@ -117,43 +124,75 @@ fun WishlistsActivity(navController: NavController, wishlistViewModel: WishlistV
 //singola wishlist visualizzata nella schermata delle wishlist
 @Composable
 fun WishlistsItem(wishlistViewModel: WishlistViewModel, item : Wishlist, onWishlistClick: (Wishlist) -> Unit = {}) {
-    Row(
+    Row (
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(8.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(MaterialTheme.colorScheme.primary)
             .padding(15.dp)
             .clickable { onWishlistClick(item) }
     ){
-        Column {
-            Text(text = item.wishlistName, style = MaterialTheme.typography.titleMedium)
-            Text(text = "Questa wishlist è ${item.visibility} e contiene ${item.games.size} giochi ", style = MaterialTheme.typography.bodyMedium)
-        }
-        //Pulsante per rimuovere gioco dalla wishlist
-        Button(
-            onClick = {
-                wishlistViewModel.viewModelScope.launch {
-                    val response = RetrofitInstance.createApi(
-                        WishlistApiService::class.java,
-                        TokenManager.getToken()
-                    ).deleteWishlist(item.wishlistName)
-                    if (response.isSuccessful) {
-                        Log.d("WishlistsActivity", "Wishlist eliminata: ${item.wishlistName}")
-                        wishlistViewModel.loadWishlists()
-                    } else {
-                        Log.e(
-                            "WishlistsActivity",
-                            "Errore eliminazione wishlist: ${response.errorBody()?.string()}"
-                        )
-                    }
-                }
-            }
+        Column(
+            modifier = Modifier
+                .weight(.75f)
+                .align(Alignment.CenterVertically)
         ) {
-            Text("Elimina Wishlist")
+            Text(
+                text = item.wishlistName,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = isSystemInDarkTheme().let { if (it) Color.Black else Color.White }
+            )
+            val visibility = when (item.visibility) {
+                0 -> "Privata"
+                1 -> "Pubblica"
+                2 -> "Solo Amici"
+                else -> "Sconosciuta"
+            }
+            Text(text = "Questa wishlist è $visibility", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.align(Alignment.CenterHorizontally), color = isSystemInDarkTheme().let { if (it) Color.DarkGray else Color.LightGray })
+            Text(text = "Contiene ${item.games.size} giochi ", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.align(Alignment.CenterHorizontally), color = isSystemInDarkTheme().let { if (it) Color.DarkGray else Color.LightGray })
         }
-}
-
+        Column(
+            modifier = Modifier
+                .weight(.25f)
+                .fillMaxSize()
+                .align(Alignment.CenterVertically)
+        ) {
+            Button(
+                onClick = {
+                    wishlistViewModel.viewModelScope.launch {
+                        val response = RetrofitInstance.createApi(
+                            WishlistApiService::class.java,
+                            TokenManager.getToken()
+                        ).deleteWishlist(item.wishlistName)
+                        if (response.isSuccessful) {
+                            Log.d(
+                                "WishlistsActivity",
+                                "Wishlist eliminata: ${item.wishlistName}"
+                            )
+                            wishlistViewModel.loadWishlists()
+                        } else {
+                            Log.e(
+                                "WishlistsActivity",
+                                "Errore eliminazione wishlist: ${
+                                    response.errorBody()?.string()
+                                }"
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                AsyncImage(
+                    model = R.drawable.delete,
+                    contentDescription = "Elimina Wishlist",
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -180,35 +219,39 @@ fun CreaWishlistModal(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Column {
-                    RadioButton(
-                        selected = visibilita == 1,
-                        onClick = { visibilita = 1 }
-                    )
-                    Text("Pubblica")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = visibilita == 0,
+                            onClick = { visibilita = 0 }
+                        )
+                        Text("Privata")
+                    }
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = visibilita == 2,
+                            onClick = { visibilita = 2 }
+                        )
+                        Text("Solo Amici")
+                    }
 
-                    RadioButton(
-                        selected = visibilita == 0,
-                        onClick = { visibilita = 0 }
-                    )
-                    Text("Privata")
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    RadioButton(
-                        selected = visibilita == 2,
-                        onClick = { visibilita = 2 }
-                    )
-                    Text("Solo Amici")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(
+                            selected = visibilita == 1,
+                            onClick = { visibilita = 1 }
+                        )
+                        Text("Pubblica")
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(horizontalArrangement = Arrangement.End) {
+                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth().align(Alignment.End)) {
                     TextButton(onClick = onDismiss) {
                         Text("Annulla")
                     }
+
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     TextButton(onClick = {
                         // Avvia una coroutine per la chiamata API

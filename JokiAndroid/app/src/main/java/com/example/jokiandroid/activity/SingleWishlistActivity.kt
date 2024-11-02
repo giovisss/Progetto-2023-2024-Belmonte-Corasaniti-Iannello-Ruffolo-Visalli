@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -84,45 +86,47 @@ fun WishlistsGameItem(item : Game, onGameClick: (Game) -> Unit = {}, onAddToCart
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            if (isSystemInDarkTheme()) {
-                Text(
-                    text = item.title,
-                    fontSize = 20.sp,
-                    color = Color.Black
-                )
-                Text(
-                    text = item.description,
-                    fontSize = 15.sp,
-                    color = Color.DarkGray
-                )
-            } else {
-                Text(
-                    text = item.title,
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
-                Text(
-                    text = item.description,
-                    fontSize = 15.sp,
-                    color = Color.LightGray
-                )
-            }
+            Text(
+                text = item.title,
+                fontSize = 20.sp,
+                color = isSystemInDarkTheme().let { if (it) Color.Black else Color.White },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
-            Row {
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Text(
+                text = item.description,
+                fontSize = 15.sp,
+                color = isSystemInDarkTheme().let { if (it) Color.DarkGray else Color.LightGray }
+            )
+
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            ) {
 
                 Button(
                     onClick = {
                         wishlistViewModel.removeGameFromWishlist(wishlistName, item.id)
                         wishlistViewModel.getSingleWishlist(wishlistName)
-                    }
+                    },
+                    modifier = Modifier
+                        .weight(.5f)
                 ) {
-                    Text("Rimuovi")
+                    AsyncImage(
+                        model = R.drawable.delete,
+                        contentDescription = "Rimuovi gioco",
+                    )
                 }
 
                 Button(
                     onClick = { onAddToCart(item) },
                     modifier = Modifier
-                        .weight(.3f)
+                        .weight(.5f)
                 ) {
                     AsyncImage(
                         model = R.drawable.add_shopping_cart,
