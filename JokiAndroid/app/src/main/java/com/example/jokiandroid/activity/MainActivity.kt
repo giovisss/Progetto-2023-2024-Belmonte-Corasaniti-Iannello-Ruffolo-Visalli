@@ -147,10 +147,12 @@ fun MainScreen(refresh: Boolean, authManager: AuthManager, gameViewModel: GameVi
             gameId?.let { GameDetailsActivity(gameId = it, viewModel = gameViewModel, navController) }
         }
 
+        composable("edit_current_user") { EditCurrentUserDataActivity(navController, userViewModel) }
     }
 
     if (refresh) {
         navController.navigate("home")
     }
+
 
 }

@@ -130,6 +130,11 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                         onClick = { selectPage("wishlist", coroutineScope, drawerState, navController, selectedItem) }
                     )
                     NavigationDrawerItem(
+                        label = { Text(text = "Gestione Profilo") },
+                        selected = selectedItem.value == "userinfo",
+                        onClick = { selectPage("edit_current_user", coroutineScope, drawerState, navController, selectedItem) }
+                    )
+                    NavigationDrawerItem(
                         label = { Text(text = "About") },
                         selected = selectedItem.value == "about",
                         onClick = {
