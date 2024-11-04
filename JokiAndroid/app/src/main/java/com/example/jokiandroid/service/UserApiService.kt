@@ -42,4 +42,7 @@ interface UserApiService {
 
     @DELETE("$BASE_URL/user/cart")
     suspend fun removeAllGamesFromCart(): Response<Any>
+
+    @GET("$BASE_URL/checkout")
+    suspend fun checkout(): Response<Any>
 }

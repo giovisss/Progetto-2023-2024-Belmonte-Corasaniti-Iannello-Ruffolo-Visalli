@@ -176,4 +176,10 @@ public class UserController {
             return ResponseEntity.status(500).body(new Gson().toJson("Error during logout"));
         }
     }
+
+    @GetMapping("/checkout")
+    public ResponseEntity<String> checkout() {
+        userService.checkout();
+        return ResponseEntity.ok(new Gson().toJson("Checkout successful"));
+    }
 }

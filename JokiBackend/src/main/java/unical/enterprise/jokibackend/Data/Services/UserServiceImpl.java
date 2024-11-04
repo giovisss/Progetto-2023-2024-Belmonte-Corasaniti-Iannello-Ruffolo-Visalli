@@ -262,5 +262,39 @@ public class UserServiceImpl implements UserService {
     public void deleteGameFromUsers(UUID id) {
         userDao.deleteGameFromUsers(id);
     }
+
+    @Override
+    @Transactional
+    public void checkout() {
+        String username = UserContextHolder.getContext().getPreferredUsername();
+        Collection<GameDto> cartGames = getUserCart(username);
+
+        if (cartGames.isEmpty()) {
+            throw new IllegalStateException("Cart is empty");
+        }
+
+        try {
+            for (GameDto gameDto : cartGames) {
+                // Verifica disponibilità prima del checkout
+                Game game = gameDao.findById(gameDto.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Game not found: " + gameDto.getId()));
+
+                if (game.getStock() <= 0) {
+                    throw new IllegalStateException("Game out of stock: " + game.getTitle());
+                }
+            }
+
+            // Se tutti i controlli passano, procedi con il checkout
+            for (GameDto gameDto : cartGames) {
+                addGameToUserLibrary(username, gameDto.getId());
+            }
+
+            // Svuota il carrello solo dopo che tutti i giochi sono stati aggiunti con successo
+            clearUserCart(username);
+        } catch (Exception e) {
+            // In caso di errore, esegui il rollback della transazione
+            throw new RuntimeException("Checkout failed: " + e.getMessage(), e);
+        }
+    }
 }
 

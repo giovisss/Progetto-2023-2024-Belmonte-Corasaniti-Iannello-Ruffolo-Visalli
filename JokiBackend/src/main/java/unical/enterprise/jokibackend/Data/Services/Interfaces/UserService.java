@@ -3,10 +3,12 @@ package unical.enterprise.jokibackend.Data.Services.Interfaces;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Utility.UserFriendship;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -52,4 +54,6 @@ public interface UserService {
     boolean checkIfFriend(String other);
 
     void deleteGameFromUsers(UUID id);
+
+    void checkout();
 }

@@ -1,6 +1,5 @@
 package com.example.jokiandroid.viewmodel
 
-import TokenManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,11 +17,13 @@ class CartViewModel() : ViewModel() {
     private val _cartItems = MutableLiveData<List<Game>>()
     private val _totalPrice = MutableLiveData<Double>(0.0)
     private val _isLoading = MutableLiveData(false)
+    private val _checkoutStatus = MutableLiveData<Boolean?>(null)
 
     // LiveData per osservare i cambiamenti del carrello
     val cartItems: LiveData<List<Game>> get() = _cartItems
     val totalPrice: LiveData<Double> = _totalPrice
     val isLoading: LiveData<Boolean> get() = _isLoading
+    val checkoutStatus: LiveData<Boolean?> get() = _checkoutStatus
 
     fun loadCart(){
         viewModelScope.launch {
@@ -96,6 +97,46 @@ class CartViewModel() : ViewModel() {
             }
         }
     }
+
+    //funzione che simula il pagamento spostando i giochi del carrello nella libreria dell'utente
+//    fun checkout() {
+//        for (game in _cartItems.value ?: emptyList()) {
+//            viewModelScope.launch {
+//                try {
+//                    val response = cartRepository.checkout()
+//                    if (response) {
+//                        Log.d("CartViewModel", "Gioco acquistato: Response = ${game.title}")
+//                        loadCart()
+//                    } else {
+//                        Log.e("CartViewModel", "Errore nell'acquisto del gioco: Response = $response")
+//                    }
+//                } catch (e: Exception) {
+//                    Log.e("CartViewModel", "Errore nell'acquisto del gioco", e)
+//                }
+//            }
+//        }
+//    }
+
+    fun checkout() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = cartRepository.checkout()
+                if (response) {
+                    _checkoutStatus.value = true
+                    loadCart() // Ricarica il carrello dopo il checkout riuscito
+                } else {
+                    _checkoutStatus.value = false
+                }
+            } catch (e: Exception) {
+                Log.e("CartViewModel", "Errore durante il checkout", e)
+                _checkoutStatus.value = false
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
 
 
 //    fun clearCart() {

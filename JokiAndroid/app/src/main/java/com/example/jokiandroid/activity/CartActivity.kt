@@ -10,41 +10,64 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.viewmodel.CartViewModel
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.sp
+import com.example.jokiandroid.activity.LoginRequiredDialog
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldReload: Boolean = false) {
-    val cartItems by viewModel.cartItems.observeAsState(emptyList())
-    val isLoading by viewModel.isLoading.observeAsState()
+fun CartActivity(navController: NavController, cartViewModel: CartViewModel, shouldReload: Boolean = false) {
+    val cartItems by cartViewModel.cartItems.observeAsState(emptyList())
+    val isLoading by cartViewModel.isLoading.observeAsState()
+    val checkoutStatus by cartViewModel.checkoutStatus.observeAsState()
 
     LaunchedEffect(shouldReload) {
         if (shouldReload) {
-            viewModel.loadCart()
+            cartViewModel.loadCart()
+        }
+    }
+
+    LaunchedEffect(checkoutStatus) {
+        when (checkoutStatus) {
+            true -> {
+                // Checkout riuscito
+                // Puoi mostrare un messaggio di successo o navigare alla libreria
+                Log.d("CartActivity", "Checkout riuscito")
+
+            }
+            false -> {
+                // Checkout fallito
+                // Mostra un messaggio di errore
+                Log.e("CartActivity", "Checkout fallito")
+            }
+            null -> {
+                // Nessun checkout ancora tentato
+            }
         }
     }
 
     Log.d("CartActivity created blablabla", "cartItems size: ${cartItems.size}")
 
     Column(modifier = Modifier.fillMaxSize()) {
-        if (isLoading == true) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-        }
-        else {
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                itemsIndexed(cartItems) { index: Int, game: Game ->
-                    GameItem(game = game, viewModel = viewModel)}
+        if (TokenManager.getToken() == null) {
+            LoginRequiredDialog(
+                onDismissRequest = { /* Non fare nulla, l'utente deve effettuare il login */ },
+                onConfirmClick = { navController.popBackStack() }
+            )
+        } else {
+            if (isLoading == true) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else {
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    itemsIndexed(cartItems) { index: Int, game: Game ->
+                        GameItem(game = game, viewModel = cartViewModel)
+                    }
                 }
             }
             Text(
@@ -59,7 +82,8 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
             Row {
                 Button(
                     onClick = {
-
+                        cartViewModel.checkout()
+                        cartViewModel.loadCart()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -72,8 +96,8 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
             Row {
                 Button(
                     onClick = {
-                        viewModel.removeAllGamesFromCart()
-                        viewModel.loadCart()
+                        cartViewModel.removeAllGamesFromCart()
+                        cartViewModel.loadCart()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,6 +108,7 @@ fun CartActivity(navController: NavController, viewModel: CartViewModel, shouldR
             }
         }
     }
+}
 
 
 @Composable
@@ -100,7 +125,7 @@ fun GameItem(game: Game, viewModel: CartViewModel) {
         }
         Button(onClick = { viewModel.removeGame(game) }
         ) {
-            Text("Remove")
+            Text("Rimuovi")
         }
     }
 }

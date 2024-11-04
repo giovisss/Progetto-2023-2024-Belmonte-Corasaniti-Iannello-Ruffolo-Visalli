@@ -145,7 +145,7 @@ fun LoginRequiredDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(text = "Login richiesto") },
-        text = { Text("Per visualizzare la tua libreria devi effettuare il login.") },
+        text = { Text("Per visualizzare la pagina devi effettuare il login.") },
         confirmButton = {
             Button(
                 onClick = {
