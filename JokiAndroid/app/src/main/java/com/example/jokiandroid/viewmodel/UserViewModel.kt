@@ -27,6 +27,10 @@ object UserViewModel : ViewModel() {
     val isAdmin: LiveData<Boolean> get() = _isAdmin
 
     init {
+        reloadUser()
+    }
+
+    fun reloadUser() {
         viewModelScope.launch {
             fetchCurrentUser()
         }

@@ -16,6 +16,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,11 +39,12 @@ class MainActivity : ComponentActivity() {
 //        hideSystemUI()
         super.onCreate(savedInstanceState)
         IPManager.setIps(this)
-        authManager = AuthManager(this)
 
         // Inizializziamo sempre il GameViewModel
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+
+        authManager = AuthManager(this, userViewModel)
 
         // Inizializziamo il CartRepository
         cartRepository = CartRepository()
@@ -55,11 +57,11 @@ class MainActivity : ComponentActivity() {
         initializeContent()
     }
 
-    private fun initializeContent() {
+    private fun initializeContent(refresh: Boolean = false) {
         setContent {
             JokiAndroidTheme {
                 Surface {
-                    MainScreen(authManager, gameViewModel, cartRepository, userViewModel)
+                    MainScreen(refresh, authManager, gameViewModel, cartRepository, userViewModel)
                 }
             }
         }
@@ -81,26 +83,35 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AuthManager.RC_AUTH) {
-            authManager.handleAuthorizationResponse(requestCode, resultCode, data) { accessToken, idToken ->
-                if (accessToken != null && idToken != null) {
-                    TokenManager.setToken(accessToken)
-                    runOnUiThread {
-                        initializeContent()
+        try{
+            super.onActivityResult(requestCode, resultCode, data)
+            if (requestCode == AuthManager.RC_AUTH) {
+                authManager.handleAuthorizationResponse(
+                    requestCode,
+                    resultCode,
+                    data
+                ) { accessToken, idToken ->
+                    if (accessToken != null && idToken != null) {
+                        TokenManager.setToken(accessToken)
+                        runOnUiThread {
+                            initializeContent()
 //                        gameViewModel.refreshData() // Forziamo un refresh dei dati dopo l'autenticazione
+                        }
+                    } else {
+                        Log.e("Auth", "Authentication failed")
+                        // Gestisci l'errore di autenticazione
                     }
-                } else {
-                    Log.e("Auth", "Authentication failed")
-                    // Gestisci l'errore di autenticazione
                 }
             }
+        }
+        catch (e: Exception){
+            initializeContent(true)
         }
     }
 }
 
 @Composable
-fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, userViewModel: UserViewModel) {
+fun MainScreen(refresh: Boolean, authManager: AuthManager, gameViewModel: GameViewModel, cartRepository: CartRepository, userViewModel: UserViewModel) {
     val navController = rememberNavController()
     val cartViewModel = remember { CartViewModel() }
     val wishlistViewModel = remember { WishlistViewModel() }
@@ -137,4 +148,9 @@ fun MainScreen(authManager: AuthManager, gameViewModel: GameViewModel, cartRepos
         }
 
     }
+
+    if (refresh) {
+        navController.navigate("home")
+    }
+
 }

@@ -82,9 +82,9 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
                         label = { Text(text = "Logout") },
                         selected = selectedItem.value == "logout",
                         onClick = {
-                            // Avvia il flusso di autorizzazione (crasha per network error)
                             authManager.logout(localContext as Activity)
                             selectPage("home", coroutineScope, drawerState, navController, selectedItem)
+                            TokenManager.clearToken()
                         }
                     )
                 }else{

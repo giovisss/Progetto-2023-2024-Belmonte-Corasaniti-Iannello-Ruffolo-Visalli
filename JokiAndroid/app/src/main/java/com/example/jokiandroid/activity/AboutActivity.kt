@@ -62,12 +62,12 @@ fun AboutActivity(navController: NavController) {
         TeamMember(
             imageResId = R.drawable.kevin_corasaniti,
             name = "Kevin Corasaniti",
-            role = "Sviluppatore (Il migliore di tutti)"
+            role = "Sviluppatore"
         )
         TeamMember(
             imageResId = R.drawable.andrea_belmonte,
             name = "Andrea Belmonte",
-            role = "Sviluppatore (Ensdrongo)"
+            role = "Sviluppatore"
         )
     }
 }

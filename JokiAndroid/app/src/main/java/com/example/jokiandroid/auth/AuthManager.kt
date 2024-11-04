@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.navigation.NavController
 import com.example.jokiandroid.config.AuthConfig
 import com.example.jokiandroid.utility.IPManager
+import com.example.jokiandroid.viewmodel.UserViewModel
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthState
 import net.openid.appauth.AuthorizationException
@@ -24,7 +26,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 
-class AuthManager(private val context: Context) {
+class AuthManager(private val context: Context, private val userViewModel: UserViewModel) {
 
     private val authService: AuthorizationService
     private lateinit var authState: AuthState
@@ -86,11 +88,13 @@ class AuthManager(private val context: Context) {
                 val tokenRequest = response.createTokenExchangeRequest()
                 authService.performTokenRequest(tokenRequest) { tokenResponse, exception ->
                     if (tokenResponse != null) {
-//                        authState.update(tokenResponse, exception) // TODO: capire come funonzia
+//                        authState.update(tokenResponse, exception) //
 
                         Log.d("Auth", "Access Token: ${tokenResponse.accessToken}")
                         Log.d("Auth", "ID Token: ${tokenResponse.idToken}")
                         onTokenReceived(tokenResponse.accessToken, tokenResponse.idToken)
+
+                        userViewModel.reloadUser()
 //                        callApiWithAuthorization(tokenResponse.accessToken)
                     } else {
                         Log.e("AuthManager", "Token Exchange failed", exception)
@@ -98,8 +102,9 @@ class AuthManager(private val context: Context) {
                     }
                 }
             } else {
-                Log.e("AuthManager", "Authorization failed", ex)
+                Log.e("AuthManager", "Authorization failed")
                 onTokenReceived(null, null)
+                throw RuntimeException("Authorization failed")
             }
         }
     }
@@ -148,50 +153,53 @@ class AuthManager(private val context: Context) {
     }
 
     fun logout(activity: Activity) {
-    val accessToken = TokenManager.getToken()
+        val accessToken = TokenManager.getToken()
 
-    if (accessToken != null) {
-        val realmBaseUrl = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm"
-        val logoutUrl = "$realmBaseUrl/protocol/openid-connect/logout"
+        if (accessToken != null) {
+            val realmBaseUrl = "http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm"
+            val logoutUrl = "$realmBaseUrl/protocol/openid-connect/logout"
 
-        val client = OkHttpClient()
+            val client = OkHttpClient()
 
-        val formBody = FormBody.Builder()
-            .add("client_id", AuthConfig.CLIENT_ID)
-            .build()
+            val formBody = FormBody.Builder()
+                .add("client_id", AuthConfig.CLIENT_ID)
+                .build()
 
-        val request = Request.Builder()
-            .url(logoutUrl)
-            .addHeader("Authorization", "Bearer $accessToken")
-            .post(formBody)
-            .build()
+            val request = Request.Builder()
+                .url(logoutUrl)
+                .addHeader("Authorization", "Bearer $accessToken")
+                .post(formBody)
+                .build()
 
-        Log.d("AuthManager", "Attempting logout at URL: $logoutUrl")
+            Log.d("AuthManager", "Attempting logout at URL: $logoutUrl")
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("AuthManager", "Failed to revoke access token", e)
-            }
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("AuthManager", "Failed to revoke access token", e)
+                }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    Log.d("AuthManager", "Access token revoked successfully")
-                    TokenManager.clearToken()
-                    val logoutUri = Uri.parse("http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm/protocol/openid-connect/logout")
-                    val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
-                    activity.startActivity(logoutIntent)
-                } else {
-                    Log.e("AuthManager", "Failed to revoke access token: ${response.code}")
-                    response.body?.string()?.let {
-                        Log.e("AuthManager", "Error response: $it")
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        Log.d("AuthManager", "Access token revoked successfully")
+                        TokenManager.clearToken()
+                        val logoutUri = Uri.parse("http://${IPManager.KEYCLOAK_IP}/realms/JokiRealm/protocol/openid-connect/logout")
+                        val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
+                        activity.startActivity(logoutIntent)
+                        TokenManager.clearToken()
+                        userViewModel.reloadUser()
+
+                    } else {
+                        Log.e("AuthManager", "Failed to revoke access token: ${response.code}")
+                        response.body?.string()?.let {
+                            Log.e("AuthManager", "Error response: $it")
+                        }
                     }
                 }
-            }
-        })
-    } else {
-        Log.d("AuthManager", "No access token to revoke")
+            })
+        } else {
+            Log.d("AuthManager", "No access token to revoke")
+        }
     }
-}
 
 //    fun logout(activity: Activity) {
 //        // Revoca il token di accesso
