@@ -11,6 +11,7 @@ import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
+import unical.enterprise.jokibackend.Data.Entities.FriendNotification;
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
@@ -25,6 +26,9 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static unical.enterprise.jokibackend.Utility.NotificationStatus.ACCEPTED;
+import static unical.enterprise.jokibackend.Utility.NotificationStatus.PENDING;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -33,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final GameDao gameDao;
     private final AdminService adminService;
+    private final FriendNotificationService friendNotificationService;
 
     @Override
     public void save(User user) {
@@ -169,6 +174,18 @@ public class UserServiceImpl implements UserService {
 
         if (add) {
             userDao.addFriendship(user, oth);
+
+            if (isFriend(other) == UserFriendship.PENDING){
+                friendNotificationService.sendFriendNotification(
+                        other,
+                        FriendNotification.builder().status(PENDING).newFriendUsername(other).message("Friend request from " + UserContextHolder.getContext().getPreferredUsername()).build()
+                );
+            } else if (isFriend(other) == UserFriendship.FRIENDS){
+                friendNotificationService.sendFriendNotification(
+                        other,
+                        FriendNotification.builder().status(ACCEPTED).newFriendUsername(other).message("L'utente " + UserContextHolder.getContext().getPreferredUsername() + " ha accettato la tua richiesta d'amicizia").build()
+                );
+            }
         } else {
             userDao.removeFriendship(user, oth);
         }

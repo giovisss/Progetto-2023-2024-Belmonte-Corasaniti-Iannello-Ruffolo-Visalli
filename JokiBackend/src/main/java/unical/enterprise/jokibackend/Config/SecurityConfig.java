@@ -47,6 +47,7 @@ class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, prefix+"/chat/user/**").hasRole("client_user") // Permetti solo agli utenti di aggiungersi
                         .requestMatchers(HttpMethod.GET, prefix+"/chat/admin").hasRole("client_user") // Permetti solo agli utenti di vedere la lista degli admin in chat
                         .requestMatchers("/ws/**").permitAll() // Permetti l'accesso al WebSocket
+                        .requestMatchers("/ws2/**").permitAll() // Permetti l'accesso al WebSocket delle notifiche d'amicizia
 
                         .anyRequest().hasRole("client_user")); // permetti tutte le richieste se autenticato
                         // .anyRequest().permitAll()); // permetti tutte le richieste
