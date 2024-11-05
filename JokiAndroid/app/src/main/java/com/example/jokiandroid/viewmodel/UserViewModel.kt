@@ -114,13 +114,14 @@ object UserViewModel : ViewModel() {
         }
     }
 
-    fun updateUser(user: User) {
+    fun updateUser(user: User){
         viewModelScope.launch {
             try {
                 val token = TokenManager.getToken()
-                val response = RetrofitInstance.createApi(UserApiService::class.java,token).updateUser(user.username, user)
+                val response = RetrofitInstance.createApi(UserApiService::class.java, token)
+                    .updateUser(user.username, user)
                 if (response.isSuccessful) {
-                    _selectedUser.value = response.body()?.let { User(it) }
+                    fetchAllUsers()
                 } else {
                     Log.e("UserViewModel", "Error updating user: ${response.code()}")
                     _selectedUser.value = User()
@@ -133,4 +134,25 @@ object UserViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateCurrentUser(user: User) {
+        viewModelScope.launch {
+            try {
+                val token = TokenManager.getToken()
+                val response = RetrofitInstance.createApi(UserApiService::class.java,token).updateCurrentUser(user)
+                if (response.isSuccessful) {
+                    fetchCurrentUser()
+                } else {
+                    Log.e("UserViewModel", "Error updating current user: ${response.code()}")
+                    Log.e("Sempre userviewmodel","il problema è nell'else")
+                    _currentUser.value = User()
+                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error updating current user: $e")
+                Log.e("Sempre userviewmodel","il problema è nel catch")
+                _currentUser.value = User()
+            }
+        }
+    }
+
 }
