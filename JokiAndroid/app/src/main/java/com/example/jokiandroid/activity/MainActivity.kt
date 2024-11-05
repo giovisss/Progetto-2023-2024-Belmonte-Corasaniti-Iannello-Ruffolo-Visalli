@@ -12,11 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -36,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
-//        hideSystemUI()
         super.onCreate(savedInstanceState)
         IPManager.setIps(this)
 
@@ -49,11 +44,6 @@ class MainActivity : ComponentActivity() {
         // Inizializziamo il CartRepository
         cartRepository = CartRepository()
 
-//        if (TokenManager.getToken() == null) {
-//            authManager.startAuthorization(this)
-//        } else {
-//            initializeContent()
-//        }
         initializeContent()
     }
 
@@ -64,21 +54,6 @@ class MainActivity : ComponentActivity() {
                     MainScreen(refresh, authManager, gameViewModel, cartRepository, userViewModel)
                 }
             }
-        }
-        // Forziamo un refresh dei dati
-//        gameViewModel.refreshData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        hideSystemUI()
-    }
-
-    private fun hideSystemUI() {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, window.decorView).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.statusBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 

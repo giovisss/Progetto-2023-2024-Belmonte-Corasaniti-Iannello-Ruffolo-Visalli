@@ -103,7 +103,7 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (
                     text = item.title,
                     fontSize = 20.sp,
                     color = Color.Black,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
+                    modifier = Modifier.align(Alignment.Start).padding(bottom = 5.dp)
                 )
                 Text(
                     text = item.description,
@@ -115,7 +115,7 @@ fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (
                     text = item.title,
                     fontSize = 20.sp,
                     color = Color.White,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(5.dp)
+                    modifier = Modifier.align(Alignment.Start).padding(bottom = 5.dp)
                 )
                 Text(
                     text = item.description,
