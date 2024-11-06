@@ -2,6 +2,7 @@ package com.example.jokiandroid.activity
 
 import CartActivity
 import GameViewModel
+import TokenManager
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.jokiandroid.auth.AuthManager
+import com.example.jokiandroid.utility.CustomToast
+import com.example.jokiandroid.utility.ToastString
 import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.UserViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
@@ -68,6 +71,9 @@ fun BasicUI(navController: NavController, authManager: AuthManager, userViewMode
     val selectedItem = remember { mutableStateOf("home") } // Stato per l'elemento selezionato
     val isAdmin by userViewModel.isAdmin.observeAsState()
     val cartViewModel = CartViewModel()
+
+    ToastString.setMessage("")
+    CustomToast(localContext)
 
     ModalNavigationDrawer( //menu a tendina che si apre premendo l'icona del menu
         drawerState = drawerState,

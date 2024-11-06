@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    EFFETTO OMBRA CHE PERò NON MI PIACE-->
+
+<!--    <item>-->
+<!--        <shape>-->
+<!--            <solid android:color="#40000000"/> &lt;!&ndash; Ombra semi-trasparente &ndash;&gt;-->
+<!--            <corners android:radius="16dp"/>-->
+<!--        </shape>-->
+<!--    </item>-->
+
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape>
+            <solid android:color="#80000000"/> <!-- Sfondo semi-trasparente -->
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+</layer-list>
