@@ -201,7 +201,7 @@ fun EditCurrentUserDataContent(navController: NavController, userViewModel: User
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        userViewModel.updateUser(User(user!!.id, firstName, lastName, user!!.username, email, Date(birthdateDay, birthdateMonth, birthdateYear).toString()))
+                        userViewModel.updateCurrentUser(User(user!!.id, firstName, lastName, user!!.username, email, Date(birthdateDay, birthdateMonth, birthdateYear).toString()))
                         navController.popBackStack()
                     },
                     modifier = Modifier.align(Alignment.End)

@@ -26,7 +26,10 @@ interface UserApiService {
     suspend fun getUserByUsername(@Path("username") username: String): Response<User>
 
     @PUT("$ADMIN_URL/{username}")
-    suspend fun updateUser(@Path("username") username: String, @Body user: User): Response<User>
+    suspend fun updateUser(@Path("username") username: String, @Body user: User): Response<String>
+
+    @PUT("$BASE_URL/user")
+    suspend fun updateCurrentUser(@Body user: User): Response<String>
 
     @GET("$BASE_URL/user")
     suspend fun getCurrentUser(): Response<User>

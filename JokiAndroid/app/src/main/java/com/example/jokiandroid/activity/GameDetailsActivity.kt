@@ -1,10 +1,27 @@
-import android.util.Log
-import androidx.compose.foundation.layout.*
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,15 +66,42 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                     .padding(innerPadding)
             ) {
                 item {
-                    AsyncImage(
-                        model = "${IPManager.BACKEND_IMAGES}/${game?.url1}",
-                        contentDescription = game?.title,
-                        error = painterResource(id = R.drawable.games_image),
-                        //placeholder = painterResource(id = R.drawable.games_image),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    ) {
+                        AsyncImage(
+                            model = "${IPManager.BACKEND_IMAGES}/${game?.url2}",
+                            contentDescription = game?.title,
+                            error = painterResource(id = R.drawable.games_image),
+                            placeholder = painterResource(id = R.drawable.games_image),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(150.dp)
+                                .padding(5.dp)
+                        )
+                        AsyncImage(
+                            model = "${IPManager.BACKEND_IMAGES}/${game?.url1}",
+                            contentDescription = game?.title,
+                            error = painterResource(id = R.drawable.games_image),
+                            placeholder = painterResource(id = R.drawable.games_image),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(150.dp)
+                                .padding(5.dp)
+                        )
+                        AsyncImage(
+                            model = "${IPManager.BACKEND_IMAGES}/${game?.url3}",
+                            contentDescription = game?.title,
+                            error = painterResource(id = R.drawable.games_image),
+                            placeholder = painterResource(id = R.drawable.games_image),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(150.dp)
+                                .padding(5.dp)
+                        )
+                    }
                 }
                 item {
                     Text(
@@ -68,16 +112,57 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                 }
                 item {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
                     ) {
-                        Text("Descrizione: ${game?.description}")
-                        Text("Valutazione:")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Genere: ${game?.genre}")
-                        Text("Prezzo: €${String.format("%.2f", game?.price ?: 0.0)}")
-                        Text("Developer: ${game?.developer}")
-                        Text("Publisher: ${game?.publisher}")
-                        Text("Data di uscita: ${game?.formattedReleaseDate}")
+                        Text(
+                            text = "Descrizione:",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        Text(
+                            text = game?.description ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+//                        Spacer(modifier = Modifier.height(8.dp))
+//
+//                        Text(
+//                            text = "Valutazione:",
+//                            style = MaterialTheme.typography.titleMedium,
+//                            modifier = Modifier.padding(bottom = 4.dp)
+//                        )
+                        // Add rating bar or stars here if available
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Genere: ${game?.genre}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Prezzo: €${String.format("%.2f", game?.price ?: 0.0)}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Developer: ${game?.developer}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Publisher: ${game?.publisher}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Data di uscita: ${game?.formattedReleaseDate}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
                     }
                 }
             }

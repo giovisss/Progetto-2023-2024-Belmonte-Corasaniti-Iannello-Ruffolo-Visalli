@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.repository.CartRepository
+import com.example.jokiandroid.utility.ToastString
 import kotlinx.coroutines.launch
 
 //classe per gestire lo stato del carrello aggiungendo e rimuovendo giochi
@@ -51,13 +52,16 @@ class CartViewModel() : ViewModel() {
             try {
                 val response = cartRepository.addGameToCart(game)
                 if (response) {
+                    ToastString.setMessage("Gioco aggiunto al carrello")
                     Log.d("CartViewModel", "Game aggiunto al carrello: Response = ${game.title}")
                     loadCart()
                 } else {
+                    ToastString.setMessage("Errore nell'aggiunta del gioco al carrello")
                     Log.e("CartViewModel", "Errore nell'aggiunta del gioco: Response = $response")
 //                    _error.value = response.toString()
                 }
             } catch (e: Exception) {
+                ToastString.setMessage("Errore nell'aggiunta del gioco al carrello")
                 Log.e("CartViewModel", "Errore nell'aggiunta del gioco al carrello", e)
             }
         }
