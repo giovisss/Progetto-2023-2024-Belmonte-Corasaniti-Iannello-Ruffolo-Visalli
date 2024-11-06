@@ -3,10 +3,13 @@ import {CartService} from "../../services/cart.service";
 import {Observable} from "rxjs";
 import {AdminService} from "../../services/admin.service";
 import {UserService} from "../../services/user.service";
-import {LogoutComponent} from "../logout/logout.component";
 import {KeycloakService} from "keycloak-angular";
-import {ViewChild} from "@angular/core";
 import { MessageService } from '../../services/message.service';
+import * as Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
+import { Frame } from '@stomp/stompjs';
+
+
 
 @Component({
   selector: 'app-header',
@@ -17,14 +20,17 @@ export class HeaderComponent implements OnInit{
   nProducts: Observable<number> = new Observable<number>();
   showCart: boolean = false;
   hasNewMessages: boolean = false;
-  pollingInterval: any; 
+  pollingInterval: any;
+  soketClient: any = null;
+  hasNotifications: boolean = false;
+  private friendNotificationsSubscription: any;
 
   constructor(
     private cartService: CartService,
     protected adminService: AdminService,
     protected userService: UserService,
     private keycloakService: KeycloakService,
-    private messageService: MessageService) {
+    private messageService: MessageService,) {
     this.nProducts = this.cartService.getQuantity();
   }
 
@@ -37,6 +43,7 @@ export class HeaderComponent implements OnInit{
         this.hasNewMessages = false;
       }
     }, 10000); // Controlla ogni 10 secondi
+
   }
 
   ngOnDestroy() {

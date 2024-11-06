@@ -3,6 +3,7 @@ package unical.enterprise.jokibackend.Data.Services;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import static unical.enterprise.jokibackend.Utility.NotificationStatus.ACCEPTED;
 import static unical.enterprise.jokibackend.Utility.NotificationStatus.PENDING;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -174,18 +176,6 @@ public class UserServiceImpl implements UserService {
 
         if (add) {
             userDao.addFriendship(user, oth);
-
-            if (isFriend(other) == UserFriendship.PENDING){
-                friendNotificationService.sendFriendNotification(
-                        other,
-                        FriendNotification.builder().status(PENDING).newFriendUsername(other).message("Friend request from " + UserContextHolder.getContext().getPreferredUsername()).build()
-                );
-            } else if (isFriend(other) == UserFriendship.FRIENDS){
-                friendNotificationService.sendFriendNotification(
-                        other,
-                        FriendNotification.builder().status(ACCEPTED).newFriendUsername(other).message("L'utente " + UserContextHolder.getContext().getPreferredUsername() + " ha accettato la tua richiesta d'amicizia").build()
-                );
-            }
         } else {
             userDao.removeFriendship(user, oth);
         }
