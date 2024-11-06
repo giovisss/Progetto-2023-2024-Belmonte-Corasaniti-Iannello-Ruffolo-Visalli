@@ -118,6 +118,23 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    fun deleteGame(gameId: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.createApi(GameApiService::class.java,TokenManager.getToken()).deleteGame(gameId)
+                if (response.isSuccessful) {
+                    _error.value = "Gioco eliminato con successo"
+                    fetchGames()
+                } else {
+                    _error.value = "Errore durante l'eliminazione del gioco: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                Log.e("GameViewModel", "Error deleting game", e)
+                _error.value = "Errore durante l'eliminazione del gioco: ${e.message}"
+            }
+        }
+    }
+
 
 
 }

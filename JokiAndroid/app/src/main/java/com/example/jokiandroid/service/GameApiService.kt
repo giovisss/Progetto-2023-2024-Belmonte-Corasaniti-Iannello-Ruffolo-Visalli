@@ -3,6 +3,7 @@ package com.example.jokiandroid.service
 import com.example.jokiandroid.model.Game
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -20,6 +21,8 @@ interface GameApiService {
     @GET("api/v1/users/user/library")
     suspend fun getGamesByUser(): Response<List<Game>>
 
+    @DELETE("api/v1/admin/games/{id}")
+    suspend fun deleteGame(@Path("id") id: String): Response<String>
 
 
 

@@ -347,14 +347,25 @@ fun EditGameContent(navController: NavController, gameViewModel: GameViewModel, 
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                Row(modifier = Modifier.fillMaxWidth().align(Alignment.End)) {
                 Button(
                     onClick = {
                         gameViewModel.updateGame(Game(game!!.id, title, price, description, game!!.imagePath, stock, genre, developer, publisher, Date(releaseDateDay, releaseDateMonth, releaseDateYear).toString()))
                         navController.popBackStack()
-                    },
-                    modifier = Modifier.align(Alignment.End)
+                    }
                 ) {
                     Text("Save")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    onClick = {
+                        gameViewModel.deleteGame(game!!.id)
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("Delete")
+                }
                 }
             } else {
                 Column(
