@@ -74,13 +74,16 @@ class CartViewModel() : ViewModel() {
                 val response = cartRepository.removeGameFromCart(game.id)
                 if (response) {
                     Log.d("CartViewModel", "Gioco rimosso dal carrello: Response = ${game.title}")
+                    ToastString.setMessage("Gioco rimosso dal carrello")
 
                 } else {
                     Log.e("CartViewModel", "Errore nella rimozione del gioco: Response = $response")
+                    ToastString.setMessage("Errore nella rimozione del gioco dal carrello")
                 }
                 loadCart()
             } catch (e: Exception) {
                 Log.e("CartViewModel", "Errore nella rimozione del gioco dal carrello")
+                ToastString.setMessage("Errore nella rimozione del gioco dal carrello")
                 loadCart()
             }
         }
@@ -92,12 +95,15 @@ class CartViewModel() : ViewModel() {
                 val response = cartRepository.removeAllGamesFromCart()
                 if (response) {
                     Log.d("CartViewModel", "Tutti i giochi sono stati rimossi dal carrello")
+                    ToastString.setMessage("Tutti i giochi sono stati rimossi dal carrello")
                 } else {
                     Log.e("CartViewModel", "Errore nella rimozione di tutti i giochi dal carrello")
+                    ToastString.setMessage("Errore nella rimozione di tutti i giochi dal carrello")
                 }
                 loadCart()
             } catch (e: Exception) {
                 Log.e("CartViewModel", "Errore nella rimozione di tutti i giochi dal carrello", e)
+                ToastString.setMessage("Errore nella rimozione di tutti i giochi dal carrello")
             }
         }
     }
@@ -117,6 +123,7 @@ class CartViewModel() : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("CartViewModel", "Errore durante il checkout", e)
+                ToastString.setMessage("Errore durante il checkout")
                 _checkoutStatus.value = false
             } finally {
                 _isLoading.value = false

@@ -9,7 +9,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,10 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jokiandroid.model.Game
+import com.example.jokiandroid.utility.IPManager
+import coil.compose.AsyncImage
+
 
 @Composable
 fun LibraryActivity(navController: NavController, gameViewModel: GameViewModel) {
-    val gamesResponse by gameViewModel.libraryGames.observeAsState()
+    val games by gameViewModel.libraryGames.observeAsState()
     val isLoading by gameViewModel.isLoading.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
     var showEmptyLibraryDialog by remember { mutableStateOf(false) }
@@ -57,24 +59,16 @@ fun LibraryActivity(navController: NavController, gameViewModel: GameViewModel) 
             onConfirmClick = { navController.popBackStack() }
         )
     } else {
-        val canMakeDecisions = !isLoading && gamesResponse != null
+        val canMakeDecisions = !isLoading && games != null
 
         LaunchedEffect(Unit) {
             gameViewModel.fetchGamesByUser()
         }
 
-        val gameList = gamesResponse?.let { response ->
-            if (response.isSuccessful) {
-                Log.d("LibraryActivity", "GameList: $response")
-                response.body() ?: emptyList()
-            } else {
-                emptyList()
-            }
-        } ?: emptyList()
 
         LaunchedEffect(canMakeDecisions) {
             if (canMakeDecisions) {
-                showEmptyLibraryDialog = gameList.isEmpty()
+                showEmptyLibraryDialog = games?.isEmpty() ?: false
             }
         }
 
@@ -87,7 +81,7 @@ fun LibraryActivity(navController: NavController, gameViewModel: GameViewModel) 
                     onConfirmClick = { navController.popBackStack() }
                 )
             } else {
-                GameList(gameList, navController)
+                games?.let { GameList(it, navController) }
             }
         }
     }
@@ -182,8 +176,12 @@ fun LoginRequiredDialog(
     )
 }
 
+
+
+
+
 @Composable
-fun LibraryItem(item : Game, onGameClick: (Game) -> Unit = {}){
+fun LibraryItem(item: Game, onGameClick: (Game) -> Unit = {}) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -193,23 +191,57 @@ fun LibraryItem(item : Game, onGameClick: (Game) -> Unit = {}){
             .padding(15.dp)
             .clickable { onGameClick(item) }
     ){
+
+        Column(
+            modifier = Modifier
+                .weight(.75f)
+                .fillMaxSize()
+        ) {
+            AsyncImage(
+                model = "${IPManager.BACKEND_IMAGES}/${item.url1}",
+                contentDescription = item.title,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp)
+                    .padding(end = 10.dp)
+            )
+
+        }
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = item.title,
-                fontSize = 20.sp,
-                color = isSystemInDarkTheme().let { if (it) Color.Black else Color.White },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
 
-            Spacer(modifier = Modifier.padding(5.dp))
 
-            Text(
-                text = item.description,
-                fontSize = 15.sp,
-                color = isSystemInDarkTheme().let { if (it) Color.DarkGray else Color.LightGray }
-            )
+
+            if (isSystemInDarkTheme()) {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    modifier = Modifier.align(Alignment.Start).padding(bottom = 10.dp)
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.DarkGray
+                )
+            } else {
+                Text(
+                    text = item.title,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Start).padding(bottom = 10.dp)
+                )
+                Text(
+                    text = item.description,
+                    fontSize = 15.sp,
+                    color = Color.LightGray
+                )
+            }
         }
+
     }
 }
+

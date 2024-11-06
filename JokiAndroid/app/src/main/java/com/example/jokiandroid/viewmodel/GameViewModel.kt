@@ -1,3 +1,4 @@
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,6 @@ import com.example.jokiandroid.service.GameApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class GameViewModel : ViewModel() {
     private val _games = MutableLiveData<List<Game>>()
@@ -17,8 +17,8 @@ class GameViewModel : ViewModel() {
     private val _gameDetails = MutableLiveData<Game?>()
     val gameDetails: LiveData<Game?> get() = _gameDetails
 
-    private val _libraryGames = MutableLiveData<Response<List<Game>>>()
-    val libraryGames: LiveData<Response<List<Game>>> get() = _libraryGames
+    private val _libraryGames = MutableLiveData<List<Game>>()
+    val libraryGames: LiveData<List<Game>> get() = _libraryGames
 
     // LiveData per gestire gli errori
     private val _error = MutableLiveData<String?>()
@@ -88,7 +88,20 @@ class GameViewModel : ViewModel() {
             try {
                 val token = TokenManager.getToken()
                 if (token != null) {
-                    _libraryGames.value = RetrofitInstance.createApi(GameApiService::class.java,token).getGamesByUser()
+                    val response = RetrofitInstance.createApi(GameApiService::class.java,token).getGamesByUser()
+                    if (response.isSuccessful) {
+                        val games = response.body()?.map { it } ?: emptyList()
+
+                        val out = mutableListOf<Game>()
+                        for (game in games) {
+                            out.add(Game(game))
+                        }
+
+                        _libraryGames.value = out
+                    }
+                    else {
+                        _error.value = "Errore durante il caricamento dei giochi: ${response.code()}"
+                    }
                 } else {
                     _error.value = "Effettua il login per visualizzare i giochi"
                 }
@@ -96,7 +109,6 @@ class GameViewModel : ViewModel() {
                 Log.e("GameViewModel", "Error fetching games", e)
                 _error.value = "Errore durante il caricamento dei giochi"
             }
-
             _isLoading.value = false
         }
     }

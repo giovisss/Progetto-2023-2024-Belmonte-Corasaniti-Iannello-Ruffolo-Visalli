@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jokiandroid.model.User
 import com.example.jokiandroid.service.UserApiService
+import com.example.jokiandroid.utility.ToastString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -122,13 +123,16 @@ object UserViewModel : ViewModel() {
                     .updateUser(user.username, user)
                 if (response.isSuccessful) {
                     fetchAllUsers()
+                    ToastString.setMessage("Utente aggiornato con successo")
                 } else {
                     Log.e("UserViewModel", "Error updating user: ${response.code()}")
                     _selectedUser.value = User()
+                    ToastString.setMessage("Errore nell'aggiornamento dell'utente")
                 }
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error updating user: $e")
                 _selectedUser.value = User()
+                ToastString.setMessage("Errore nell'aggiornamento dell'utente")
             } finally {
                 fetchAllUsers()
             }
@@ -142,15 +146,16 @@ object UserViewModel : ViewModel() {
                 val response = RetrofitInstance.createApi(UserApiService::class.java,token).updateCurrentUser(user)
                 if (response.isSuccessful) {
                     fetchCurrentUser()
+                    ToastString.setMessage("Utente aggiornato con successo")
                 } else {
                     Log.e("UserViewModel", "Error updating current user: ${response.code()}")
-                    Log.e("Sempre userviewmodel","il problema è nell'else")
                     _currentUser.value = User()
+                    ToastString.setMessage("Errore nell'aggiornamento dell'utente")
                 }
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error updating current user: $e")
-                Log.e("Sempre userviewmodel","il problema è nel catch")
                 _currentUser.value = User()
+                ToastString.setMessage("Errore nell'aggiornamento dell'utente")
             }
         }
     }

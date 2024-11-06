@@ -1,6 +1,7 @@
 package com.example.jokiandroid.activity
 
 import GameViewModel
+import TokenManager
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ import com.example.jokiandroid.R
 import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.model.Wishlist
 import com.example.jokiandroid.utility.IPManager
+import com.example.jokiandroid.utility.ToastString
 import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 
@@ -87,18 +89,23 @@ fun GameListPage(wishlistViewModel: WishlistViewModel, gameViewModel: GameViewMo
             }
         )
 
-        if (showModal) {
-            selectedGame?.id?.let {
-                AvalibleWishlistsModal(
-                    gameId = it,
-                    wishlistViewModel = wishlistViewModel,
-                    onDismiss = { showModal = false },
-                    modalAddToWishlist = { wishlistName, gameID: String ->
-                        wishlistViewModel.addGameToWishlist(wishlistName, gameID)
-                        showModal = false
-                    }
-                )
-            }
+            if (showModal) {
+                if (TokenManager.isLoggedIn()){
+                selectedGame?.id?.let {
+                    AvalibleWishlistsModal(
+                        gameId = it,
+                        wishlistViewModel = wishlistViewModel,
+                        onDismiss = { showModal = false },
+                        modalAddToWishlist = { wishlistName, gameID: String ->
+                            wishlistViewModel.addGameToWishlist(wishlistName, gameID)
+                            showModal = false
+                        }
+                    )
+                }
+            } else{
+                ToastString.setMessage("Devi essere loggato per aggiungere un gioco alla wishlist")
+                showModal = false
+                }
         }
     }
 }
