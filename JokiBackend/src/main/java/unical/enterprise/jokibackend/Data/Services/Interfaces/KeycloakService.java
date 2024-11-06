@@ -14,6 +14,6 @@ public interface KeycloakService {
     void deleteUser(String username);
     void sendVerificationLink(String userId);
     void sendResetPassword(String userId);
-    void logoutUser(String username);
+//    void logoutUser(String username);
     UsersResource getInstance();
 }

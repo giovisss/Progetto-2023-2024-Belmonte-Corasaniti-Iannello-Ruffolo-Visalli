@@ -1,11 +1,11 @@
 package unical.enterprise.jokibackend.Controller.v1.admin;
 
 import com.google.gson.Gson;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
+import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
 
 import java.util.UUID;
@@ -16,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminUserController {
     private final UserService userService;
+    private final KeycloakService keycloakService;
 
     @GetMapping("")
     public ResponseEntity<String> getUsersList(){
@@ -38,12 +39,10 @@ public class AdminUserController {
 
     @PutMapping("/{username}")
     public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDto userDto) {
-        System.out.println(userDto.getUsername());
-        System.out.println(userDto.getEmail());
+        if (userDto.getUsername() == null || userDto.getEmail() == null) return ResponseEntity.badRequest().body("Field cannot be null");
 
-        if (userDto.getUsername() == null || userDto.getEmail() == null) return ResponseEntity.badRequest().body("porcodio nullo");
-
-        if(userService.updateUser(username, userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
+//        if(userService.updateUser(username, userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
+        if(keycloakService.updateUser(username, userDto)) return ResponseEntity.ok(new Gson().toJson("User updated"));
         else return ResponseEntity.notFound().build();
     }
 

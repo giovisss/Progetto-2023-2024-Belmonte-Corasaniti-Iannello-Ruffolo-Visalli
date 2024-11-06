@@ -16,7 +16,6 @@ import unical.enterprise.jokibackend.Data.Dto.UserDto;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.KeycloakService;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.UserService;
-import unical.enterprise.jokibackend.Exceptions.NotModifiedException;
 import unical.enterprise.jokibackend.Utility.KeycloakManager;
 
 import java.util.Arrays;
@@ -56,6 +55,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         } catch (Exception e){
             // deleteUser(getUser(user.getUsername()).getId());
             // userDao.deleteByUsername(user.getUsername());
+            return null;
         }
 
         return null;
@@ -80,18 +80,13 @@ public class KeycloakServiceImpl implements KeycloakService {
         UserDto old = userService.getUserByUsername(username);
         UserRepresentation user = new UserRepresentation();
 
-        if(
-                old.getEmail().equals(userDTO.getEmail()) ||
-                old.getFirstName().equals(userDTO.getFirstName()) ||
-                old.getLastName().equals(userDTO.getLastName()) ||
-                old.getBirthdate().equals(userDTO.getBirthdate())
-        ) throw new NotModifiedException("Field can not be the same as before");
+//        if(
+//                old.getEmail().equals(userDTO.getEmail()) ||
+//                old.getFirstName().equals(userDTO.getFirstName()) ||
+//                old.getLastName().equals(userDTO.getLastName()) ||
+//                old.getBirthdate().equals(userDTO.getBirthdate())
+//        ) throw new NotModifiedException("Field can not be the same as before");
 
-        //TODO: fare in modo che si possa fare l'update su più campi alla volta
-//        user.setFirstName(userDTO.getFirstName());
-//        user.setLastName(userDTO.getLastName());
-//        user.setEmail(userDTO.getEmail());
-//        user.setCredentials(Collections.singletonList(createPasswordCredentials(userDTO.getPassword())));
         if (!userDTO.getUpdateType("email")) userDTO.setEmail(old.getEmail());
         user.setEmail(userDTO.getEmail());
 
@@ -147,11 +142,11 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     //Funzione di Logout
     //TODO: Non serve per il frontend, rimuoverla se non serve nemmeno per Android
-    @Override
-    public void logoutUser(String username) {
-        UsersResource usersResource = getInstance();
-        usersResource.get(username).logout();
-    }
+//    @Override
+//    public void logoutUser(String username) {
+//        UsersResource usersResource = getInstance();
+//        usersResource.get(username).logout();
+//    }
 
     private CredentialRepresentation createPasswordCredentials(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
