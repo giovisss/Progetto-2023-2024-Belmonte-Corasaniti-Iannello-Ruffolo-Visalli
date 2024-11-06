@@ -26,6 +26,5 @@ public interface WishlistDao extends JpaRepository<Wishlist, UUID> {
     @Query(value = "DELETE FROM wishlist_games WHERE game_id = :gameId", nativeQuery = true)
     void deleteGameFromWishlists(@Param("gameId") UUID gameId);
 
-//   Optional<Wishlist> findWishlistByWishlistName(String name);
-//    Optional<Wishlist> findWishlistByGameId(UUID id);
+
 }

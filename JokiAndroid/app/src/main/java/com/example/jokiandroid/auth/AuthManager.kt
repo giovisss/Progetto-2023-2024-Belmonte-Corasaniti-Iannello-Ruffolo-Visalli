@@ -112,19 +112,6 @@ class AuthManager(private val context: Context, private val userViewModel: UserV
     companion object {
         const val RC_AUTH = 100  // Codice di richiesta univoco per la richiesta di autenticazione
 
-//        private val _token = MutableLiveData<String>()
-//        val token: LiveData<String> get() = _token
-//
-//        fun setToken(t: String) {
-//            _token.value = t
-//        }
-//
-//        private val _isLogged = MutableLiveData<Boolean>()
-//        val isLogged: LiveData<Boolean> get() = _isLogged
-//
-//        fun setContent(b:Boolean) {
-//            _isLogged.value = b
-//        }
     }
 
     fun callApiWithAuthorization(accessToken: String?) {
@@ -201,19 +188,6 @@ class AuthManager(private val context: Context, private val userViewModel: UserV
         }
     }
 
-//    fun logout(activity: Activity) {
-//        // Revoca il token di accesso
-//        revokeAccessToken()
-//
-//        // Cancella il token salvato nel TokenManager
-//        TokenManager.clearToken()
-//
-//        // Avvia il processo di logout in Keycloak
-//        val logoutUri = Uri.parse("${AuthConfig.DISCOVERY_URI}/protocol/openid-connect/logout")
-//        val logoutIntent = Intent(Intent.ACTION_VIEW, logoutUri)
-//        activity.startActivity(logoutIntent)
-//
-//    }
 
     private fun revokeAccessToken() {
         val accessToken = TokenManager.getToken()

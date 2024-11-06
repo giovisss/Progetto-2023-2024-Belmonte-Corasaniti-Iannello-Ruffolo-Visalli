@@ -102,24 +102,7 @@ class CartViewModel() : ViewModel() {
         }
     }
 
-    //funzione che simula il pagamento spostando i giochi del carrello nella libreria dell'utente
-//    fun checkout() {
-//        for (game in _cartItems.value ?: emptyList()) {
-//            viewModelScope.launch {
-//                try {
-//                    val response = cartRepository.checkout()
-//                    if (response) {
-//                        Log.d("CartViewModel", "Gioco acquistato: Response = ${game.title}")
-//                        loadCart()
-//                    } else {
-//                        Log.e("CartViewModel", "Errore nell'acquisto del gioco: Response = $response")
-//                    }
-//                } catch (e: Exception) {
-//                    Log.e("CartViewModel", "Errore nell'acquisto del gioco", e)
-//                }
-//            }
-//        }
-//    }
+
 
     fun checkout() {
         viewModelScope.launch {
@@ -141,12 +124,6 @@ class CartViewModel() : ViewModel() {
         }
     }
 
-
-
-//    fun clearCart() {
-//        _cartItems.value = emptyList()
-//        _totalPrice.value = 0.0
-//    }
 
     fun getTotalPrice(): Double {
         val currentList = _cartItems.value ?: emptyList()

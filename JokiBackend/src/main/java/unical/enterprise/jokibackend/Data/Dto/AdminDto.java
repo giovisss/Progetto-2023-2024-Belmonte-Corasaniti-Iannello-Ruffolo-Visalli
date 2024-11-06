@@ -13,5 +13,5 @@ public class AdminDto {
     private UUID id;
     private String username;
     private String email;
-//    private Collection<GameDto> games;
+
 }

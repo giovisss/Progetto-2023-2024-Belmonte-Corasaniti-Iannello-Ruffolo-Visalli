@@ -28,18 +28,13 @@ class GameViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
-//        if (TokenManager.getToken() == null) {
-//            _error.value = "Token non disponibile. Effettua il login."
-//        } else {
-//            fetchGames()
-//        }
+
         fetchGames()
     }
 
     fun refreshData() {
         fetchGames()
         fetchGamesByUser()
-        // Aggiungi qui altre chiamate di fetch se necessario
     }
 
 
@@ -101,12 +96,7 @@ class GameViewModel : ViewModel() {
                 Log.e("GameViewModel", "Error fetching games", e)
                 _error.value = "Errore durante il caricamento dei giochi"
             }
-//            try {
-//                _libraryGames.value = RetrofitInstance.api.getGamesByUser()
-//            } catch (e: Exception) {
-//                Log.e("GameViewModel", "Error fetching games by user", e)
-//                _error.value = "Errore durante il caricamento dei giochi dell'utente"
-//            }
+
             _isLoading.value = false
         }
     }

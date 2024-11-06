@@ -36,7 +36,6 @@ fun CustomToast(context: Context) {
 
     with(Toast(context)) {
         duration = Toast.LENGTH_SHORT
-//        setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
         view = layout
         show()
     }

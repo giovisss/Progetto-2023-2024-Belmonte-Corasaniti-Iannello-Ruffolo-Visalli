@@ -19,7 +19,6 @@
      @Override
      public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
          try {
- //            TODO: GESTIRE BENE ECCEZIONE
 
              String token = ((HttpServletRequest) request).getHeader("Authorization");
              if(token == null || token.isEmpty()) {
@@ -53,6 +52,5 @@
          }
      }
 
- //    @Override
- //    public void destroy() {}
+
  }

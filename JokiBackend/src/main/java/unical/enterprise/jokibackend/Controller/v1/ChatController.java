@@ -82,8 +82,8 @@ public class ChatController {
         if (adminIds.isEmpty()) {
             return ResponseEntity.status(404).body(Collections.singletonMap("error", "Nessun admin disponibile al momento."));
         }
-        UUID firstAdminId = adminIds.get(0); // Prende il primo admin dalla lista
-        adminIds.remove(0); // Rimuove l'admin dalla lista per evitare che venga selezionato da più utenti (non è perfetto)
+        UUID firstAdminId = adminIds.get(0);
+        adminIds.remove(0);
         Map<String, String> response = new HashMap<>();
         response.put("adminId", firstAdminId.toString());
         return ResponseEntity.ok(response);
@@ -118,8 +118,8 @@ public class ChatController {
             response.put("error", "Nessun utente disponibile al momento.");
             return ResponseEntity.status(404).body(response);
         }
-        UUID firstUserId = userIds.get(0); // Prende il primo utente che vuole chattare
-        userIds.remove(0); // Rimuove l'utente dalla lista per evitare che venga selezionato di nuovo (non è perfetto)
+        UUID firstUserId = userIds.get(0);
+        userIds.remove(0);
         Map<String, String> response = new HashMap<>();
         response.put("userId", firstUserId.toString());
         return ResponseEntity.ok(response);

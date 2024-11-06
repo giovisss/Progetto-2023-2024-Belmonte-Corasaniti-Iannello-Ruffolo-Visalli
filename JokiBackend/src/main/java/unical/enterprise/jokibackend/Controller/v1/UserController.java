@@ -164,18 +164,6 @@ public class UserController {
     }
     // Fine controller amici
 
-    //Funzione di Logout
-    //TODO: Non serve per il frontend, rimuoverla se non serve nemmeno per Android
-//    @PostMapping("/logout")
-//    public ResponseEntity<String> logout(Principal principal) {
-//        String username = principal.getName();
-//        try {
-//            keycloakService.logoutUser(username);
-//            return ResponseEntity.ok(new Gson().toJson("Logout successful"));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(new Gson().toJson("Error during logout"));
-//        }
-//    }
 
     @GetMapping("/checkout")
     public ResponseEntity<String> checkout() {

@@ -121,8 +121,6 @@ fun EditGameListItem(item : Game, onGameClick: (Game) -> Unit = {}) {
             AsyncImage(
                 model = "${IPManager.BACKEND_IMAGES}/${item.url1}",
                 contentDescription = item.title,
-                //error = painterResource(id = R.drawable.games_image), // Uncomment and replace with your error image resource
-                //placeholder = painterResource(id = R.drawable.games_image), // Uncomment and replace with your placeholder image resource
                 modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.CenterHorizontally)
@@ -222,7 +220,6 @@ fun EditGameContent(navController: NavController, gameViewModel: GameViewModel, 
                 TextField(
                     value = out,
                     onValueChange = { it ->
-                        Log.e("PORCO", it)
                         val acceptedValues = "0123456789."
                         if (it.all { acceptedValues.contains(it) }) {
                             val pointIndex = it.indexOf('.')

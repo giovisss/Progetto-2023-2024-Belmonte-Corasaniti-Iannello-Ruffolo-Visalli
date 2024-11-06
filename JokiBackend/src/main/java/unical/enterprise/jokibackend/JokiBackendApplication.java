@@ -66,7 +66,7 @@ public class JokiBackendApplication {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println("Errore durante l'esecuzione dello script Python: " + e.getMessage());
+                }
     }
 }

@@ -127,15 +127,6 @@ fun GameDetailsActivity(gameId: String, viewModel: GameViewModel, navController:
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
 
-//                        Spacer(modifier = Modifier.height(8.dp))
-//
-//                        Text(
-//                            text = "Valutazione:",
-//                            style = MaterialTheme.typography.titleMedium,
-//                            modifier = Modifier.padding(bottom = 4.dp)
-//                        )
-                        // Add rating bar or stars here if available
-
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(

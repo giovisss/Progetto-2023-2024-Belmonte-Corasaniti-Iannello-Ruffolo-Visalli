@@ -84,43 +84,5 @@ class WishlistViewModel : ViewModel() {
         }
     }
 
-    //crea una nuova wishlist
-//    fun createWishlist(name: String, visibility: Int) {
-//        viewModelScope.launch {
-//            try {
-//                val response = wishlistRepository.createWishlist(name, visibility)
-//                if (response) {
-//                    Log.d("WishlistViewModel", "Wishlist creata: Response = $response")
-//                    loadWishlists()
-//                } else {
-//                    Log.e("WishlistViewModel", "Errore nella creazione della wishlist: Response = $response")
-//                }
-//            } catch (e: Exception) {
-//                Log.e("WishlistViewModel", "Errore nella creazione della wishlist", e)
-//            }
-//        }
-//    }
-//    fun getListOfWishlist(): LiveData<MutableList<Wishlist>>? {
-//        return wishlists
-//    }
 
-//    fun createWishlist(name: String?, visibility: Int) {
-//        require(!(name == null || name.isEmpty())) { "Il nome della wishlist non può essere vuoto" }
-//        var currentWishlists: MutableList<Wishlist>? = wishlists!!.getValue()
-//        if (currentWishlists == null) {
-//            currentWishlists = ArrayList()
-//        }
-//        val newWishlist = Wishlist(name, visibility)
-//        currentWishlists.add(newWishlist)
-//        wishlists.setValue(currentWishlists)
-//    }
-//
-//
-//    fun removeWishlist(name: String) {
-//        val currentWishlist: MutableList<Wishlist> = checkNotNull(
-//            wishlists!!.value
-//        )
-//        currentWishlist.removeIf { wishlist: Wishlist -> wishlist.name == name }
-//        wishlists.setValue(currentWishlist)
-//    }
 }

@@ -84,8 +84,7 @@ public class GameServiceImpl implements GameService{
         try {
             Path path = Paths.get(folder + gameDto.getImagePath().replace(".jpg", "_") + index + ".jpg");
 
-            // Salva il file nel percorso specificato
-//            Files.write(path, photo.getBytes());
+
             photo.transferTo(path);
             return true;
         } catch (IOException e) {

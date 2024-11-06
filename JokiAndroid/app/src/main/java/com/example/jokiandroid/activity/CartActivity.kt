@@ -52,7 +52,7 @@ fun CartActivity(navController: NavController, cartViewModel: CartViewModel, sho
         }
     }
 
-    Log.d("CartActivity created blablabla", "cartItems size: ${cartItems.size}")
+    Log.d("CartActivity created", "cartItems size: ${cartItems.size}")
 
     Column(modifier = Modifier.fillMaxSize()) {
         if (TokenManager.getToken() == null) {

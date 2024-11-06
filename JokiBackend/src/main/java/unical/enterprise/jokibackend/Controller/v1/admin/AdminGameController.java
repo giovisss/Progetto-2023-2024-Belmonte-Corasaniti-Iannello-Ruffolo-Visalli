@@ -22,16 +22,14 @@ public class AdminGameController {
     private final GameService gameService;
     private final AdminService adminService;
 
-    // this endpoint is a duplicate of the used by users
-    // it's added here for easier implementation logic
+
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<String> getGamesList(){
         Collection<GameDto> games = gameService.findAll();
         return ResponseEntity.ok(new Gson().toJson(games));
     }
 
-    // this endpoint is a duplicate of the used by users
-    // it's added here for easier implementation logic
+
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<String> getGameById(@PathVariable UUID id) {
         GameDto game = gameService.getGameById(id);
