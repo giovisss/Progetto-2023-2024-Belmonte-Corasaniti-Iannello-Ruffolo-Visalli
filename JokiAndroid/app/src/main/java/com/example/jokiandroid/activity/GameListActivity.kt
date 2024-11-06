@@ -17,8 +17,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,20 +44,36 @@ import com.example.jokiandroid.utility.IPManager
 import com.example.jokiandroid.viewmodel.CartViewModel
 import com.example.jokiandroid.viewmodel.WishlistViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameListPage(wishlistViewModel: WishlistViewModel, gameViewModel: GameViewModel, cartViewModel: CartViewModel, navController: NavController) {
     val games by gameViewModel.games.observeAsState(emptyList())
     var showModal by remember { mutableStateOf(false) }
     var selectedGame by remember { mutableStateOf<Game?>(null) }
+    var searchQuery by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
             .padding(8.dp)
     ) {
+        TextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Cerca") },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        val filteredGames = games.filter { it.title.contains(searchQuery, ignoreCase = true) }
+
         LazyColumn(
             content = {
-                itemsIndexed(games) { _: Int, game: Game ->
+                itemsIndexed(filteredGames) { _: Int, game: Game ->
                     GameItem(
                         item = game,
                         onAddToCart = { cartViewModel.addGame(it) },
@@ -83,7 +102,6 @@ fun GameListPage(wishlistViewModel: WishlistViewModel, gameViewModel: GameViewMo
         }
     }
 }
-
 @Composable
 fun GameItem(item : Game, onAddToCart: (Game) -> Unit = {}, itemAddToWishlist: (Game) -> Unit = {}, onGameClick: (Game) -> Unit = {}){
     Row (

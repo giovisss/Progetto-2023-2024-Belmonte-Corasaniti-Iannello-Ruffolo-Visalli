@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -44,9 +46,12 @@ import com.example.jokiandroid.model.User
 import com.example.jokiandroid.utility.Date
 import com.example.jokiandroid.viewmodel.UserViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditUserDataActivity(navController: NavController, userViewModel: UserViewModel, searchedUsername: String) {
     val users = userViewModel.usersList.observeAsState()
+    var searchQuery by remember { mutableStateOf("") }
+
 
     if(users.value == null || users.value!!.isEmpty()) {
         AlertDialog(
@@ -64,8 +69,25 @@ fun EditUserDataActivity(navController: NavController, userViewModel: UserViewMo
     }
 
     if (searchedUsername == "") {
+        TextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Cerca") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        val filteredUsers = users.value?.filter { it.username.contains(searchQuery, ignoreCase = true) }
+
+
         LazyColumn {
-            itemsIndexed(users.value!!) { index: Int, user: User ->
+
+
+            itemsIndexed(filteredUsers!!) { index: Int, user: User ->
                 EditUsersListItem(
                     item = user,
                     onGameClick = { navController.navigate("edit_users/${user.username}") }

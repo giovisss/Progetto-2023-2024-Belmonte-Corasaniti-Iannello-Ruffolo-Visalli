@@ -20,8 +20,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,6 +49,7 @@ fun LibraryActivity(navController: NavController, gameViewModel: GameViewModel) 
     var showLoginDialog by remember { mutableStateOf(false) }
     var showEmptyLibraryDialog by remember { mutableStateOf(false) }
     val isLoggedIn by TokenManager.token.collectAsState()
+
 
     if (isLoggedIn == null) {
         LoginRequiredDialog(
@@ -99,14 +103,33 @@ fun LoadingIndicator() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameList(gameList: List<Game>, navController: NavController) {
+    var searchQuery by remember { mutableStateOf("") }
+
+
+    TextField(
+        value = searchQuery,
+        onValueChange = { searchQuery = it },
+        label = { Text("Cerca") },
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+
+    val filteredGames = gameList.filter { it.title.contains(searchQuery, ignoreCase = true) }
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
             .padding(8.dp)
     ) {
-        itemsIndexed(gameList) { _, game ->
+        itemsIndexed(filteredGames) { _, game ->
             LibraryItem(
                 item = game,
                 onGameClick = { navController.navigate("game_detail/${game.id}") }

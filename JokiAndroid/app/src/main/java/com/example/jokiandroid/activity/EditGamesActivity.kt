@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,9 +52,14 @@ import com.example.jokiandroid.model.Game
 import com.example.jokiandroid.utility.Date
 import com.example.jokiandroid.utility.IPManager
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditGamesActivity(navController: NavController, gameViewModel: GameViewModel, gameId: String) {
     val games = gameViewModel.games.observeAsState()
+    var searchQuery by remember { mutableStateOf("") }
+
+
+
 
     if(games.value == null || games.value!!.isEmpty()) {
         AlertDialog(
@@ -71,8 +77,23 @@ fun EditGamesActivity(navController: NavController, gameViewModel: GameViewModel
     }
 
     if (gameId == "") {
+
+        TextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Cerca") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+
+        val filteredGames = games.value?.filter { it.title.contains(searchQuery, ignoreCase = true) }
+
         LazyColumn {
-            itemsIndexed(games.value!!) { index: Int, game: Game ->
+            itemsIndexed(filteredGames!!) { index: Int, game: Game ->
                 EditGameListItem(
                     item = game,
                     onGameClick = { navController.navigate("edit_games/${game.id}") }
