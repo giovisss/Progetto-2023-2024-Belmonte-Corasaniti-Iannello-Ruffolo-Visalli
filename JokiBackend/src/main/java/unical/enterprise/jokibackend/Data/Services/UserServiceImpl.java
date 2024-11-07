@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final GameDao gameDao;
     private final AdminService adminService;
-    private final FriendNotificationService friendNotificationService;
 
     @Override
     public void save(User user) {
