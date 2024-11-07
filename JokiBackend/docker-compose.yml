@@ -12,7 +12,7 @@ services:
      KC_DB_URL_PORT: 5432
      KC_DB_URL_DATABASE: ea
      KC_DB_USERNAME: giovanni
-     KC_DB_PASSWORD: penepiccolo
+     KC_DB_PASSWORD: JSGgdhf5DR84AH38enu37
    ports:
      - "8080:8080"
    command: start-dev

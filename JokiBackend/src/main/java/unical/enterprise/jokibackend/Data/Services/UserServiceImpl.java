@@ -12,7 +12,6 @@ import unical.enterprise.jokibackend.Data.Dao.UserDao;
 import unical.enterprise.jokibackend.Data.Dto.GameDto;
 import unical.enterprise.jokibackend.Data.Dto.UpdateUserDto;
 import unical.enterprise.jokibackend.Data.Dto.UserDto;
-import unical.enterprise.jokibackend.Data.Entities.FriendNotification;
 import unical.enterprise.jokibackend.Data.Entities.Game;
 import unical.enterprise.jokibackend.Data.Entities.User;
 import unical.enterprise.jokibackend.Data.Services.Interfaces.AdminService;
